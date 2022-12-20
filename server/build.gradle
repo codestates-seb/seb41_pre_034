@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.6'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id "org.asciidoctor.jvm.convert" version "3.3.2"    // rest docs
 }
 
 group = 'com.preproject'
@@ -9,46 +10,71 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+	// rest docs
+	asciidoctorExtensions
 }
 
 repositories {
 	mavenCentral()
 }
 
+ext {
+	// rest docs
+	set('snippetsDir', file("build/generated-snippets"))
+}
 project.ext {
 	querydslVersion = dependencyManagement.importedProperties['querydsl.version']
 }
 
+
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
+	// rest docs
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc:2.0.7.RELEASE'
+	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor:2.0.7.RELEASE'
+	// gson
+	implementation 'com.google.code.gson:gson'
 	// jpa
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-
 	// validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
-
-
 	// lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
-
 	// h2
 	runtimeOnly 'com.h2database:h2'
-
 	// mapper
-	implementation 'org.mapstruct:mapstruct:1.4.2.Final'
-	annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
+	implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
 }
 
 tasks.named('test') {
+	// rest docs
+	outputs.dir snippetsDir
 	useJUnitPlatform()
 }
 
+// rest docs
+tasks.named('asciidoctor') {
+	configurations "asciidoctorExtensions"
+	inputs.dir snippetsDir
+	dependsOn test
+}
+
+// rest docs
+task copyDocument(type: Copy) {
+	dependsOn asciidoctor
+	println "asciidoctor output: ${asciidoctor.outputDir}"
+	from file("build/docs/asciidoc/")
+	into file("src/main/resources/static/docs")
+}
+
+// rest docs
+build {
+	dependsOn copyDocument
+}
 
 // Querydsl 설정
 def generated='src/main/generated'
@@ -73,4 +99,12 @@ clean {
 // 빌드시 plain jar 파일 만들지 않도록 설정
 jar {
 	enabled = false
+}
+
+// rest docs
+bootJar {
+	dependsOn copyDocument
+	from ("${asciidoctor.outputDir}") {
+		into 'BOOT-INF/classes/static/docs'
+	}
 }

@@ -1,0 +1,29 @@
+= Stack Overflow
+:sectnums:
+:toc: left
+:toclevels: 4
+:toc-title: Table of Contents
+:source-highlighter: prettify
+
+E2I4 <test@test.com>
+
+v1.0.0, 2022.12.20
+
+
+== HomeController
+=== TEST
+
+.curl-request
+include::{snippets}/get-home/curl-request.adoc[]
+
+.http-request
+include::{snippets}/get-home/http-request.adoc[]
+
+.http-response
+include::{snippets}/get-home/http-response.adoc[]
+
+.response-body
+include::{snippets}/get-home/response-body.adoc[]
+
+.response-fields
+include::{snippets}/get-home/response-fields.adoc[]
