@@ -27,6 +27,7 @@ public class AnswerVote {
 
     @Setter
     @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
     private VoteStatus voteStatus;
 
     @Column(nullable = false, insertable = false, updatable = false,
