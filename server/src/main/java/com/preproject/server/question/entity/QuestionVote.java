@@ -1,8 +1,10 @@
 package com.preproject.server.question.entity;
 
 
-import com.preproject.server.constant.QuestionVoteStatus;
+import com.preproject.server.constant.VoteStatus;
+import com.preproject.server.user.entity.User;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -19,7 +21,6 @@ import java.time.LocalDateTime;
 })
 @EntityListeners(AuditingEntityListener.class)
 @Entity
-
 public class QuestionVote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +28,7 @@ public class QuestionVote {
 
     @Enumerated(value = EnumType.STRING)
     @Column
-    private QuestionVoteStatus questionVoteStatus= QuestionVoteStatus.NONE;
+    private VoteStatus voteStatus = VoteStatus.NONE;
 
     @Column(nullable = false, insertable = false, updatable = false,
             columnDefinition = "datetime default CURRENT_TIMESTAMP")
@@ -38,6 +39,17 @@ public class QuestionVote {
             columnDefinition = "datetime default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP")
     @LastModifiedDate
     private LocalDateTime updateAt;
+
+    /* 연관 관계 */
+
+    @Setter
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    private User user;
+
+
+    @Setter
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    private Question question;
 }
 
 
