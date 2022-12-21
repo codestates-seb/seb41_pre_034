@@ -9,7 +9,7 @@ function Navbar(props) {
           {/* 로고 */}
           <a
             href="#"
-            className="py-0 px-2 h-full flex items-center bg-transparent box-border"
+            className="py-0 px-2 h-full flex items-center bg-transparent box-border hover:bg-[#e3e6e8]"
           >
             <span className="bg-no-repeat bg-left-bottom ml-0 w-[150px] h-[30px] mt-[-4px] inline-block bg-[url('https://cdn.sstatic.net/Img/unified/sprites.svg?v=fcc0ea44ba27')]"></span>
           </a>
