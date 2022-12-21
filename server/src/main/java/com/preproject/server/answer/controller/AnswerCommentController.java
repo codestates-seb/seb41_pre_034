@@ -16,15 +16,15 @@ public class AnswerCommentController {
     }
 
     // 1' Comment 수정
-    @PatchMapping("/comment/{commentId}")
-    public ResponseEntity patchComment(@PathVariable("commentId") Long commentId
+    @PatchMapping("/comment/{answerCommentId}")
+    public ResponseEntity patchComment(@PathVariable("answerCommentId") Long answerCommentId
     ) {
         return null;
     }
 
     // 1' Comment 삭제
-    @DeleteMapping("/comment/{commentId}")
-    public ResponseEntity deleteComment(@PathVariable("commentId") Long commentId
+    @DeleteMapping("/comment/{answerCommentId}")
+    public ResponseEntity deleteComment(@PathVariable("answerCommentId") Long answerCommentId
     ) {
         return null;
     }
