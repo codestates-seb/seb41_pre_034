@@ -66,6 +66,22 @@ public class Answer {
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     private User user;
 
+    public void addAnswerComment(AnswerComment answerComment) {
+        answerComments.add(answerComment);
+    }
 
+    public void addAnswerVote(AnswerVote answerVote) {
+        answerVotes.add(answerVote);
+    }
+
+    public void addQuestion(Question question) {
+        this.question = question;
+        question.addAnswer(this);
+    }
+
+    public void addUser(User user) {
+        this.user = user;
+        user.addAnswer(this);
+    }
 
 }

@@ -49,4 +49,14 @@ public class AnswerVote {
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     private User user;
 
+    public void addAnswer(Answer answer) {
+        this.answer = answer;
+        answer.addAnswerVote(this);
+    }
+
+    public void addUser(User user) {
+        this.user = user;
+        user.addAnswerVote(this);
+    }
+
 }
