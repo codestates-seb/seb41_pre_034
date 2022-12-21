@@ -27,4 +27,12 @@ public class UserController {
         return null;
     }
 
+    /* 사용자 생성 */
+    @PostMapping
+    public ResponseEntity createUser(
+            // Todo UserPostDto
+    ) {
+        return null;
+    }
+
 }
