@@ -7,11 +7,13 @@ spring:
     url: jdbc:h2:mem:test
   jpa:
     hibernate:
-      ddl-auto: create  # (1) ??? ?? ??
-    #    show-sql: true      # (2) SQL ?? ??
+      ddl-auto: create-drop
+    #    show-sql: true
     properties:
       hibernate:
         format_sql: true
+        # Entity에 예약어가 있다면 '' 자동 추가
+        auto_quote_keyword: true
 
 logging.level:
   org.hibernate.SQL: debug
