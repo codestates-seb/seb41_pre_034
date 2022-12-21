@@ -16,16 +16,16 @@ public class QuestionCommentController {
     }
 
 //  질문의  Comment 수정
-    @PatchMapping("/comment/{commentId}")
-    public ResponseEntity patchQuestionComment(@PathVariable Long commentId
+    @PatchMapping("/comment/{questionCommentId}")
+    public ResponseEntity patchQuestionComment(@PathVariable Long questionCommentId
                // Todo QuestionCommentPatchDto
     ){
         return null;
     }
 
 //  질문의 Comment 삭제
-    @DeleteMapping("/comment/{commentId}")
-    public ResponseEntity deleteQuestionComment(@PathVariable Long commentId){
+    @DeleteMapping("/comment/{questionCommentId}")
+    public ResponseEntity deleteQuestionComment(@PathVariable Long questionCommentId){
         return null;
     }
 }

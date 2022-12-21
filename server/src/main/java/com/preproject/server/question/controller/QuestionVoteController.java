@@ -15,8 +15,8 @@ public class QuestionVoteController {
     }
 
 //    추천 (UP/NONE/DOWN) 수정
-    @PatchMapping("/vote/{questionId}")
-    public ResponseEntity patchQuestionvote(@PathVariable Long questionId
+    @PatchMapping("/vote/{questionVoteId}")
+    public ResponseEntity patchQuestionvote(@PathVariable Long questionVoteId
             // Todo QuestionVotePatchDto
     ){
         return null;
