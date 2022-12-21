@@ -1,7 +1,13 @@
 package com.preproject.server.user.entity;
 
+import com.preproject.server.answer.entity.Answer;
+import com.preproject.server.answer.entity.AnswerComment;
+import com.preproject.server.answer.entity.AnswerVote;
 import com.preproject.server.constant.LoginType;
 import com.preproject.server.constant.UserStatus;
+import com.preproject.server.question.entity.Question;
+import com.preproject.server.question.entity.QuestionComment;
+import com.preproject.server.question.entity.QuestionVote;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,6 +17,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @ToString
@@ -63,5 +71,63 @@ public class User {
             columnDefinition = "datetime default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP")
     @LastModifiedDate
     private LocalDateTime updateAt;
+
+
+    /* 연관 관계 */
+
+    @ToString.Exclude
+    @OrderBy("questionId")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Question> questions = new ArrayList<>();
+
+    @ToString.Exclude
+    @OrderBy("answerId")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Answer> answers = new ArrayList<>();
+
+    @ToString.Exclude
+    @OrderBy("answerVoteId")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<AnswerVote> answerVotes = new ArrayList<>();
+
+    @ToString.Exclude
+    @OrderBy("answerCommentId")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<AnswerComment> answerComments = new ArrayList<>();
+
+    @ToString.Exclude
+    @OrderBy("questionCommentId")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<QuestionComment> questionComments = new ArrayList<>();
+
+    @ToString.Exclude
+    @OrderBy("questionVoteId")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<QuestionVote> questionVotes = new ArrayList<>();
+
+    public void addQuestion(Question question) {
+        questions.add(question);
+    }
+
+    public void addAnswer(Answer answer) {
+        answers.add(answer);
+    }
+
+    public void addAnswerVote(AnswerVote answerVote) {
+        answerVotes.add(answerVote);
+    }
+
+    public void addAnswerComment(AnswerComment answerComment) {
+        answerComments.add(answerComment);
+    }
+
+    public void addQuestionComment(QuestionComment questionComment) {
+        questionComments.add(questionComment);
+    }
+
+    public void addQuestionVote(QuestionVote questionVote) {
+        questionVotes.add(questionVote);
+    }
+
 
 }

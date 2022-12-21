@@ -1,7 +1,9 @@
 package com.preproject.server.question.entity;
 
 
+import com.preproject.server.user.entity.User;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -35,5 +37,25 @@ public class QuestionComment {
             columnDefinition = "datetime default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP")
     @LastModifiedDate
     private LocalDateTime updateAt;
+
+    /* 연관 관계 */
+
+    @Setter
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    private User user;
+
+    @Setter
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    private Question question;
+
+    public void addUser(User user) {
+        this.user = user;
+        user.addQuestionComment(this);
+    }
+
+    public void addQuestion(Question question) {
+        this.question = question;
+        question.addQuestionComment(this);
+    }
 
 }

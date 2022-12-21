@@ -1,6 +1,9 @@
 package com.preproject.server.answer.entity;
 
+import com.preproject.server.constant.VoteStatus;
+import com.preproject.server.user.entity.User;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -22,6 +25,10 @@ public class AnswerVote {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long answerVoteId;
 
+    @Setter
+    @Column(nullable = false)
+    private VoteStatus voteStatus;
+
     @Column(nullable = false, insertable = false, updatable = false,
             columnDefinition = "datetime default CURRENT_TIMESTAMP")
     @CreatedDate
@@ -32,6 +39,24 @@ public class AnswerVote {
     @LastModifiedDate
     private LocalDateTime updateAt;
 
-    //TODO answer_vote_status ENUM
+    /* 연관 관계 */
+
+    @Setter
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    private Answer answer;
+
+    @Setter
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    private User user;
+
+    public void addAnswer(Answer answer) {
+        this.answer = answer;
+        answer.addAnswerVote(this);
+    }
+
+    public void addUser(User user) {
+        this.user = user;
+        user.addAnswerVote(this);
+    }
 
 }
