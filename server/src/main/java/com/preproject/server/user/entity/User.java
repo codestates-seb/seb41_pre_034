@@ -105,5 +105,29 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<QuestionVote> questionVotes = new ArrayList<>();
 
+    public void addQuestion(Question question) {
+        questions.add(question);
+    }
+
+    public void addAnswer(Answer answer) {
+        answers.add(answer);
+    }
+
+    public void addAnswerVote(AnswerVote answerVote) {
+        answerVotes.add(answerVote);
+    }
+
+    public void addAnswerComment(AnswerComment answerComment) {
+        answerComments.add(answerComment);
+    }
+
+    public void addQuestionComment(QuestionComment questionComment) {
+        questionComments.add(questionComment);
+    }
+
+    public void addQuestionVote(QuestionVote questionVote) {
+        questionVotes.add(questionVote);
+    }
+
 
 }
