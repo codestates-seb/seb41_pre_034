@@ -43,4 +43,17 @@ public class UserController {
         return null;
     }
 
+    /* 사용자 전체 삭제 */
+    @DeleteMapping
+    public ResponseEntity deleteUsers() {
+        return null;
+    }
+
+    /* 사용자 삭제 */
+    @DeleteMapping("/{userId}")
+    public ResponseEntity deleteUser(
+            @PathVariable("userId") Long userId
+    ) {
+        return null;
+    }
 }
