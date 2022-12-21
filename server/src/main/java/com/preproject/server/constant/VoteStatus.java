@@ -1,8 +1,6 @@
 package com.preproject.server.constant;
 
-import lombok.Getter;
-
-public enum QuestionVoteStatus {
+public enum VoteStatus {
 
     UP,NONE,DOWN
 }
