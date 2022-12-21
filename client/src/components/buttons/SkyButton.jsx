@@ -5,7 +5,7 @@ function SkyButton(props) {
     <div className="block">
       <a
         href="/"
-        className="bg-[#e1ecf4] border border-solid	rounded border-transparent text-[#39739d] p-[10px] text-[13px] font-normal leading-4 relative hover:bg-[#b3d3ea]"
+        className="bg-[#e1ecf4] border border-solid	rounded border-[#39739d] text-[#39739d] p-[10px] text-[13px] font-normal leading-4 relative hover:bg-[#b3d3ea]"
       >
         {props.text}
       </a>
