@@ -48,4 +48,14 @@ public class QuestionComment {
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     private Question question;
 
+    public void addUser(User user) {
+        this.user = user;
+        user.addQuestionComment(this);
+    }
+
+    public void addQuestion(Question question) {
+        this.question = question;
+        question.addQuestionComment(this);
+    }
+
 }

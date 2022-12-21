@@ -50,6 +50,16 @@ public class QuestionVote {
     @Setter
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     private Question question;
+
+    public void addUser(User user) {
+        this.user = user;
+        user.addQuestionVote(this);
+    }
+
+    public void addQuestion(Question question) {
+        this.question = question;
+        question.addQuestionVote(this);
+    }
 }
 
 
