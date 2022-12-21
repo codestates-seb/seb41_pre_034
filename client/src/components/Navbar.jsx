@@ -14,6 +14,20 @@ function Navbar(props) {
             <span className="bg-no-repeat bg-left-bottom ml-0 w-[150px] h-[30px] mt-[-4px] inline-block bg-[url('https://cdn.sstatic.net/Img/unified/sprites.svg?v=fcc0ea44ba27')]"></span>
           </a>
           {/* About, Products, For Teams 버튼 */}
+          <ol className="flex">
+            {['About', 'Products', 'For Teams'].map((item, index) => {
+              return (
+                <li key={index} className="m-0 p-0">
+                  <a
+                    href="/"
+                    className="text-[#5b6269] py-1.5 px-3 rounded-full shadow-none hover:bg-[#e3e6e8] text-sm"
+                  >
+                    {item}
+                  </a>
+                </li>
+              );
+            })}
+          </ol>
           {/* 검색창 자리 */}
           {/* 로그인 */}
           {/* 회원가입 */}
