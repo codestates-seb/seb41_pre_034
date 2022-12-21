@@ -35,4 +35,12 @@ public class UserController {
         return null;
     }
 
+    /* 사용자 정보 수정 */
+    @PatchMapping("/{userId}")
+    public ResponseEntity patchUser(
+            @PathVariable("userId") Long userId
+    ) {
+        return null;
+    }
+
 }
