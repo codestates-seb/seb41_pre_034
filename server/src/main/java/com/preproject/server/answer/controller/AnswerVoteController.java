@@ -16,8 +16,8 @@ public class AnswerVoteController {
     }
 
     // 1' 추천 수정
-    @PatchMapping("/vote/{voteId}")
-    public ResponseEntity patchVote(@PathVariable("voteId") Long voteId
+    @PatchMapping("/vote/{answerVoteId}")
+    public ResponseEntity patchVote(@PathVariable("answerVoteId") Long answerVoteId
 
     ) {
         return null;
