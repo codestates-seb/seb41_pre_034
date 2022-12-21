@@ -50,4 +50,9 @@ public class Tag {
     @OrderBy("questionTagId")
     @OneToMany(mappedBy = "tag", cascade = CascadeType.REMOVE)
     private List<QuestionTag> questionTags = new ArrayList<>();
+
+    public void addQuestionTag(QuestionTag questionTag) {
+        questionTags.add(questionTag);
+    }
+
 }

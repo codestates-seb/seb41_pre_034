@@ -47,4 +47,15 @@ public class QuestionTag {
     @Setter
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     private Tag tag;
+
+    public void addQuestion(Question question) {
+        this.question = question;
+        question.addQuestionTag(this);
+    }
+
+    public void addTag(Tag tag) {
+        this.tag = tag;
+        tag.addQuestionTag(this);
+    }
+
 }
