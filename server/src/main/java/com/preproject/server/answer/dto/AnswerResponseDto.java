@@ -22,6 +22,8 @@ public class AnswerResponseDto {
 
     private String body;
 
+    private Boolean check;
+
     private LocalDateTime createAt;
 
     private LocalDateTime updateAt;
