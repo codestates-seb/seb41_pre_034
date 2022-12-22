@@ -2,6 +2,7 @@ package com.preproject.server.question.controller;
 
 import com.preproject.server.dto.PageResponseDto;
 import com.preproject.server.dto.ResponseDto;
+import com.preproject.server.question.dto.QuestionPatchDto;
 import com.preproject.server.question.dto.QuestionPostDto;
 import com.preproject.server.question.dto.QuestionResponseDto;
 import com.preproject.server.utils.StubDtoUtils;
@@ -38,7 +39,7 @@ public class QuestionController {
     }
 
     //    질문 단건 조회
-    @GetMapping("/{qestionId}")
+    @GetMapping("/{questionId}")
     public ResponseEntity getQuestion(
             @PathVariable Long questionId
     ) {
@@ -51,7 +52,7 @@ public class QuestionController {
     @PatchMapping("/{questionId}")
     public ResponseEntity patchQuestion(
             @PathVariable Long questionId,
-            @RequestBody QuestionPostDto questionPostDto
+            @RequestBody QuestionPatchDto questionPatchDto
     ) {
         return new ResponseEntity<>(
                 ResponseDto.of(stubDtoUtils.createQuestionResponseDto()),
