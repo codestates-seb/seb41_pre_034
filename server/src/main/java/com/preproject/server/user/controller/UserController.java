@@ -70,7 +70,7 @@ public class UserController {
     ) {
 
         return new ResponseEntity<>(
-                ResponseDto.of(stubDtoUtils.createUserResponseDto()),
+                ResponseDto.of(stubDtoUtils.createUserSimpleResponseDto()),
                 HttpStatus.OK
         );
     }

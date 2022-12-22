@@ -51,7 +51,7 @@ public class StubDtoUtils {
 
     /* User 전체 조회시 Response
     *  전체 조회시 User의 작성 질문과 답변까지 응답 되어 불필요한 데이터 제거 */
-    public UserSimpleResponseDto createUsersResponseDto() {
+    public UserSimpleResponseDto createUserSimpleResponseDto() {
         return new UserSimpleResponseDto(
                 1L,
                 "test@test.com",
@@ -80,9 +80,9 @@ public class StubDtoUtils {
     /* 전체 유저 조회 응답 데이터*/
     public Page<UserSimpleResponseDto> createUserResponseDtoPage(Pageable pageable) {
         List<UserSimpleResponseDto> userResponseDto = List.of(
-                createUsersResponseDto(),
-                createUsersResponseDto(),
-                createUsersResponseDto());
+                createUserSimpleResponseDto(),
+                createUserSimpleResponseDto(),
+                createUserSimpleResponseDto());
 
         return new PageImpl<>(
                 userResponseDto,
