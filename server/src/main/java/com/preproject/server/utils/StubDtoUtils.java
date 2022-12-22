@@ -26,6 +26,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StubDtoUtils {
 
+
+    /* User 응답 데이터 */
     public UserResponseDto createUserResponseDto() {
         return new UserResponseDto(
                 1L,
@@ -46,6 +48,7 @@ public class StubDtoUtils {
         );
     }
 
+    /* User create 응답 데이터 */
     public UserResponseDto createUserDto() {
         return new UserResponseDto(
                 1L,
@@ -62,6 +65,7 @@ public class StubDtoUtils {
         );
     }
 
+    /* 전체 유저 조회 응답 데이터*/
     public Page<UserResponseDto> createUserResponseDtoPage(Pageable pageable) {
         List<UserResponseDto> userResponseDto = List.of(
                 createUserResponseDto(),
@@ -75,6 +79,7 @@ public class StubDtoUtils {
         );
     }
 
+    /* 전체 테그 조회 응답 데이터*/
     public Page<TagResponseDto> createTagResponseDtoPage(Pageable pageable) {
         List<TagResponseDto> tagResponseDto = List.of(
                 createTagResponseDto(),
@@ -91,6 +96,7 @@ public class StubDtoUtils {
         );
     }
 
+    /* 태그 생성 응답 데이터 */
     public TagResponseDto createTagResponseDto() {
         return new TagResponseDto(
                 1L,
@@ -100,6 +106,7 @@ public class StubDtoUtils {
         );
     }
 
+    /* 질문 조회 응답 데이터 */
     public QuestionResponseDto createQuestionResponseDto() {
         return new QuestionResponseDto(
                 1L,
@@ -125,6 +132,7 @@ public class StubDtoUtils {
         );
     }
 
+    /* 질문 생성 응답 데이터 */
     public QuestionResponseDto createQuestionDto() {
         return new QuestionResponseDto(
                 1L,
@@ -145,6 +153,7 @@ public class StubDtoUtils {
         );
     }
 
+    /* 질문 전체 조회 응답 데이터 */
     public Page<QuestionResponseDto> createQuestionResponseDtoPage(Pageable pageable) {
         List<QuestionResponseDto> questionResponseDto = List.of(
                 createQuestionResponseDto(),
@@ -158,6 +167,7 @@ public class StubDtoUtils {
         );
     }
 
+    /* 질문 조회 응답 데이터 */
     public AnswerResponseDto createAnswerResponseDto() {
         return new AnswerResponseDto(
                 1L,
@@ -175,6 +185,24 @@ public class StubDtoUtils {
         );
     }
 
+
+    /* 질문 생성 응답 데이터 */
+    public AnswerResponseDto createAnswerDto() {
+        return new AnswerResponseDto(
+                1L,
+                1L,
+                "testUser",
+                "Test Body",
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                0
+        );
+    }
+
+
+    /* 질문 추천 응답 데이터 */
     public QuestionVoteResponseDto createQuestionVoteResponseDto() {
         return new QuestionVoteResponseDto(
                 1L,
@@ -183,6 +211,8 @@ public class StubDtoUtils {
         );
     }
 
+
+    /* 답변 추천 응답 데이터 */
     public AnswerVoteResponseDto createAnswerVoteResponseDto() {
         return new AnswerVoteResponseDto(
                 1L,
@@ -191,6 +221,8 @@ public class StubDtoUtils {
         );
     }
 
+
+    /* 질문 코멘트 응답 데이터 */
     public QuestionCommentResponseDto createQuestionCommentResponseDto() {
         return new QuestionCommentResponseDto(
                 1L,
@@ -202,6 +234,8 @@ public class StubDtoUtils {
         );
     }
 
+
+    /* 답변 코멘트 응답 데이터 */
     public AnswerCommentResponseDto createAnswerCommentResponseDto() {
         return new AnswerCommentResponseDto(
                 1L,
