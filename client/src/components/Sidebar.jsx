@@ -28,17 +28,6 @@ function Sidebar() {
               </li>
             );
           })}
-          {/* <li className="py-[4px] pl-[8px] pr-[4px] text-[#525960] text-[13px] cursor-pointer">
-            <a>Home</a>
-          </li>
-          <li>
-            <li className="text-[#525960] flex pl-[30px] py-[4px] pr-[4px] text-[13px] cursor-pointer">
-              <a>Tags</a>
-            </li>
-            <li className="text-[#525960] flex pl-[30px] py-[4px] pr-[4px] text-[13px] cursor-pointer">
-              <a>Users</a>
-            </li>
-          </li> */}
         </ol>
       </nav>
     </div>
