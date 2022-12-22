@@ -7,11 +7,22 @@ spring:
     url: jdbc:h2:mem:test
   jpa:
     hibernate:
-      ddl-auto: create  # (1) ??? ?? ??
-    #    show-sql: true      # (2) SQL ?? ??
+      ddl-auto: create-drop
+    #    show-sql: true
     properties:
       hibernate:
         format_sql: true
+        # Entity에 예약어가 있다면 '' 자동 추가
+        auto_quote_keyword: true
 
+# 디버깅 용이하게 하기 위한 로깅 레벨 수정
 logging.level:
   org.hibernate.SQL: debug
+  org:
+    hibernate:
+      type:
+        descriptor:
+          sql:
+            org.hibernate.type.descriptor.sql.BasicBinder: trace
+    springframework:
+      web.servlet: debug
