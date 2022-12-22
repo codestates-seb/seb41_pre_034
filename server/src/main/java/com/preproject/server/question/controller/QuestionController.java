@@ -1,5 +1,6 @@
 package com.preproject.server.question.controller;
 
+import com.preproject.server.dto.PageResponseDto;
 import com.preproject.server.dto.ResponseDto;
 import com.preproject.server.question.dto.QuestionPostDto;
 import com.preproject.server.question.dto.QuestionResponseDto;
@@ -27,28 +28,35 @@ public class QuestionController {
 //    질문 전체 삭제
     @DeleteMapping
     public ResponseEntity deleteQuestion(){
-        return null;
+        return new ResponseEntity<>(
+                ResponseDto.of(new QuestionResponseDto()),
+                HttpStatus.OK);
     }
 
 //    질문 단건 조회
     @GetMapping("/{qestionId}")
     public ResponseEntity getQuestion(@PathVariable Long questionId){
-        return null;
+        return new ResponseEntity<>(
+                ResponseDto.of(new QuestionResponseDto()),
+                HttpStatus.OK);
     }
 
 //    질문 수정
     @PatchMapping("/{questionId}")
     public ResponseEntity patchQuestion(@PathVariable Long questionId
-        // Todo QuestionPatchDto
+        ,@RequestBody QuestionPostDto questionPostDto
     ){
-
-        return null;
+        return new ResponseEntity<>(
+                ResponseDto.of(new QuestionResponseDto()),
+                HttpStatus.OK);
     }
 
 //    질문 삭제
     @DeleteMapping("/{questionId}")
     public ResponseEntity deleteQuestion(@PathVariable Long questionId){
-        return null;
+        return new ResponseEntity<>(
+                ResponseDto.of(new QuestionResponseDto()),
+                HttpStatus.OK);
     }
 
 //    질문 전체 조회 페이지
@@ -57,7 +65,9 @@ public class QuestionController {
             @PageableDefault(page = 0, size = 10, sort = "questionId", direction = Sort.Direction.DESC)
             Pageable pageable
     ){
-        return null;
+        return new ResponseEntity<>(
+                PageResponseDto.of(null,null),
+                HttpStatus.OK);
     }
 
 }
