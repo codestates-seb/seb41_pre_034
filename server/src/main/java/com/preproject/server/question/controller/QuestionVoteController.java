@@ -3,6 +3,7 @@ package com.preproject.server.question.controller;
 import com.preproject.server.dto.ResponseDto;
 import com.preproject.server.question.dto.QuestionVotePatchDto;
 import com.preproject.server.question.dto.QuestionVotePostDto;
+import com.preproject.server.question.dto.QuestionVoteResponseDto;
 import com.preproject.server.utils.StubDtoUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,8 +35,11 @@ public class QuestionVoteController {
             @PathVariable Long questionVoteId,
             @RequestBody QuestionVotePatchDto questionVotePatchDto
     ) {
+        QuestionVoteResponseDto response =
+                stubDtoUtils.createQuestionVoteResponseDto();
+        response.setVoteStatus("DOWN");
         return new ResponseEntity<>(
-                ResponseDto.of(stubDtoUtils.createQuestionVoteResponseDto()),
+                ResponseDto.of(response),
                 HttpStatus.OK);
     }
 }
