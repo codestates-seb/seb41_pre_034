@@ -3,28 +3,36 @@ import profile from '../profile.jpeg';
 
 function QuestionItem(props) {
   return (
-    <div className="relative flex justify-center w-[719px] items-center text-[17px] p-[16px] border-b-[1px] m-5">
-      <div className="flex flex-col justify-between w-[108px] h-[69px] mr-[16px] mb-[4px] text-[13px]">
-        <div className="flex justify-end ">
-          <span className="mr-[2px]">10</span>
+    <div className="relative flex justify-center w-[719px] items-center p-[16px] border-b-[1px] m-5">
+      <div className="flex flex-col gap-2 justify-start w-[108px] h-[99.859px] mr-[16px] mb-[4px] text-[13px]">
+        <div className="flex justify-end gap-x-1 font-bold">
+          <span>10</span>
           <span>vote</span>
         </div>
-        <div className="flex justify-end">
-          <span className="mr-[2px]">1</span>
+        <div className="flex justify-end gap-x-1">
+          <span>1</span>
           <span>answers</span>
         </div>
-        <div className="flex justify-end">
-          <span className="mr-[2px]">78</span>
+        <div className="flex justify-end gap-x-1">
+          <span>78</span>
           <span>views</span>
         </div>
       </div>
-      <div className="flex flex-col justify-start w-[595px] h-[73px]">
-        <a className="flex h-min w-max mb-[5px]">
-          how can i make the lines variable in a file?
-        </a>
+      <div className="flex flex-col w-[595px] h-[99.859pxpx] text-[12px] mb-[5px]">
+        <h3 className="mb-[5px]">
+          <a className="text-[17px] ">
+            how can i make the lines variable in a file?
+          </a>
+        </h3>
+        <div className="line-clamp-2 mb-[8px]">
+          I am working on a single page application (SPA) app that grants access
+          to specific paths in the application, based on roles setup in Azure AD
+          for the user logging in. As per this
+          https://github.com/Azure-Samples/ms-identity-javascript-react-tutorial/tree/main/5-AccessControl/1-call-api-roles
+        </div>
         <div className="flex">
           <div className="flex w-min h-min">
-            <ul className="flex list-none ml-0">
+            <ul className="flex list-none ml-0 mt-[4px]">
               <li className="mr-[4px]">
                 <a className="border-solid border-[#e1ecf4] bg-[#e1ecf4] text-[#39739d] hover:bg-[#B3D3EA] rounded text-xs py-[4.8px] px-[6px] border-[1px] mr-[2px] mb-[2px]">
                   javascript
@@ -42,7 +50,7 @@ function QuestionItem(props) {
               </li>
             </ul>
           </div>
-          <div className="flex justify-end ml-[auto] text-[12px]">
+          <div className="flex ml-[auto] text-[12px] gap-1 h-[38.594px] items-center">
             <div>
               <a className="m-[2px]">
                 <div>
@@ -50,7 +58,7 @@ function QuestionItem(props) {
                 </div>
               </a>
             </div>
-            <div className="flex items-center">
+            <div className="flex">
               <div>
                 <a className="m-[2px]">z1nun</a>
               </div>
