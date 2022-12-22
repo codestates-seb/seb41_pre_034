@@ -6,20 +6,26 @@ import com.preproject.server.question.dto.QuestionCommentPatchDto;
 import com.preproject.server.question.dto.QuestionCommentPostDto;
 import com.preproject.server.question.dto.QuestionCommentResponseDto;
 import com.preproject.server.question.dto.QuestionResponseDto;
+import com.preproject.server.utils.StubDtoUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/question-comment")
+@RequiredArgsConstructor
 public class QuestionCommentController {
+
+    private final StubDtoUtils stubDtoUtils;
+
 
     // 질문의 comment 생성
     @PostMapping("/{questionId}")
     public ResponseEntity postQuestionComment(@PathVariable Long questionId
              ,@RequestBody QuestionCommentPostDto questionCommentPostDto){
         return new ResponseEntity<>(
-                ResponseDto.of(new QuestionCommentResponseDto()),
+                ResponseDto.of(stubDtoUtils.createQuestionCommentResponseDto()),
                 HttpStatus.CREATED);
     }
 
@@ -28,15 +34,13 @@ public class QuestionCommentController {
     public ResponseEntity patchQuestionComment(@PathVariable Long questionCommentId
                , @RequestBody QuestionCommentPatchDto questionCommentPatchDto){
         return new ResponseEntity<>(
-                ResponseDto.of(new QuestionCommentResponseDto()),
+                ResponseDto.of(stubDtoUtils.createQuestionCommentResponseDto()),
                 HttpStatus.OK);
     }
 
 //  질문의 Comment 삭제
     @DeleteMapping("/comment/{questionCommentId}")
     public ResponseEntity deleteQuestionComment(@PathVariable Long questionCommentId){
-        return new ResponseEntity<>(
-                ResponseDto.of(new QuestionCommentResponseDto()),
-                HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 }
