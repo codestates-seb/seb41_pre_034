@@ -38,7 +38,7 @@ public class QuestionResponseDto {
     private int countingVote = countingVote();
     private List<AnswerResponseDto> answers;
 
-    private int countingAnswers = answers.size();
+    private int countingAnswers;
 
     private List<QuestionCommentResponseDto> questionComments;
 
