@@ -1,5 +1,5 @@
 import React from 'react';
-// import profile from '../profile.jpeg';
+import profile from '../assets/profile.jpeg';
 
 function QuestionItem(props) {
   return (
@@ -55,7 +55,7 @@ function QuestionItem(props) {
               <div>
                 <a>
                   <div>
-                    {/* <img className="w-[16px] h-[16px]" src={profile}></img> */}
+                    <img className="w-[16px] h-[16px]" src={profile}></img>
                   </div>
                 </a>
               </div>
