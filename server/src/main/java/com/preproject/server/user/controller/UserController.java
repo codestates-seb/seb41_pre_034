@@ -4,7 +4,7 @@ import com.preproject.server.dto.PageResponseDto;
 import com.preproject.server.dto.ResponseDto;
 import com.preproject.server.user.dto.UserPatchDto;
 import com.preproject.server.user.dto.UserPostDto;
-import com.preproject.server.user.dto.UserResponseDto;
+import com.preproject.server.user.dto.UserSimpleResponseDto;
 import com.preproject.server.utils.StubDtoUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -39,7 +39,7 @@ public class UserController {
             @PageableDefault(page = 0, size = 10, sort = "userId", direction = Sort.Direction.DESC)
             Pageable pageable
     ) {
-        Page<UserResponseDto> userResponseDtoPage =
+        Page<UserSimpleResponseDto> userResponseDtoPage =
                 stubDtoUtils.createUserResponseDtoPage(pageable);
         PageResponseDto response = PageResponseDto.of(
                 userResponseDtoPage.getContent()

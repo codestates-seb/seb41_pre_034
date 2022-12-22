@@ -12,6 +12,7 @@ import com.preproject.server.question.dto.QuestionResponseDto;
 import com.preproject.server.question.dto.QuestionVoteResponseDto;
 import com.preproject.server.tag.dto.TagResponseDto;
 import com.preproject.server.user.dto.UserResponseDto;
+import com.preproject.server.user.dto.UserSimpleResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -48,9 +49,10 @@ public class StubDtoUtils {
         );
     }
 
-    /* User create 응답 데이터 */
-    public UserResponseDto createUserDto() {
-        return new UserResponseDto(
+    /* User 전체 조회시 Response
+    *  전체 조회시 User의 작성 질문과 답변까지 응답 되어 불필요한 데이터 제거 */
+    public UserSimpleResponseDto createUsersResponseDto() {
+        return new UserSimpleResponseDto(
                 1L,
                 "test@test.com",
                 "testUser",
@@ -58,19 +60,29 @@ public class StubDtoUtils {
                 UserStatus.ACTIVITY.toString(),
                 LoginType.BASIC.toString(),
                 LocalDateTime.now(),
+                LocalDateTime.now());
+    }
+
+    /* User create 응답 데이터 */
+    public UserSimpleResponseDto createUserDto() {
+        return new UserSimpleResponseDto(
+                1L,
+                "test@test.com",
+                "testUser",
+                true,
+                UserStatus.ACTIVITY.toString(),
+                LoginType.BASIC.toString(),
                 LocalDateTime.now(),
-                new ArrayList<>(),
-                new ArrayList<>(),
-                new ArrayList<>()
+                LocalDateTime.now()
         );
     }
 
     /* 전체 유저 조회 응답 데이터*/
-    public Page<UserResponseDto> createUserResponseDtoPage(Pageable pageable) {
-        List<UserResponseDto> userResponseDto = List.of(
-                createUserResponseDto(),
-                createUserResponseDto(),
-                createUserResponseDto());
+    public Page<UserSimpleResponseDto> createUserResponseDtoPage(Pageable pageable) {
+        List<UserSimpleResponseDto> userResponseDto = List.of(
+                createUsersResponseDto(),
+                createUsersResponseDto(),
+                createUsersResponseDto());
 
         return new PageImpl<>(
                 userResponseDto,
