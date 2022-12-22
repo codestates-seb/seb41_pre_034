@@ -40,7 +40,7 @@ public class TagController {
 
     @GetMapping
     public ResponseEntity getTags(
-            @PageableDefault(page = 0, size = 10, sort = "tagId", direction = Sort.Direction.DESC)
+            @PageableDefault(page = 0, size = 36, sort = "tagId", direction = Sort.Direction.DESC)
             Pageable pageable
     ) {
         Page<TagResponseDto> tagResponseDtoPage =
