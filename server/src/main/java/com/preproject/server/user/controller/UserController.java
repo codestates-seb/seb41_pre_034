@@ -2,6 +2,7 @@ package com.preproject.server.user.controller;
 
 import com.preproject.server.dto.PageResponseDto;
 import com.preproject.server.dto.ResponseDto;
+import com.preproject.server.user.dto.UserPatchDto;
 import com.preproject.server.user.dto.UserPostDto;
 import com.preproject.server.user.dto.UserResponseDto;
 import com.preproject.server.utils.StubDtoUtils;
@@ -57,15 +58,17 @@ public class UserController {
     ) {
         return new ResponseEntity<>(
                 ResponseDto.of(stubDtoUtils.createUserDto()),
-                HttpStatus.OK
+                HttpStatus.CREATED
         );
     }
 
     /* 사용자 정보 수정 */
     @PatchMapping("/{userId}")
     public ResponseEntity patchUser(
-            @PathVariable("userId") Long userId
+            @PathVariable("userId") Long userId,
+            @RequestBody UserPatchDto userPatchDto
     ) {
+
         return new ResponseEntity<>(
                 ResponseDto.of(stubDtoUtils.createUserResponseDto()),
                 HttpStatus.OK
