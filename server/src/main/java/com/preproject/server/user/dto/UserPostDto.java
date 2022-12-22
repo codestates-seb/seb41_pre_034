@@ -23,4 +23,7 @@ public class UserPostDto {
     @NotBlank
     private String displayName;
 
+    @NotBlank
+    private Boolean emailNotice;
+
 }
