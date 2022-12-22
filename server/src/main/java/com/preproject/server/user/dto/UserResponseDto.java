@@ -31,7 +31,7 @@ public class UserResponseDto {
 
     private LocalDateTime updateAt;
 
-    // Todo 응답 데이터 불필요 부분 제거 검토
+    // Todo 최근 작성 n 개 기준 출력
     private List<QuestionResponseDto> questions;
 
     private List<AnswerResponseDto> answers;
