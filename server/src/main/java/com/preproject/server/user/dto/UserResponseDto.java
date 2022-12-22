@@ -31,6 +31,7 @@ public class UserResponseDto {
 
     private LocalDateTime updateAt;
 
+    // Todo 응답 데이터 불필요 부분 제거 검토
     private List<QuestionResponseDto> questions;
 
     private List<AnswerResponseDto> answers;
