@@ -32,6 +32,10 @@ public class Tag {
     @Column(nullable = false)
     private String tag;
 
+    @Setter
+    @Column(nullable = true)
+    private String description;
+
     @Column(nullable = false, insertable = false, updatable = false,
             columnDefinition = "datetime default CURRENT_TIMESTAMP")
     @CreatedDate

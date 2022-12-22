@@ -15,6 +15,8 @@ public class TagResponseDto {
 
     private String tag;
 
+    private String description;
+
     private LocalDateTime createAt;
 
 }
