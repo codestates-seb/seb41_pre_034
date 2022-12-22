@@ -3,6 +3,7 @@ package com.preproject.server.tag.entity;
 
 import com.preproject.server.question.entity.QuestionTag;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
@@ -22,7 +23,17 @@ import java.util.List;
 }, name = "TAGS")
 @EntityListeners(AuditingEntityListener.class)
 @Entity
+@NoArgsConstructor
 public class Tag {
+
+    /* 생성자 */
+    public Tag(
+            String tag,
+            String description
+    ) {
+        this.tag = tag;
+        this.description = description;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

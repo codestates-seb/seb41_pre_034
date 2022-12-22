@@ -2,6 +2,7 @@ package com.preproject.server.answer.entity;
 
 import com.preproject.server.user.entity.User;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
@@ -19,7 +20,15 @@ import java.time.LocalDateTime;
 })
 @EntityListeners(AuditingEntityListener.class)
 @Entity
+@NoArgsConstructor
 public class AnswerComment {
+    /* 생성자 */
+    public AnswerComment(
+            String comment
+    ) {
+        this.comment = comment;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long answerCommentId;

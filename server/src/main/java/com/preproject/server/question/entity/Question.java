@@ -5,6 +5,7 @@ import com.preproject.server.answer.entity.Answer;
 import com.preproject.server.constant.QuestionStatus;
 import com.preproject.server.user.entity.User;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
@@ -24,7 +25,17 @@ import java.util.List;
 },name="QUESTIONS")
 @EntityListeners(AuditingEntityListener.class)
 @Entity
+@NoArgsConstructor
 public class Question {
+
+    /* 생성자 */
+    public Question(
+            String title,
+            String body
+    ) {
+        this.title = title;
+        this.body = body;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -9,6 +9,7 @@ import com.preproject.server.question.entity.Question;
 import com.preproject.server.question.entity.QuestionComment;
 import com.preproject.server.question.entity.QuestionVote;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
@@ -28,7 +29,22 @@ import java.util.List;
 }, name = "USERS")
 @EntityListeners(AuditingEntityListener.class)
 @Entity
+@NoArgsConstructor
 public class User {
+
+    /* 생성자 */
+    public User(
+            String email,
+            String password,
+            String displayName,
+            Boolean emailNotice
+    ) {
+        this.email = email;
+        this.password = password;
+        this.displayName = displayName;
+        this.emailNotice = emailNotice;
+        this.userStatus = UserStatus.ACTIVITY;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

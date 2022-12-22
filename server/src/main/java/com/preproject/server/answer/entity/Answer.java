@@ -3,6 +3,7 @@ package com.preproject.server.answer.entity;
 import com.preproject.server.question.entity.Question;
 import com.preproject.server.user.entity.User;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
@@ -22,7 +23,14 @@ import java.util.List;
 })
 @EntityListeners(AuditingEntityListener.class)
 @Entity
+@NoArgsConstructor
 public class Answer {
+    /* 생성자 */
+    public Answer(
+            String body
+    ) {
+        this.body = body;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -20,7 +20,13 @@ import java.time.LocalDateTime;
 })
 @EntityListeners(AuditingEntityListener.class)
 @Entity
+
 public class AnswerVote {
+    /* 생성자 */
+    public AnswerVote() {
+        this.voteStatus = VoteStatus.NONE;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long answerVoteId;

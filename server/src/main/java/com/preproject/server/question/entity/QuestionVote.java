@@ -22,6 +22,11 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 public class QuestionVote {
+    /* 생성자 */
+    public QuestionVote() {
+        this.voteStatus = VoteStatus.NONE;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long questionVoteId;
@@ -29,7 +34,7 @@ public class QuestionVote {
     @Setter
     @Enumerated(value = EnumType.STRING)
     @Column
-    private VoteStatus voteStatus = VoteStatus.NONE;
+    private VoteStatus voteStatus;
 
     @Column(nullable = false, insertable = false, updatable = false,
             columnDefinition = "datetime default CURRENT_TIMESTAMP")
