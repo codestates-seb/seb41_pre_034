@@ -33,8 +33,11 @@ public class AnswerVoteController {
             @PathVariable("answerVoteId") Long answerVoteId,
             @RequestBody AnswerVotePatchDto answerVotePatchDto
     ) {
+        AnswerVoteResponseDto response =
+                stubDtoUtils.createAnswerVoteResponseDto();
+        response.setVoteStatus("DOWN");
         return new ResponseEntity<>(
-                ResponseDto.of(stubDtoUtils.createAnswerVoteResponseDto()),
+                ResponseDto.of(response),
                 HttpStatus.OK);
     }
 }
