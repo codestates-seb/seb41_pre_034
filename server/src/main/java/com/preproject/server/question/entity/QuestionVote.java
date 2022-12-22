@@ -26,6 +26,7 @@ public class QuestionVote {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long questionVoteId;
 
+    @Setter
     @Enumerated(value = EnumType.STRING)
     @Column
     private VoteStatus voteStatus = VoteStatus.NONE;

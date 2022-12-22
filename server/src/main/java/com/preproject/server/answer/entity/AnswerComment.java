@@ -24,6 +24,7 @@ public class AnswerComment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long answerCommentId;
 
+    @Setter
     @Column(nullable = false)
     private String comment;
 

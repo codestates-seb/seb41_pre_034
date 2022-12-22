@@ -29,12 +29,15 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long questionId;
 
+    @Setter
     @Column(nullable = false)
     private String title;
 
+    @Setter
     @Column(nullable = false, columnDefinition = "LONGTEXT")
     private String body;
 
+    @Setter
     @Enumerated(value = EnumType.STRING)
     @Column
     private QuestionStatus questionStatus = QuestionStatus.OPENED;
