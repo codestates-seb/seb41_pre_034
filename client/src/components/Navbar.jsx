@@ -2,6 +2,7 @@ import React from 'react';
 import SkyButton from './buttons/SkyButton';
 import BlueButton from './buttons/BlueButton';
 import profile from '../assets/profile.jpeg';
+import Inputbox from './Inputbox';
 
 function Navbar(props) {
   const dummyButtonImageColor = '#525960';
@@ -87,6 +88,9 @@ function Navbar(props) {
             })}
           </ol>
           {/* 검색창 자리 */}
+          <div className="py-0 px-[8px] shrink-[10000] grow items-center flex w-full">
+            <Inputbox></Inputbox>
+          </div>
           <nav className="h-full overflow-x-auto pr-3 ml-auto align-baseline">
             <ol className="flex h-full overflow-x-auto ml-auto list-none items-center">
               {props.isLogin ? (
