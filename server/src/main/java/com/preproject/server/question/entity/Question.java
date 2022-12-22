@@ -25,6 +25,7 @@ import java.util.List;
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 public class Question {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long questionId;
@@ -36,6 +37,10 @@ public class Question {
     @Setter
     @Column(nullable = false, columnDefinition = "LONGTEXT")
     private String body;
+
+    @Setter
+    @Column(nullable = false)
+    private int viewCounting;
 
     @Setter
     @Enumerated(value = EnumType.STRING)
