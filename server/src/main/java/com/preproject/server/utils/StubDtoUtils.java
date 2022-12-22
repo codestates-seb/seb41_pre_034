@@ -167,7 +167,7 @@ public class StubDtoUtils {
         );
     }
 
-    /* 질문 조회 응답 데이터 */
+    /* 답변 조회 응답 데이터 */
     public AnswerResponseDto createAnswerResponseDto() {
         return new AnswerResponseDto(
                 1L,
@@ -186,7 +186,7 @@ public class StubDtoUtils {
     }
 
 
-    /* 질문 생성 응답 데이터 */
+    /* 답변 생성 응답 데이터 */
     public AnswerResponseDto createAnswerDto() {
         return new AnswerResponseDto(
                 1L,
