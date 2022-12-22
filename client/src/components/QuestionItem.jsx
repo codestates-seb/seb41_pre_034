@@ -30,8 +30,8 @@ function QuestionItem(props) {
           for the user logging in. As per this
           https://github.com/Azure-Samples/ms-identity-javascript-react-tutorial/tree/main/5-AccessControl/1-call-api-roles
         </div>
-        <div className="flex">
-          <div className="flex w-min h-min">
+        <div className="flex h-[38.594px]">
+          <div className="flex">
             <ul className="flex list-none ml-0 mt-[4px]">
               <li className="mr-[4px]">
                 <a className="border-solid border-[#e1ecf4] bg-[#e1ecf4] text-[#39739d] hover:bg-[#B3D3EA] rounded text-xs py-[4.8px] px-[6px] border-[1px] mr-[2px] mb-[2px]">
@@ -50,27 +50,27 @@ function QuestionItem(props) {
               </li>
             </ul>
           </div>
-          <div className="flex ml-[auto] text-[12px] gap-1 h-[38.594px] items-center">
-            <div>
-              <a className="m-[2px]">
-                <div>
-                  <img className="w-[24px] h-[24px]" src={profile}></img>
-                </div>
-              </a>
-            </div>
-            <div className="flex">
+          <div className="flex ml-[auto] items-center">
+            <div className="flex text-[12px] gap-1 h-[16px]">
               <div>
-                <a className="m-[2px]">z1nun</a>
+                <a>
+                  <div>
+                    <img className="w-[16px] h-[16px]" src={profile}></img>
+                  </div>
+                </a>
               </div>
-              <ul className="list-none ml-0">
-                <li>
-                  <span className="font-bold">80k</span>
-                </li>
-              </ul>
+              <div className="flex">
+                <div>
+                  <a className="m-[2px]">z1nun</a>
+                </div>
+                <ul className="list-none ml-0">
+                  <li>
+                    <span className="font-bold">80k</span>
+                  </li>
+                </ul>
+              </div>
+              <time className="flex ml-[2px]">modified 7 secs ago</time>
             </div>
-            <time className="flex items-center ml-[2px]">
-              modified 7 secs ago
-            </time>
           </div>
         </div>
       </div>
