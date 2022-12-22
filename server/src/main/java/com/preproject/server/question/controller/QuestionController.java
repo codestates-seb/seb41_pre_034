@@ -1,8 +1,12 @@
 package com.preproject.server.question.controller;
 
+import com.preproject.server.dto.ResponseDto;
+import com.preproject.server.question.dto.QuestionPostDto;
+import com.preproject.server.question.dto.QuestionResponseDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,12 +14,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/questions")
 public class QuestionController {
 
-//    질문 생성
+    //    질문 생성
     @PostMapping
     public ResponseEntity postQuestion(
-            // Todo QuestionPostDto
-    ){
-        return null;
+            @RequestBody QuestionPostDto questionPostDto
+    ) {
+        return new ResponseEntity<>(
+                ResponseDto.of(new QuestionResponseDto()),
+                HttpStatus.CREATED);
     }
 
 //    질문 전체 삭제
@@ -35,6 +41,7 @@ public class QuestionController {
     public ResponseEntity patchQuestion(@PathVariable Long questionId
         // Todo QuestionPatchDto
     ){
+
         return null;
     }
 
