@@ -2,8 +2,8 @@ import React from 'react';
 
 function Footer(props) {
   return (
-    <footer className="bg-[#232629]">
-      <div className="flex mx-[auto] w-[1240px] h-[322px] mx-[36.5px] p-[12px] pt-[32px] text-[13px] font-[500]">
+    <footer className="bg-[#232629] w-full">
+      <div className="flex max-w-[1264px] mx-[auto] h-[322px] p-[12px] pt-[32px] text-[13px] font-[500]">
         <div className="w-[64px] h-[258px] mb-[32px] bt-[-12px]">
           {/* 로고 이미지 클릭시 홈화면으로 이동 */}
           <a>
