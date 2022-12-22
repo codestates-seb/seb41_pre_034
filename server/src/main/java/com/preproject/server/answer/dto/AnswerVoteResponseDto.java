@@ -9,6 +9,10 @@ import lombok.*;
 @Setter
 public class AnswerVoteResponseDto {
 
+    private Long answerVoteId;
+
     private Long userId;
+
+    private String voteStatus;
 
 }
