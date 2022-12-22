@@ -4,7 +4,6 @@ import com.preproject.server.dto.PageResponseDto;
 import com.preproject.server.dto.ResponseDto;
 import com.preproject.server.question.dto.QuestionPostDto;
 import com.preproject.server.question.dto.QuestionResponseDto;
-import com.preproject.server.user.dto.UserResponseDto;
 import com.preproject.server.utils.StubDtoUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -32,42 +31,47 @@ public class QuestionController {
                 HttpStatus.CREATED);
     }
 
-//    질문 전체 삭제
+    //    질문 전체 삭제
     @DeleteMapping
-    public ResponseEntity deleteQuestion(){
-        return ResponseEntity.ok().build();
+    public ResponseEntity deleteQuestion() {
+        return ResponseEntity.noContent().build();
     }
 
-//    질문 단건 조회
+    //    질문 단건 조회
     @GetMapping("/{qestionId}")
-    public ResponseEntity getQuestion(@PathVariable Long questionId){
+    public ResponseEntity getQuestion(
+            @PathVariable Long questionId
+    ) {
         return new ResponseEntity<>(
                 ResponseDto.of(stubDtoUtils.createQuestionResponseDto()),
                 HttpStatus.OK);
     }
 
-//    질문 수정
+    //    질문 수정
     @PatchMapping("/{questionId}")
-    public ResponseEntity patchQuestion(@PathVariable Long questionId
-        ,@RequestBody QuestionPostDto questionPostDto
-    ){
+    public ResponseEntity patchQuestion(
+            @PathVariable Long questionId,
+            @RequestBody QuestionPostDto questionPostDto
+    ) {
         return new ResponseEntity<>(
                 ResponseDto.of(stubDtoUtils.createQuestionResponseDto()),
                 HttpStatus.OK);
     }
 
-//    질문 삭제
+    //    질문 삭제
     @DeleteMapping("/{questionId}")
-    public ResponseEntity deleteQuestion(@PathVariable Long questionId){
-        return ResponseEntity.ok().build();
+    public ResponseEntity deleteQuestion(
+            @PathVariable Long questionId
+    ) {
+        return ResponseEntity.noContent().build();
     }
 
-//    질문 전체 조회 페이지
+    //    질문 전체 조회 페이지
     @GetMapping
     public ResponseEntity getQuestions(
             @PageableDefault(page = 0, size = 10, sort = "questionId", direction = Sort.Direction.DESC)
             Pageable pageable
-    ){
+    ) {
         Page<QuestionResponseDto> questionResponseDtoPage =
                 stubDtoUtils.createQuestionResponseDtoPage(pageable);
         PageResponseDto response = PageResponseDto.of(

@@ -78,7 +78,7 @@ public class UserController {
     /* 사용자 전체 삭제 */
     @DeleteMapping
     public ResponseEntity deleteUsers() {
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     /* 사용자 삭제 */
@@ -86,6 +86,6 @@ public class UserController {
     public ResponseEntity deleteUser(
             @PathVariable("userId") Long userId
     ) {
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }
