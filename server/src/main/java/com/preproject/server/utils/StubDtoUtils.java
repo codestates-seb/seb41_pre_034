@@ -161,7 +161,9 @@ public class StubDtoUtils {
                 new ArrayList<>(),
                 0,
                 new ArrayList<>(),
-                new ArrayList<>()
+                List.of(createTagResponseDto(),
+                        createTagResponseDto(),
+                        createTagResponseDto())
         );
     }
 
