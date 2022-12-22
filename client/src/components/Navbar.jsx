@@ -1,4 +1,6 @@
 import React from 'react';
+import SkyButton from './buttons/SkyButton';
+import BlueButton from './buttons/BlueButton';
 
 function Navbar(props) {
   return (
@@ -29,8 +31,21 @@ function Navbar(props) {
             })}
           </ol>
           {/* 검색창 자리 */}
-          {/* 로그인 */}
-          {/* 회원가입 */}
+          {/* 로그인[프로필 버튼, 더미버튼 5개], 비로그인[로그인 버튼, 회원가입 버튼] */}
+          <nav className="h-full overflow-x-auto pr-3 ml-auto align-baseline">
+            <ol className="flex h-full overflow-x-auto ml-auto list-none">
+              {props.isLogin ? (
+                <>
+                  <li className="inline-flex py-[8px]">
+                    <SkyButton text={'Log in'}></SkyButton>
+                  </li>
+                  <li className="inline-flex py-[8px] px-[4px]">
+                    <BlueButton text={'Sign up'}></BlueButton>
+                  </li>
+                </>
+              ) : null}
+            </ol>
+          </nav>
         </div>
       </header>
     </>
