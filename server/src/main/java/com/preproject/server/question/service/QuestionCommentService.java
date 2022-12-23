@@ -2,6 +2,7 @@ package com.preproject.server.question.service;
 
 import com.preproject.server.constant.ErrorCode;
 import com.preproject.server.exception.ServiceLogicException;
+import com.preproject.server.question.dto.QuestionResponseDto;
 import com.preproject.server.question.entity.Question;
 import com.preproject.server.question.entity.QuestionComment;
 import com.preproject.server.question.repository.QuestionCommentRepository;
@@ -11,6 +12,7 @@ import com.preproject.server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
@@ -31,6 +33,7 @@ public class QuestionCommentService {
         QuestionComment save = questionCommentRepository.save(questionComment);
 
         return save;
+
     }
 
         public QuestionComment findVerifiedQuestionComment(long questionCommentId) {
@@ -47,6 +50,7 @@ public class QuestionCommentService {
         return findUser.orElseThrow(
                 () -> new ServiceLogicException(ErrorCode.QUESTION_NOT_FOUND)
         );
+
     }
 
 

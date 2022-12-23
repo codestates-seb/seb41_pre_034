@@ -21,7 +21,6 @@ public class QuestionVoteService {
 
     private final QuestionVoteRepository questionVoteRepository;
 
-
     public QuestionVote post(QuestionVote questionVote, Long questionId) {
 
         QuestionVote findQuestionVote = findVerifiedQuestionVote(questionId);

@@ -5,6 +5,7 @@ import com.preproject.server.constant.QuestionStatus;
 import com.preproject.server.exception.ServiceLogicException;
 import com.preproject.server.question.dto.QuestionResponseDto;
 import com.preproject.server.question.entity.Question;
+import com.preproject.server.question.entity.QuestionComment;
 import com.preproject.server.question.entity.QuestionTag;
 import com.preproject.server.question.repository.QuestionRepository;
 import com.preproject.server.tag.entity.Tag;
@@ -55,10 +56,10 @@ public class QuestionService {
         questionRepository.deleteAll();
     }
 
+
     public Question get(Long questionId) {
 
         Question question = findVerifiedQuestion(questionId);
-
         question.setViewCounting(question.getViewCounting()+1);
         return question;
     }
@@ -69,11 +70,9 @@ public class QuestionService {
     }
 
 
-
-
     public List<Question> findAll() {
-       List<Question> questionList = questionRepository.findAll();
-       return questionList;
+        List<Question> questionList = questionRepository.findAll();
+        return questionList;
     }
 
     public Question patch(Long questionId, Question question) {
@@ -100,10 +99,13 @@ public class QuestionService {
 
         return findQuestion;
     }
+
     private User verifiedUserById(Long userId) {
         Optional<User> findUser = userRepository.findById(userId);
         return findUser.orElseThrow(
                 () -> new ServiceLogicException(ErrorCode.QUESTION_NOT_FOUND)
         );
     }
+
 }
+

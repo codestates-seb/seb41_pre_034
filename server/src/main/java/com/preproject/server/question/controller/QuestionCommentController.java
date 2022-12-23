@@ -27,6 +27,7 @@ public class QuestionCommentController {
     private final QuestionCommentService questionCommentService;
     private final UserService userService;
     private final QuestionService questionService;
+
     // 질문의 comment 생성
     @PostMapping("/{questionId}")
     public ResponseEntity postQuestionComment(

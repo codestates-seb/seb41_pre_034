@@ -20,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +35,7 @@ public class QuestionController {
     private final QuestionService questionService;
     private final QuestionMapper questionMapper;
     private final UserService userService;
+
     //    질문 생성
     @PostMapping
     public ResponseEntity postQuestion(
@@ -57,6 +59,7 @@ public class QuestionController {
     }
 
     //    질문 단건 조회
+    @Transactional(readOnly = true)
     @GetMapping("/{questionId}")
     @Transactional(readOnly = true)
     public ResponseEntity getQuestion(
