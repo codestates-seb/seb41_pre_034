@@ -2,6 +2,8 @@ package com.preproject.server.user.service;
 
 
 import com.preproject.server.constant.ErrorCode;
+import com.preproject.server.constant.LoginType;
+import com.preproject.server.constant.UserStatus;
 import com.preproject.server.exception.ServiceLogicException;
 import com.preproject.server.user.entity.User;
 import com.preproject.server.user.repository.UserRepository;
@@ -33,6 +35,8 @@ public class UserService {
 
     /* 사용자 생성 */
     public User createUser(User user) {
+        user.setUserStatus(UserStatus.ACTIVITY);
+        user.setLoginType(LoginType.BASIC);
         String email = user.getEmail();
         verifyUserByEmail(email);
 
@@ -52,7 +56,9 @@ public class UserService {
 
     /* 사용자 단건 조회 */
     public User findUser(Long userId) {
-        return verifiedUserById(userId);
+        User user = verifiedUserById(userId);
+
+        return user;
     }
 
     /* 사용자 전체 조회 페이징 */
@@ -80,14 +86,14 @@ public class UserService {
         return findUser;
     }
 
-    private void verifyUserByEmail(String email) {
+    public void verifyUserByEmail(String email) {
         Optional<User> findUser = userRepository.findByEmail(email);
         if (findUser.isPresent()) {
             throw new ServiceLogicException(ErrorCode.USER_EXISTS);
         }
     }
 
-    private User verifiedUserById(Long userId) {
+    public User verifiedUserById(Long userId) {
         Optional<User> findUser = userRepository.findById(userId);
         return findUser.orElseThrow(
                 () -> new ServiceLogicException(ErrorCode.USER_NOT_FOUND)
