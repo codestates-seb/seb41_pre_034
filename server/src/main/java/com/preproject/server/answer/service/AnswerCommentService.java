@@ -6,7 +6,6 @@ import com.preproject.server.answer.repository.AnswerCommentRepository;
 import com.preproject.server.answer.repository.AnswerRepository;
 import com.preproject.server.constant.ErrorCode;
 import com.preproject.server.exception.ServiceLogicException;
-import com.preproject.server.question.repository.QuestionCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,22 +16,27 @@ import java.util.Optional;
 public class AnswerCommentService {
     private final AnswerRepository answerRepository;
     private final AnswerCommentRepository answerCommentRepository;
-    private final QuestionCommentRepository questionCommentRepository;
 
 
-    public AnswerComment createComment(AnswerComment answerComment, Long answerId) {
+    public AnswerComment createComment(
+            AnswerComment answerComment,
+            Long answerId
+    ) {
         Answer answer = verifiedAnswerById(answerId);
+        answerComment.addAnswer(answer);
         return answerCommentRepository.save(answerComment);
     }
 
-    public AnswerComment updateComment(AnswerComment answerComment, Long answerId) {
-        Answer answer= verifiedAnswerById(answerId);
+    public AnswerComment updateComment(
+            AnswerComment answerComment,
+            Long answerCommentId
+    ) {
+        AnswerComment findEntity =
+                verifiedAnswerCommentById(answerCommentId);
 
-        Optional.ofNullable(answerComment.getComment());
-        // TODO
-//                .ifPresent(answerComment.setComment());
-
-        return answerCommentRepository.save(answerComment);
+        Optional.ofNullable(answerComment.getComment())
+                .ifPresent(ac -> findEntity.setComment(ac));
+        return findEntity;
     }
 
     public void delete(Long answerCommentId) {
@@ -41,14 +45,16 @@ public class AnswerCommentService {
     }
 
     public Answer verifiedAnswerById(Long answerId) {
-        Optional<Answer> findAnswer = answerRepository.findById(answerId);
+        Optional<Answer> findAnswer =
+                answerRepository.findById(answerId);
         return findAnswer.orElseThrow(
                 () -> new ServiceLogicException(ErrorCode.ANSWER_NOT_FOUND)
         );
     }
 
     public AnswerComment verifiedAnswerCommentById(Long answerCommentId) {
-        Optional<AnswerComment> findComment = answerCommentRepository.findById(answerCommentId);
+        Optional<AnswerComment> findComment =
+                answerCommentRepository.findById(answerCommentId);
         return findComment.orElseThrow(
                 () -> new ServiceLogicException(ErrorCode.ANSWER_NOT_FOUND)
         );

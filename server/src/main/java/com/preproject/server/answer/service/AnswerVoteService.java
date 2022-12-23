@@ -5,6 +5,7 @@ import com.preproject.server.answer.entity.AnswerVote;
 import com.preproject.server.answer.repository.AnswerRepository;
 import com.preproject.server.answer.repository.AnswerVoteRepository;
 import com.preproject.server.constant.ErrorCode;
+import com.preproject.server.constant.VoteStatus;
 import com.preproject.server.exception.ServiceLogicException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,15 +18,26 @@ public class AnswerVoteService {
     private final AnswerRepository answerRepository;
     private final AnswerVoteRepository answerVoteRepository;
 
-    public AnswerVote createVote(AnswerVote answerVote, Long answerId, Long answerVoteId) {
+    public AnswerVote createVote(
+            AnswerVote answerVote,
+            Long answerId
+    ) {
         Answer answer = verifiedAnswerById(answerId);
-        AnswerVote vote = verifiedAnswerVoteById(answerVoteId);
+        answerVote.addAnswer(answer);
         return answerVoteRepository.save(answerVote);
     }
 
-    public AnswerVote updateVote(AnswerVote answerVote, Long answerId, Long answerVoteId) {
-        Answer answer = verifiedAnswerById(answerId);
+    public AnswerVote updateVote(AnswerVote answerVote, Long answerVoteId) {
         AnswerVote vote = verifiedAnswerVoteById(answerVoteId);
+        VoteStatus comp = vote.getVoteStatus();
+        if (comp.equals(VoteStatus.NONE)) {
+
+        } else if (comp.equals(VoteStatus.DOWN)) {
+
+        } else {
+
+        }
+
         Optional.ofNullable(answerVote.getVoteStatus())
                 .ifPresent(voteStatus -> vote.setVoteStatus(voteStatus));
 
