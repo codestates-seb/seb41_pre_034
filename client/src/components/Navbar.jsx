@@ -65,7 +65,7 @@ function Navbar(props) {
 
   return (
     <>
-      <header className="box-border h-[50px] fixed left-0 top-0 min-w-[auto] shadow-md w-full z-[5050] bg-white	flex border-t-[3px] border-[#f48225] items-center">
+      <header className="box-border h-[50px] fixed left-0 top-0 min-w-[auto] shadow-md w-full z-[5050] bg-[#ffffff]	flex border-t-[3px] border-[#f48225] items-center">
         <div className="w-[97.2307692rem] max-w-[1264px] h-full flex my-0 mx-auto items-center box-border">
           <a
             href="#"
