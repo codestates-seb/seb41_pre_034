@@ -73,7 +73,7 @@ function Navbar(props) {
           >
             <span className="bg-no-repeat bg-left-bottom ml-0 w-[150px] h-[30px] mt-[-4px] inline-block bg-[url('https://cdn.sstatic.net/Img/unified/sprites.svg?v=fcc0ea44ba27')]"></span>
           </a>
-          <ol className="flex">
+          <ol className="flex min-w-[236px]">
             {['About', 'Products', 'For Teams'].map((item, index) => {
               return (
                 <li key={index} className="m-0 p-0">
@@ -87,12 +87,11 @@ function Navbar(props) {
               );
             })}
           </ol>
-          {/* 검색창 자리 */}
           <div className="py-0 px-[8px] shrink-[10000] grow items-center flex w-full">
             <Inputbox></Inputbox>
           </div>
           <nav className="h-full overflow-x-auto pr-3 ml-auto align-baseline">
-            <ol className="flex h-full overflow-x-auto ml-auto list-none items-center">
+            <ol className="flex h-full overflow-x-auto ml-auto list-none items-center min-w-[135px]">
               {props.isLogin ? (
                 <>
                   <li className="inline-flex h-full">
