@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 function Sidebar() {
   const [currentMenu, setCurrentMenu] = useState(0);
   // 클릭 이벤트가 발생하면 해당 li 요소로 focus가 이동한다
-  const menuArr = [{ name: 'Home' }, { name: 'Tags' }, { name: 'Users' }];
+  const menuArr = [
+    { name: 'Home', link: '/' },
+    { name: 'Tags', link: '/tags' },
+    { name: 'Users', link: '/users' },
+  ];
 
   const selectMenuHandler = (index) => {
     setCurrentMenu(index);
@@ -19,17 +24,19 @@ function Sidebar() {
           <ol>
             {menuArr.map((el, idx) => {
               return (
-                <li
-                  className={
-                    idx === currentMenu
-                      ? basicLiClassName +
-                        ` border-r-focused bg-focused font-focused`
-                      : basicLiClassName
-                  }
-                  onClick={() => selectMenuHandler(idx)}
-                >
-                  {el.name}
-                </li>
+                <Link to={el.link}>
+                  <li
+                    className={
+                      idx === currentMenu
+                        ? basicLiClassName +
+                          ` border-r-focused bg-focused font-focused`
+                        : basicLiClassName
+                    }
+                    onClick={() => selectMenuHandler(idx)}
+                  >
+                    {el.name}
+                  </li>
+                </Link>
               );
             })}
           </ol>
