@@ -4,6 +4,9 @@ import com.preproject.server.dto.ResponseDto;
 import com.preproject.server.question.dto.QuestionVotePatchDto;
 import com.preproject.server.question.dto.QuestionVotePostDto;
 import com.preproject.server.question.dto.QuestionVoteResponseDto;
+import com.preproject.server.question.entity.QuestionVote;
+import com.preproject.server.question.mapper.QuestionVoteMapper;
+import com.preproject.server.question.service.QuestionVoteService;
 import com.preproject.server.utils.StubDtoUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,14 +20,19 @@ public class QuestionVoteController {
 
     private final StubDtoUtils stubDtoUtils;
 
+    private final QuestionVoteMapper questionVoteMapper;
+    private final QuestionVoteService questionVoteService;
+
     //    질문의 추천 생성(UP/NONE/DOWN)
     @PostMapping("/{questionId}")
     public ResponseEntity postQuestionvote(
             @PathVariable Long questionId,
-            @RequestBody QuestionVotePostDto questionVotePostDto
-    ) {
+            @RequestBody QuestionVotePostDto questionVotePostDto) {
+        QuestionVote questionVote = questionVoteMapper.QuestionVotePostDtoToEntity(questionVotePostDto);
+        QuestionVote saved = questionVoteService.post(questionVote,questionId);
+
         return new ResponseEntity<>(
-                ResponseDto.of(stubDtoUtils.createQuestionVoteResponseDto()),
+                ResponseDto.of(questionVoteMapper.QuestionVoteEntityToDto(saved)),
                 HttpStatus.CREATED);
 
     }
@@ -33,11 +41,15 @@ public class QuestionVoteController {
     @PatchMapping("/vote/{questionVoteId}")
     public ResponseEntity patchQuestionvote(
             @PathVariable Long questionVoteId,
-            @RequestBody QuestionVotePatchDto questionVotePatchDto
-    ) {
+            @RequestBody QuestionVotePatchDto questionVotePatchDto) {
+
+        QuestionVote questionVote = questionVoteMapper.QUestionVotePatchDtoToEntity(questionVotePatchDto);
+
+        QuestionVote newQuestionVote = questionVoteService.patch(questionVote,questionVoteId);
+
         QuestionVoteResponseDto response =
-                stubDtoUtils.createQuestionVoteResponseDto();
-        response.setVoteStatus("DOWN");
+                questionVoteMapper.QuestionVoteEntityToDto(newQuestionVote);
+//        response.setVoteStatus("DOWN");
         return new ResponseEntity<>(
                 ResponseDto.of(response),
                 HttpStatus.OK);
