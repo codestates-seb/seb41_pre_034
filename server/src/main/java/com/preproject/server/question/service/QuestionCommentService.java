@@ -14,13 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class QuestionCommentService {
-
 
     private final QuestionCommentRepository questionCommentRepository;
 
@@ -33,27 +33,43 @@ public class QuestionCommentService {
         QuestionComment save = questionCommentRepository.save(questionComment);
 
         return save;
-    }
-
-    public void delete(Long questionCommentId) {
-        QuestionComment questionComment = findVerifiedMember(questionCommentId);
-        questionCommentRepository.delete(questionComment);
 
     }
 
-    public QuestionComment findVerifiedMember(long questionId) {
-        Optional<QuestionComment> optionalQuestionComment =
-                questionCommentRepository.findById(questionId);
-        QuestionComment findQuestionComment =
-                optionalQuestionComment.orElseThrow(() -> new ServiceLogicException(ErrorCode.QUESTION_NOT_FOUND));
+        public QuestionComment findVerifiedQuestionComment(long questionCommentId) {
+            Optional<QuestionComment> optionalQuestionComment =
+                    questionCommentRepository.findById(questionCommentId);
+            QuestionComment findQuestionComment =
+                    optionalQuestionComment.orElseThrow(() -> new ServiceLogicException(ErrorCode.QUESTION_NOT_FOUND));
 
-        return findQuestionComment;
-    }
+            return findQuestionComment;
+        }
 
     private User verifiedUserById(Long userId) {
         Optional<User> findUser = userRepository.findById(userId);
         return findUser.orElseThrow(
                 () -> new ServiceLogicException(ErrorCode.QUESTION_NOT_FOUND)
         );
+
+    }
+
+
+    public void delete(Long questionCommentId) {
+        QuestionComment findQuestionComment = findVerifiedQuestionComment(questionCommentId);
+        questionCommentRepository.delete(findQuestionComment);
+    }
+
+    public User findUser(Long userId) {
+        User user = verifiedUserById(userId);
+        return user;
+    }
+
+
+    public QuestionComment patch(QuestionComment questionComment, Long questionCommentId) {
+       QuestionComment findQuestionComment = findVerifiedQuestionComment(questionCommentId);
+       Optional.ofNullable(questionComment.getComment())
+                .ifPresent(comment -> findQuestionComment.setComment(comment));
+
+       return findQuestionComment;
     }
 }

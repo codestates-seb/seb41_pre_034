@@ -14,6 +14,7 @@ import com.preproject.server.user.service.UserService;
 import com.preproject.server.utils.StubDtoUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -21,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -59,6 +61,7 @@ public class QuestionController {
     //    질문 단건 조회
     @Transactional(readOnly = true)
     @GetMapping("/{questionId}")
+    @Transactional(readOnly = true)
     public ResponseEntity getQuestion(
             @PathVariable Long questionId) {
         Question question = questionService.get(questionId);
@@ -102,8 +105,10 @@ public class QuestionController {
     ) {
         List<Question> questionList = questionService.findAll();
         List<QuestionResponseDto> questionListToResponseDtoList = questionMapper.QuestionListToResponseDtoList(questionList);
+        List<QuestionResponseDto> questionResponseDto = questionListToResponseDtoList;
+
         Page<QuestionResponseDto> questionResponseDtoPage =
-                questionService.createQuestionResponseDtoPage(pageable,questionListToResponseDtoList);
+                new PageImpl<>(questionResponseDto, pageable, questionResponseDto.size());
         PageResponseDto response = PageResponseDto.of(
                 questionResponseDtoPage.getContent()
                 , questionResponseDtoPage);

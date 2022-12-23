@@ -52,8 +52,13 @@ public class QuestionCommentController {
             @PathVariable Long questionCommentId,
             @RequestBody QuestionCommentPatchDto questionCommentPatchDto
     ) {
+        QuestionComment questionComment = questionCommentMapper.QuestionCommentPatchDtoToEntity(questionCommentPatchDto);
+        User user = questionCommentService.findUser(questionCommentPatchDto.getUserId());
+        questionComment.setUser(user);
+        QuestionComment update = questionCommentService.patch(questionComment,questionCommentId);
+
         return new ResponseEntity<>(
-                ResponseDto.of(stubDtoUtils.createQuestionCommentResponseDto()),
+                ResponseDto.of(questionCommentMapper.QuestionCommentEntityToDto(update)),
                 HttpStatus.OK);
     }
 
@@ -66,3 +71,5 @@ public class QuestionCommentController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
+
+

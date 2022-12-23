@@ -75,27 +75,17 @@ public class QuestionService {
         return questionList;
     }
 
-    public Page<QuestionResponseDto> createQuestionResponseDtoPage(Pageable pageable, List<QuestionResponseDto> questionListToResponseDtoList) {
-
-        List<QuestionResponseDto> questionResponseDto = questionListToResponseDtoList;
-        return new PageImpl<>(
-                questionResponseDto,
-                pageable,
-                questionResponseDto.size()
-        );
-    }
-
     public Question patch(Long questionId, Question question) {
 
         Question findQuestion = findVerifiedQuestion(questionId);
 
-        Optional.ofNullable(findQuestion.getBody())
+        Optional.ofNullable(question.getBody())
                 .ifPresent(body -> findQuestion.setBody(body));
 
-        Optional.ofNullable(findQuestion.getTitle())
+        Optional.ofNullable(question.getTitle())
                 .ifPresent(title -> findQuestion.setTitle(title));
 
-
+//  to 태그 수정 미완성
 //          Toto Tag patch
 //        List<Tag> tagList = findQuestion.getQuestionTags().stream().map(questionTags -> {
 //                    QuestionTag questionTag = new QuestionTag();
@@ -110,11 +100,12 @@ public class QuestionService {
         return findQuestion;
     }
 
-
     private User verifiedUserById(Long userId) {
         Optional<User> findUser = userRepository.findById(userId);
         return findUser.orElseThrow(
                 () -> new ServiceLogicException(ErrorCode.QUESTION_NOT_FOUND)
         );
     }
+
 }
+
