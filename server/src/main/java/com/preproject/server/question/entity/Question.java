@@ -4,10 +4,7 @@ package com.preproject.server.question.entity;
 import com.preproject.server.answer.entity.Answer;
 import com.preproject.server.constant.QuestionStatus;
 import com.preproject.server.user.entity.User;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -49,6 +46,8 @@ public class Question {
     @Column(nullable = false, columnDefinition = "LONGTEXT")
     private String body;
 
+
+
     @Setter
     @Column(nullable = false)
     private int viewCounting;
@@ -67,6 +66,8 @@ public class Question {
             columnDefinition = "datetime default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP")
     @LastModifiedDate
     private LocalDateTime updateAt;
+
+
 
     /* 연관 관계 */
 
