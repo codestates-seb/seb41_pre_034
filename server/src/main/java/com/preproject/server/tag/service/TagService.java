@@ -1,4 +1,4 @@
-package com.preproject.server.tag;
+package com.preproject.server.tag.service;
 
 import com.preproject.server.tag.entity.Tag;
 import com.preproject.server.tag.repository.TagRepository;
