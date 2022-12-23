@@ -4,36 +4,27 @@ import com.preproject.server.answer.entity.Answer;
 import com.preproject.server.answer.entity.AnswerVote;
 import com.preproject.server.answer.repository.AnswerRepository;
 import com.preproject.server.answer.repository.AnswerVoteRepository;
+import com.preproject.server.constant.ErrorCode;
+import com.preproject.server.exception.ServiceLogicException;
 import com.preproject.server.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AnswerVoteService {
     private final AnswerRepository answerRepository;
-    private final UserRepository userRepository;
     private final AnswerVoteRepository answerVoteRepository;
 
-    public AnswerVoteService(AnswerRepository answerRepository,
-                         UserRepository userRepository,
-                             AnswerVoteRepository answerVoteRepository) {
-
-        this.answerRepository = answerRepository;
-        this.userRepository = userRepository;
-        this.answerVoteRepository = answerVoteRepository;
+    public AnswerVote createVote(AnswerVote answerVote) {
+        return answerVoteRepository.save(answerVote);
     }
-
-//    public AnswerVote answerVote(Long answerId, int vote) {
-//
-//    }
-
-
-    public Answer findVerifiedAnswer(Long answerId) {
-        Optional<Answer> optionalAnswer = answerRepository.findById(answerId);
-        // TODO: ExceptionCode
-        Answer findAnswer = optionalAnswer.orElseThrow();
-
-        return findAnswer;
+    public Answer verifiedAnswerById(Long answerId) {
+        Optional<Answer> findAnswer = answerRepository.findById(answerId);
+        return findAnswer.orElseThrow(
+                () -> new ServiceLogicException(ErrorCode.ANSWER_NOT_FOUND)
+        );
     }
 }
