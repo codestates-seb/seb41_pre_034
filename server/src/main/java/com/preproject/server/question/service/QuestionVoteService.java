@@ -1,19 +1,25 @@
 package com.preproject.server.question.service;
 
+import com.preproject.server.constant.ErrorCode;
+import com.preproject.server.exception.ServiceLogicException;
 import com.preproject.server.question.dto.QuestionVoteResponseDto;
 import com.preproject.server.question.entity.Question;
 import com.preproject.server.question.entity.QuestionVote;
 import com.preproject.server.question.repository.QuestionVoteRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
+@Transactional
 public class QuestionVoteService {
 
-    @Autowired
-    private QuestionVoteRepository questionVoteRepository;
+
+    private final QuestionVoteRepository questionVoteRepository;
 
     public QuestionVote post(QuestionVote questionVote, Long questionId) {
 
@@ -41,9 +47,9 @@ public class QuestionVoteService {
     public QuestionVote findVerifiedQuestionVote(long questionVoteId) {
         Optional<QuestionVote> optionalQuestionVote =
                 questionVoteRepository.findById(questionVoteId);
-        QuestionVote findQuestionVote =
-                optionalQuestionVote.orElseThrow(NullPointerException::new);
+        QuestionVote questionVote =
+                optionalQuestionVote.orElseThrow(() -> new ServiceLogicException(ErrorCode.QUESTION_NOT_FOUND));
 
-        return findQuestionVote;
+        return questionVote;
     }
 }
