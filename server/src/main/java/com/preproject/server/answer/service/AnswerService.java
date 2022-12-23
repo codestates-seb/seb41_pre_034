@@ -4,7 +4,6 @@ import com.preproject.server.answer.entity.Answer;
 import com.preproject.server.answer.repository.AnswerRepository;
 import com.preproject.server.constant.ErrorCode;
 import com.preproject.server.exception.ServiceLogicException;
-import com.preproject.server.user.entity.User;
 import com.preproject.server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,10 @@ public class AnswerService {
     private final AnswerRepository answerRepository;
     private final UserRepository userRepository;
 
-    public Answer createAnswer(Answer answer) {
+    public Answer createAnswer(
+            Answer answer
+    ) {
+        answer.setCheck(false);
         return answerRepository.save(answer);
     }
 
@@ -27,9 +29,11 @@ public class AnswerService {
         return answer;
     }
 
-    public void deleteAnswer() {
-        answerRepository.deleteAll();
+    public void deleteAnswer(Long answerId) {
+        answerRepository.deleteById(answerId);
     }
+
+
 
     public Answer updateAnswer(Answer answer) {
         Answer findAnswer = verifiedAnswerById(answer.getAnswerId());
@@ -40,9 +44,7 @@ public class AnswerService {
         Optional.ofNullable(answer.getCheck())
                 .ifPresent(answerCheck->findAnswer.setCheck(answerCheck));
 
-        Answer updatedQuestion = answerRepository.save(findAnswer);
-
-        return updatedQuestion;
+        return findAnswer;
     }
 
     public Answer verifiedAnswerById(Long answerId) {
