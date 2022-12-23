@@ -48,6 +48,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter
     private Long userId;
 
     @Setter
@@ -87,6 +88,10 @@ public class User {
             columnDefinition = "datetime default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP")
     @LastModifiedDate
     private LocalDateTime updateAt;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Setter
+    private List<String> roles = new ArrayList<>();
 
 
     /* 연관 관계 */
