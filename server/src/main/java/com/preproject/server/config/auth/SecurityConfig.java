@@ -54,7 +54,7 @@ public class SecurityConfig {
                         // User
                         .mvcMatchers(HttpMethod.GET,"/users").permitAll()
                         .mvcMatchers(HttpMethod.GET,"/users/**").hasRole("USER")
-                        .mvcMatchers(HttpMethod.POST,"/users/**").hasRole("USER")
+                        .mvcMatchers(HttpMethod.POST,"/users/**").permitAll()
                         .mvcMatchers(HttpMethod.PATCH,"/users/**").hasRole("USER")
                         .mvcMatchers(HttpMethod.DELETE,"/users/**").hasRole("USER")
                         // Question
