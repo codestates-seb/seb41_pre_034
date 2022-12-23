@@ -6,7 +6,6 @@ import com.preproject.server.answer.repository.AnswerRepository;
 import com.preproject.server.answer.repository.AnswerVoteRepository;
 import com.preproject.server.constant.ErrorCode;
 import com.preproject.server.exception.ServiceLogicException;
-import com.preproject.server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +17,32 @@ public class AnswerVoteService {
     private final AnswerRepository answerRepository;
     private final AnswerVoteRepository answerVoteRepository;
 
-    public AnswerVote createVote(AnswerVote answerVote) {
+    public AnswerVote createVote(AnswerVote answerVote, Long answerId, Long answerVoteId) {
+        Answer answer = verifiedAnswerById(answerId);
+        AnswerVote vote = verifiedAnswerVoteById(answerVoteId);
         return answerVoteRepository.save(answerVote);
     }
+
+    public AnswerVote updateVote(AnswerVote answerVote, Long answerId, Long answerVoteId) {
+        Answer answer = verifiedAnswerById(answerId);
+        AnswerVote vote = verifiedAnswerVoteById(answerVoteId);
+        Optional.ofNullable(answerVote.getVoteStatus())
+                .ifPresent(voteStatus -> vote.setVoteStatus(voteStatus));
+
+        return answerVote;
+    }
+
     public Answer verifiedAnswerById(Long answerId) {
         Optional<Answer> findAnswer = answerRepository.findById(answerId);
         return findAnswer.orElseThrow(
+                () -> new ServiceLogicException(ErrorCode.ANSWER_NOT_FOUND)
+        );
+    }
+
+    public AnswerVote verifiedAnswerVoteById(Long answerVoteId) {
+        Optional<AnswerVote> findVote = answerVoteRepository.findById(answerVoteId);
+        return findVote.orElseThrow(
+                // TODO: 수정 시 answerId가 아닌 answerVoteId를 가져오는게 맞는지
                 () -> new ServiceLogicException(ErrorCode.ANSWER_NOT_FOUND)
         );
     }

@@ -4,44 +4,53 @@ import com.preproject.server.answer.entity.Answer;
 import com.preproject.server.answer.entity.AnswerComment;
 import com.preproject.server.answer.repository.AnswerCommentRepository;
 import com.preproject.server.answer.repository.AnswerRepository;
-import com.preproject.server.user.repository.UserRepository;
+import com.preproject.server.constant.ErrorCode;
+import com.preproject.server.exception.ServiceLogicException;
+import com.preproject.server.question.repository.QuestionCommentRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AnswerCommentService {
     private final AnswerRepository answerRepository;
-    private final UserRepository userRepository;
     private final AnswerCommentRepository answerCommentRepository;
+    private final QuestionCommentRepository questionCommentRepository;
 
-    public AnswerCommentService(AnswerRepository answerRepository,
-                                UserRepository userRepository,
-                                AnswerCommentRepository answerCommentRepository) {
-        this.answerRepository = answerRepository;
-        this.userRepository = userRepository;
-        this.answerCommentRepository = answerCommentRepository;
-    }
 
-    public AnswerComment createAnswerComment(AnswerComment answerComment) {
+    public AnswerComment createComment(AnswerComment answerComment, Long answerId) {
+        Answer answer = verifiedAnswerById(answerId);
         return answerCommentRepository.save(answerComment);
     }
 
-    public AnswerComment findVerifiedAnswerComment (Long answerId) {
-        Optional<Answer> optionalAnswer = answerRepository.findById(answerId);
-        // TODO: ExceptionCode
-        Answer findAnswer = optionalAnswer.orElseThrow();
+    public AnswerComment updateComment(AnswerComment answerComment, Long answerId) {
+        Answer answer= verifiedAnswerById(answerId);
 
-        return null;
+        Optional.ofNullable(answerComment.getComment());
+        // TODO
+//                .ifPresent(answerComment.setComment());
+
+        return answerCommentRepository.save(answerComment);
     }
 
-//    public AnswerComment updateAnswerComment(AnswerComment answerComment) {
-//        AnswerComment findComment = findVerifiedAnswer()
-//    }
+    public void delete(Long answerCommentId) {
+        AnswerComment comment = verifiedAnswerCommentById(answerCommentId);
+        answerCommentRepository.delete(comment);
+    }
 
-    public void verfiyExistAnswer(Long answerId) {
-        Optional<Answer> answer = answerRepository.findById(answerId);
-        if (answer.isPresent()) { // TODO: ExceptionCode }
-        }
+    public Answer verifiedAnswerById(Long answerId) {
+        Optional<Answer> findAnswer = answerRepository.findById(answerId);
+        return findAnswer.orElseThrow(
+                () -> new ServiceLogicException(ErrorCode.ANSWER_NOT_FOUND)
+        );
+    }
+
+    public AnswerComment verifiedAnswerCommentById(Long answerCommentId) {
+        Optional<AnswerComment> findComment = answerCommentRepository.findById(answerCommentId);
+        return findComment.orElseThrow(
+                () -> new ServiceLogicException(ErrorCode.ANSWER_NOT_FOUND)
+        );
     }
 }

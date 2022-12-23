@@ -1,7 +1,10 @@
 package com.preproject.server.answer.controller;
 
 import com.preproject.server.answer.dto.*;
+import com.preproject.server.answer.entity.Answer;
 import com.preproject.server.dto.ResponseDto;
+import com.preproject.server.user.entity.User;
+import com.preproject.server.user.service.UserService;
 import com.preproject.server.utils.StubDtoUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +18,7 @@ public class AnswerVoteController {
 
     private final StubDtoUtils stubDtoUtils;
 
+    private final UserService userService;
 
     // 1' 답변의 추천 생성
     @PostMapping("/{answerId}")
@@ -22,6 +26,9 @@ public class AnswerVoteController {
             @PathVariable("answerId") Long answerId,
             @RequestBody AnswerVotePostDto answerVotePostDto
     ) {
+        User findUser = userService.verifiedUserById(answerVotePostDto.getUserId());
+
+        // TODO: response 추가
         return new ResponseEntity<>(
                 ResponseDto.of(stubDtoUtils.createAnswerVoteResponseDto()),
                 HttpStatus.CREATED);
