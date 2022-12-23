@@ -4,36 +4,58 @@ import com.preproject.server.answer.entity.Answer;
 import com.preproject.server.answer.entity.AnswerVote;
 import com.preproject.server.answer.repository.AnswerRepository;
 import com.preproject.server.answer.repository.AnswerVoteRepository;
-import com.preproject.server.user.repository.UserRepository;
+import com.preproject.server.constant.ErrorCode;
+import com.preproject.server.constant.VoteStatus;
+import com.preproject.server.exception.ServiceLogicException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AnswerVoteService {
     private final AnswerRepository answerRepository;
-    private final UserRepository userRepository;
     private final AnswerVoteRepository answerVoteRepository;
 
-    public AnswerVoteService(AnswerRepository answerRepository,
-                         UserRepository userRepository,
-                             AnswerVoteRepository answerVoteRepository) {
-
-        this.answerRepository = answerRepository;
-        this.userRepository = userRepository;
-        this.answerVoteRepository = answerVoteRepository;
+    public AnswerVote createVote(
+            AnswerVote answerVote,
+            Long answerId
+    ) {
+        Answer answer = verifiedAnswerById(answerId);
+        answerVote.addAnswer(answer);
+        return answerVoteRepository.save(answerVote);
     }
 
-//    public AnswerVote answerVote(Long answerId, int vote) {
-//
-//    }
+    public AnswerVote updateVote(AnswerVote answerVote, Long answerVoteId) {
+        AnswerVote vote = verifiedAnswerVoteById(answerVoteId);
+        VoteStatus comp = vote.getVoteStatus();
+        if (comp.equals(VoteStatus.NONE)) {
 
+        } else if (comp.equals(VoteStatus.DOWN)) {
 
-    public Answer findVerifiedAnswer(Long answerId) {
-        Optional<Answer> optionalAnswer = answerRepository.findById(answerId);
-        // TODO: ExceptionCode
-        Answer findAnswer = optionalAnswer.orElseThrow();
+        } else {
 
-        return findAnswer;
+        }
+
+        Optional.ofNullable(answerVote.getVoteStatus())
+                .ifPresent(voteStatus -> vote.setVoteStatus(voteStatus));
+
+        return answerVote;
+    }
+
+    public Answer verifiedAnswerById(Long answerId) {
+        Optional<Answer> findAnswer = answerRepository.findById(answerId);
+        return findAnswer.orElseThrow(
+                () -> new ServiceLogicException(ErrorCode.ANSWER_NOT_FOUND)
+        );
+    }
+
+    public AnswerVote verifiedAnswerVoteById(Long answerVoteId) {
+        Optional<AnswerVote> findVote = answerVoteRepository.findById(answerVoteId);
+        return findVote.orElseThrow(
+                // TODO: 수정 시 answerId가 아닌 answerVoteId를 가져오는게 맞는지
+                () -> new ServiceLogicException(ErrorCode.ANSWER_NOT_FOUND)
+        );
     }
 }
