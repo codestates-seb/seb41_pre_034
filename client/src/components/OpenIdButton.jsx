@@ -1,9 +1,9 @@
 import React from 'react';
 
-function OpenIdButton(props) {
+function OpenIdButton({ company, text }) {
   return (
     <>
-      {props.company !== 'google' ? null : (
+      {company !== 'google' ? null : (
         <button className="flex items-center border-[1px] border-[#d7d9dc] rounded-[5px] w-full bg-[#ffffff]">
           <svg
             className="my-[8px] ml-auto mr-[5px]"
@@ -28,11 +28,11 @@ function OpenIdButton(props) {
               fill="#EA4335"
             ></path>
           </svg>
-          <div className="mr-auto text-sm">Sign up with Google</div>
+          <div className="mr-auto text-sm">{text} with Google</div>
         </button>
       )}
 
-      {props.company !== 'github' ? null : (
+      {company !== 'github' ? null : (
         <button className="flex items-center border-[1px] border-[#2f3337] rounded-[5px] w-full bg-[#2f3337]">
           <svg
             className="my-[8px] ml-auto mr-[5px]"
@@ -46,12 +46,12 @@ function OpenIdButton(props) {
             ></path>
           </svg>
           <div className="mr-auto text-sm text-[#ffffff]">
-            Sign up with GitHub
+            {text} with GitHub
           </div>
         </button>
       )}
 
-      {props.company !== 'facebook' ? null : (
+      {company !== 'facebook' ? null : (
         <button className="flex items-center border-[1px] border-[#385499] rounded-[5px] w-full bg-[#385499]">
           <svg
             className="my-[8px] ml-auto mr-[5px]"
@@ -65,7 +65,7 @@ function OpenIdButton(props) {
             ></path>
           </svg>
           <div className="mr-auto text-sm text-[#ffffff]">
-            Sign up with Facebook
+            {text} with Facebook
           </div>
         </button>
       )}
