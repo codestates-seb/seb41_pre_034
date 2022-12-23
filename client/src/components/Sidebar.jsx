@@ -13,26 +13,28 @@ function Sidebar() {
     'h-[30px] py-[4px] pl-[8px] pr-[4px] text-[#525960] text-[13px] cursor-pointer w-[164px]';
 
   return (
-    <div className="sticky w-auto top-[50px] mb-[8px] max-h-[calc(100vh-50px-322px)] pt-[24px] bg-[#feffff]">
-      <nav>
-        <ol>
-          {menuArr.map((el, idx) => {
-            return (
-              <li
-                className={
-                  idx === currentMenu
-                    ? basicLiClassName +
-                      ` border-r-focused bg-focused font-focused`
-                    : basicLiClassName
-                }
-                onClick={() => selectMenuHandler(idx)}
-              >
-                {el.name}
-              </li>
-            );
-          })}
-        </ol>
-      </nav>
+    <div className="sidebar flex shrink-[0] relative w-[164px] text-left">
+      <div className="sticky w-auto top-[50px] mb-[8px] max-h-[calc(100vh-50px-322px)] pt-[24px] bg-[#feffff]">
+        <nav>
+          <ol>
+            {menuArr.map((el, idx) => {
+              return (
+                <li
+                  className={
+                    idx === currentMenu
+                      ? basicLiClassName +
+                        ` border-r-focused bg-focused font-focused`
+                      : basicLiClassName
+                  }
+                  onClick={() => selectMenuHandler(idx)}
+                >
+                  {el.name}
+                </li>
+              );
+            })}
+          </ol>
+        </nav>
+      </div>
     </div>
   );
 }
