@@ -9,8 +9,6 @@ import Tags from './pages/Tags';
 import Users from './pages/Users';
 import QuestionDetail from './pages/QuestionDetail';
 import Navbar from './components/Navbar';
-import Sidebar from './components/Sidebar';
-import Footer from './components/Footer';
 
 function App() {
   return (
