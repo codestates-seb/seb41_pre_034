@@ -5,8 +5,8 @@ import OpenIdButton from '../components/OpenIdButton';
 
 function Login() {
   return (
-    <div className="container flex justify-center items-center m-auto mt-[50px] h-[calc(100vh-50px)] bg-[#f1f2f3]">
-      <div className="content justify-center items-center">
+    <div className="flex justify-center items-center mt-[50px] w-full h-[calc(100vh-50px)] bg-[#f1f2f3]">
+      <div className="justify-center items-center">
         <div className="flex text-center justify-center mb-[24px] mx-auto">
           <Link to={'/'}>
             <svg width="32" height="37" viewBox="0 0 32 37">
