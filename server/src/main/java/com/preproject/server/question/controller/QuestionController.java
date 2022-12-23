@@ -5,6 +5,10 @@ import com.preproject.server.dto.ResponseDto;
 import com.preproject.server.question.dto.QuestionPatchDto;
 import com.preproject.server.question.dto.QuestionPostDto;
 import com.preproject.server.question.dto.QuestionResponseDto;
+import com.preproject.server.question.entity.Question;
+import com.preproject.server.question.entity.QuestionComment;
+import com.preproject.server.question.mapper.QuestionMapper;
+import com.preproject.server.question.service.QuestionService;
 import com.preproject.server.utils.StubDtoUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,36 +19,46 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/questions")
 @RequiredArgsConstructor
 public class QuestionController {
 
     private final StubDtoUtils stubDtoUtils;
+    private final QuestionService questionService;
+    private final QuestionMapper questionMapper;
 
     //    질문 생성
     @PostMapping
     public ResponseEntity postQuestion(
-            @RequestBody QuestionPostDto questionPostDto
-    ) {
+            @RequestBody QuestionPostDto questionPostDto) {
+        Question question = questionMapper.QuestionPostDtotoEntity(questionPostDto);
+        System.out.println("question: "+question);
+        Question saved = questionService.save(question);
+
         return new ResponseEntity<>(
-                ResponseDto.of(stubDtoUtils.createQuestionDto()),
+                ResponseDto.of(questionMapper.QuestionEntityToResponseDto(saved)),
                 HttpStatus.CREATED);
     }
 
     //    질문 전체 삭제
     @DeleteMapping
     public ResponseEntity deleteQuestion() {
-        return ResponseEntity.noContent().build();
+        questionService.deleteAll();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     //    질문 단건 조회
     @GetMapping("/{questionId}")
     public ResponseEntity getQuestion(
-            @PathVariable Long questionId
-    ) {
+            @PathVariable Long questionId) {
+        Question question = questionService.get(questionId);
+
+
         return new ResponseEntity<>(
-                ResponseDto.of(stubDtoUtils.createQuestionResponseDto()),
+                ResponseDto.of(questionMapper.QuestionEntityToResponseDto(question)),
                 HttpStatus.OK);
     }
 
@@ -52,19 +66,24 @@ public class QuestionController {
     @PatchMapping("/{questionId}")
     public ResponseEntity patchQuestion(
             @PathVariable Long questionId,
-            @RequestBody QuestionPatchDto questionPatchDto
-    ) {
+            @RequestBody QuestionPatchDto questionPatchDto) {
+
+        Question question = questionMapper.QuestionPatchDtoToEntity(questionPatchDto);
+        Question newQuestion = questionService.patch(questionId,question);
+
+
         return new ResponseEntity<>(
-                ResponseDto.of(stubDtoUtils.createQuestionResponseDto()),
+                ResponseDto.of(questionMapper.QuestionEntityToResponseDto(newQuestion)),
                 HttpStatus.OK);
     }
 
     //    질문 삭제
     @DeleteMapping("/{questionId}")
     public ResponseEntity deleteQuestion(
-            @PathVariable Long questionId
-    ) {
-        return ResponseEntity.noContent().build();
+            @PathVariable Long questionId) {
+        questionService.delete(questionId);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     //    질문 전체 조회 페이지
@@ -73,8 +92,10 @@ public class QuestionController {
             @PageableDefault(page = 0, size = 10, sort = "questionId", direction = Sort.Direction.DESC)
             Pageable pageable
     ) {
+        List<Question> questionList = questionService.findAll();
+        List<QuestionResponseDto> questionListToResponseDtoList = questionMapper.QuestionListToResponseDtoList(questionList);
         Page<QuestionResponseDto> questionResponseDtoPage =
-                stubDtoUtils.createQuestionResponseDtoPage(pageable);
+                questionService.createQuestionResponseDtoPage(pageable,questionListToResponseDtoList);
         PageResponseDto response = PageResponseDto.of(
                 questionResponseDtoPage.getContent()
                 , questionResponseDtoPage);
