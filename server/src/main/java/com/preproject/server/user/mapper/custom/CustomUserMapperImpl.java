@@ -87,17 +87,19 @@ public class CustomUserMapperImpl implements CustomUserMapper{
                 userResponseDto.getQuestions();
         List<AnswerResponseDto> answers =
                 userResponseDto.getAnswers();
+        List<TagResponseDto> tags = new ArrayList<>();
+        questions.forEach(
+                q -> tags.addAll(q.getTags())
+        );
+        userResponseDto.setTags(tags);
+
         if (!(questions.isEmpty()) && questions.size() > 4) {
-            List<TagResponseDto> tags = new ArrayList<>();
+
             List<QuestionResponseDto> resultsQuestion = questions
                     .stream()
                     .skip(questions.size() - 5)
                     .collect(Collectors.toList());
             userResponseDto.setQuestions(resultsQuestion);
-            resultsQuestion.forEach(
-                    q -> tags.addAll(q.getTags())
-            );
-            userResponseDto.setTags(tags);
         }
         if (!(answers.isEmpty()) && answers.size() > 4) {
             List<AnswerResponseDto> resultAnswer = answers
