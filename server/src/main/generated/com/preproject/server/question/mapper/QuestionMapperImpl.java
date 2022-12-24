@@ -3,24 +3,36 @@ package com.preproject.server.question.mapper;
 import com.preproject.server.constant.VoteStatus;
 import com.preproject.server.question.dto.QuestionCommentPatchDto;
 import com.preproject.server.question.dto.QuestionCommentPostDto;
-import com.preproject.server.question.dto.QuestionResponseDto;
+import com.preproject.server.question.dto.QuestionPostDto;
 import com.preproject.server.question.dto.QuestionVotePatchDto;
 import com.preproject.server.question.dto.QuestionVotePostDto;
 import com.preproject.server.question.entity.Question;
 import com.preproject.server.question.entity.QuestionComment;
 import com.preproject.server.question.entity.QuestionVote;
-import java.util.ArrayList;
-import java.util.List;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-12-24T15:52:52+0900",
+    date = "2022-12-25T02:18:07+0900",
     comments = "version: 1.5.3.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-7.5.1.jar, environment: Java 11.0.16 (Azul Systems, Inc.)"
 )
 @Component
 public class QuestionMapperImpl implements QuestionMapper {
+
+    @Override
+    public Question questionPostDtoToEntity(QuestionPostDto questionPostDto) {
+        if ( questionPostDto == null ) {
+            return null;
+        }
+
+        Question question = new Question();
+
+        question.setTitle( questionPostDto.getTitle() );
+        question.setBody( questionPostDto.getBody() );
+
+        return question;
+    }
 
     @Override
     public QuestionComment questionCommentDtoToEntity(QuestionCommentPostDto questionCommentPostDto) {
@@ -76,19 +88,5 @@ public class QuestionMapperImpl implements QuestionMapper {
         }
 
         return questionVote;
-    }
-
-    @Override
-    public List<QuestionResponseDto> questionListToResponseDtoList(List<Question> questionList) {
-        if ( questionList == null ) {
-            return null;
-        }
-
-        List<QuestionResponseDto> list = new ArrayList<QuestionResponseDto>( questionList.size() );
-        for ( Question question : questionList ) {
-            list.add( QuestionEntityToResponseDto( question ) );
-        }
-
-        return list;
     }
 }
