@@ -77,22 +77,22 @@ public class Question {
 
     @ToString.Exclude
     @OrderBy("answerId")
-    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     private List<Answer> answers = new ArrayList<>();
 
     @ToString.Exclude
     @OrderBy("questionCommentId")
-    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     private List<QuestionComment> questionComments = new ArrayList<>();
 
     @ToString.Exclude
     @OrderBy("questionVoteId")
-    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     private List<QuestionVote> questionVotes = new ArrayList<>();
 
     @ToString.Exclude
     @OrderBy("questionTagId")
-    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     private List<QuestionTag> questionTags = new ArrayList<>();
 
     public void addUser(User user) {
