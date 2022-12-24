@@ -35,8 +35,9 @@ public class TagService {
         List<Tag> tagList = Arrays.stream(split)
                 .filter(tag -> !tag.isEmpty())
                 .map(String::trim)
+                // Todo Tag 중복 여부 검증 후 중복 있다면 Entity 반환
                 .map(tag -> new Tag(tag, ""))
-                .map(tagRepository::save)
+                .map(this::verifyTag)
                 .collect(Collectors.toList());
         return tagList;
     }
