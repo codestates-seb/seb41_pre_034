@@ -24,6 +24,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class QuestionTag {
 
+    public QuestionTag(
+            Question question,
+            Tag tag
+    ) {
+        addTag(tag);
+        addQuestion(question);
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long questionTagId;

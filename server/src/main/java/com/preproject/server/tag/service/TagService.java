@@ -8,7 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -26,6 +29,18 @@ public class TagService {
         return tagRepository.findAll(pageable);
     }
 
+
+    public List<Tag> createTagByString(String tags) {
+        String[] split = tags.split(",");
+        List<Tag> tagList = Arrays.stream(split)
+                .filter(tag -> !tag.isEmpty())
+                .map(String::trim)
+                // Todo Tag 중복 여부 검증 후 중복 있다면 Entity 반환
+                .map(tag -> new Tag(tag, ""))
+                .map(this::verifyTag)
+                .collect(Collectors.toList());
+        return tagList;
+    }
 
     /* 검증 로직 */
     private Tag verifyTag(Tag tag) {

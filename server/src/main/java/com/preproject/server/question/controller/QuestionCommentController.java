@@ -6,7 +6,7 @@ import com.preproject.server.question.dto.QuestionCommentPatchDto;
 import com.preproject.server.question.dto.QuestionCommentPostDto;
 import com.preproject.server.question.entity.Question;
 import com.preproject.server.question.entity.QuestionComment;
-import com.preproject.server.question.mapper.QuestionCommentMapper;
+import com.preproject.server.question.mapper.QuestionMapper;
 import com.preproject.server.question.service.QuestionCommentService;
 import com.preproject.server.question.service.QuestionService;
 import com.preproject.server.user.entity.User;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class QuestionCommentController {
 
     private final StubDtoUtils stubDtoUtils;
-    private final QuestionCommentMapper questionCommentMapper;
+    private final QuestionMapper questionMapper;
     private final QuestionCommentService questionCommentService;
     private final UserService userService;
     private final QuestionService questionService;
@@ -34,7 +34,7 @@ public class QuestionCommentController {
             @PathVariable Long questionId,
             @RequestBody QuestionCommentPostDto questionCommentPostDto) {
 
-        QuestionComment questionComment = questionCommentMapper.QuestionCommentDtoToEntity(questionCommentPostDto);
+        QuestionComment questionComment = questionMapper.questionCommentDtoToEntity(questionCommentPostDto);
         User user = userService.findUser(questionCommentPostDto.getUserId());
         questionComment.addUser(user);
         Question verifiedQuestion = questionService.findVerifiedQuestion(questionId);
@@ -42,7 +42,7 @@ public class QuestionCommentController {
         QuestionComment saved = questionCommentService.save(questionComment);
 
         return new ResponseEntity<>(
-                ResponseDto.of(questionCommentMapper.QuestionCommentEntityToDto(saved)),
+                ResponseDto.of(questionMapper.questionCommentToQuestionCommentResponseDto(saved)),
                 HttpStatus.CREATED);
     }
 
@@ -52,13 +52,13 @@ public class QuestionCommentController {
             @PathVariable Long questionCommentId,
             @RequestBody QuestionCommentPatchDto questionCommentPatchDto
     ) {
-        QuestionComment questionComment = questionCommentMapper.QuestionCommentPatchDtoToEntity(questionCommentPatchDto);
+        QuestionComment questionComment = questionMapper.questionCommentPatchDtoToEntity(questionCommentPatchDto);
         User user = questionCommentService.findUser(questionCommentPatchDto.getUserId());
         questionComment.setUser(user);
         QuestionComment update = questionCommentService.patch(questionComment,questionCommentId);
 
         return new ResponseEntity<>(
-                ResponseDto.of(questionCommentMapper.QuestionCommentEntityToDto(update)),
+                ResponseDto.of(questionMapper.questionCommentToQuestionCommentResponseDto(update)),
                 HttpStatus.OK);
     }
 

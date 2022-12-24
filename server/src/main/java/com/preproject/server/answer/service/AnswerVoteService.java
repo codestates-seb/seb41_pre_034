@@ -30,18 +30,25 @@ public class AnswerVoteService {
     public AnswerVote updateVote(AnswerVote answerVote, Long answerVoteId) {
         AnswerVote vote = verifiedAnswerVoteById(answerVoteId);
         VoteStatus comp = vote.getVoteStatus();
-        if (comp.equals(VoteStatus.NONE)) {
-
-        } else if (comp.equals(VoteStatus.DOWN)) {
-
-        } else {
-
+        if (answerVote.getVoteStatus() != null) {
+            if (answerVote.getVoteStatus().equals(VoteStatus.UP)) {
+                if (comp.equals(VoteStatus.UP)) {
+                    return vote;
+                } else {
+                    Optional.ofNullable(answerVote.getVoteStatus())
+                            .ifPresent(vote::setVoteStatus);
+                }
+            } else {
+                if (comp.equals(VoteStatus.DOWN)) {
+                    return vote;
+                } else {
+                    Optional.ofNullable(answerVote.getVoteStatus())
+                            .ifPresent(vote::setVoteStatus);
+                }
+            }
         }
 
-        Optional.ofNullable(answerVote.getVoteStatus())
-                .ifPresent(voteStatus -> vote.setVoteStatus(voteStatus));
-
-        return answerVote;
+        return vote;
     }
 
     public Answer verifiedAnswerById(Long answerId) {
@@ -54,7 +61,6 @@ public class AnswerVoteService {
     public AnswerVote verifiedAnswerVoteById(Long answerVoteId) {
         Optional<AnswerVote> findVote = answerVoteRepository.findById(answerVoteId);
         return findVote.orElseThrow(
-                // TODO: 수정 시 answerId가 아닌 answerVoteId를 가져오는게 맞는지
                 () -> new ServiceLogicException(ErrorCode.ANSWER_NOT_FOUND)
         );
     }

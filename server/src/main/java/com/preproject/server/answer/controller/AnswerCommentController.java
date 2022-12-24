@@ -4,7 +4,7 @@ import com.preproject.server.answer.dto.AnswerCommentPatchDto;
 import com.preproject.server.answer.dto.AnswerCommentPostDto;
 import com.preproject.server.answer.dto.AnswerCommentResponseDto;
 import com.preproject.server.answer.entity.AnswerComment;
-import com.preproject.server.answer.mapper.AnswerCommentMapper;
+import com.preproject.server.answer.mapper.AnswerMapper;
 import com.preproject.server.answer.service.AnswerCommentService;
 import com.preproject.server.dto.ResponseDto;
 import com.preproject.server.user.entity.User;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AnswerCommentController {
 
-    private final AnswerCommentMapper answerCommentMapper;
+    private final AnswerMapper answerMapper;
 
     private final AnswerCommentService answerCommentService;
 
@@ -36,14 +36,14 @@ public class AnswerCommentController {
                 userService.verifiedUserById(answerCommentPostDto.getUserId());
 
         AnswerComment answerComment =
-                answerCommentMapper.AnswerPostDtoToEntity(answerCommentPostDto);
+                answerMapper.AnswerPostDtoToEntity(answerCommentPostDto);
         answerComment.addUser(findUser);
 
         AnswerComment save =
                 answerCommentService.createComment(answerComment, answerId);
 
         AnswerCommentResponseDto response =
-                answerCommentMapper.EntityToAnswerResponseDto(save);
+                answerMapper.answerCommentToAnswerCommentResponseDto(save);
 
         return new ResponseEntity<>(
                 ResponseDto.of(response),
@@ -57,13 +57,13 @@ public class AnswerCommentController {
             @RequestBody AnswerCommentPatchDto answerCommentPatchDto
     ) {
         AnswerComment answerComment =
-                answerCommentMapper.AnswerPatchDtoToEntity(answerCommentPatchDto);
+                answerMapper.AnswerPatchDtoToEntity(answerCommentPatchDto);
 
         AnswerComment update =
                 answerCommentService.updateComment(answerComment, answerCommentId);
 
         AnswerCommentResponseDto response =
-                answerCommentMapper.EntityToAnswerResponseDto(update);
+                answerMapper.answerCommentToAnswerCommentResponseDto(update);
 
         return new ResponseEntity<>(
                 ResponseDto.of(response),
