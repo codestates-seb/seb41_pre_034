@@ -1,16 +1,14 @@
 package com.preproject.server.user.controller;
 
-import com.preproject.server.answer.dto.AnswerResponseDto;
 import com.preproject.server.dto.PageResponseDto;
 import com.preproject.server.dto.ResponseDto;
-import com.preproject.server.question.dto.QuestionResponseDto;
-import com.preproject.server.tag.dto.TagResponseDto;
 import com.preproject.server.user.dto.UserPatchDto;
 import com.preproject.server.user.dto.UserPostDto;
 import com.preproject.server.user.dto.UserResponseDto;
 import com.preproject.server.user.dto.UserSimpleResponseDto;
 import com.preproject.server.user.entity.User;
 import com.preproject.server.user.mapper.UserMapper;
+import com.preproject.server.user.mapper.custom.CustomUserMapper;
 import com.preproject.server.user.service.UserService;
 import com.preproject.server.utils.StubDtoUtils;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
@@ -38,6 +34,8 @@ public class UserController {
 
     private final UserMapper userMapper;
 
+    private final CustomUserMapper customUserMapper;
+
     /* 사용자 단건 조회 */
     @GetMapping("/{userId}")
     public ResponseEntity getUser(
@@ -45,9 +43,9 @@ public class UserController {
     ) {
         User user = userService.verifiedUserById(userId);
         UserResponseDto userResponseDto =
-                userMapper.userEntityToResponseDto(user);
+                customUserMapper.userEntityToResponseDto(user);
         return new ResponseEntity<>(
-                ResponseDto.of(mapperUtil(userResponseDto)),
+                ResponseDto.of(userResponseDto),
                 HttpStatus.OK
                 );
     }
@@ -125,32 +123,5 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    private static UserResponseDto mapperUtil(
-            UserResponseDto userResponseDto
-    ) {
-        List<QuestionResponseDto> questions =
-                userResponseDto.getQuestions();
-        List<AnswerResponseDto> answers =
-                userResponseDto.getAnswers();
-        if (!(questions.isEmpty()) && questions.size() > 4) {
-            List<TagResponseDto> tags = new ArrayList<>();
-            List<QuestionResponseDto> resultsQuestion = questions
-                    .stream()
-                    .skip(questions.size() - 5)
-                    .collect(Collectors.toList());
-            userResponseDto.setQuestions(resultsQuestion);
-            resultsQuestion.forEach(
-                    q -> tags.addAll(q.getTags())
-            );
-            userResponseDto.setTags(tags);
-        }
-        if (!(answers.isEmpty()) && answers.size() > 4) {
-            List<AnswerResponseDto> resultAnswer = answers
-                    .stream()
-                    .skip(answers.size() - 5)
-                    .collect(Collectors.toList());
-            userResponseDto.setAnswers(resultAnswer);
-        }
-        return userResponseDto;
-    }
+
 }
