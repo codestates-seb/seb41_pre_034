@@ -62,7 +62,6 @@ public class QuestionController {
             @PathVariable Long questionId) {
         Question question = questionService.get(questionId);
 
-
         return new ResponseEntity<>(
                 ResponseDto.of(questionMapper.QuestionEntityToResponseDto(question)),
                 HttpStatus.OK);
