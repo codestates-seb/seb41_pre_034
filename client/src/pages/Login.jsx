@@ -5,7 +5,7 @@ import OpenIdButton from '../components/OpenIdButton';
 
 function Login() {
   return (
-    <div className="flex justify-center items-center mt-[50px] w-full h-[calc(100vh-50px)] bg-[#f1f2f3]">
+    <div className="flex justify-center items-center mt-[50px] pt-[50px] w-full min-h-[calc(100vh-50px)] bg-[#f1f2f3]">
       <div className="justify-center items-center">
         <div className="flex text-center justify-center mb-[24px] mx-auto">
           <Link to={'/'}>
