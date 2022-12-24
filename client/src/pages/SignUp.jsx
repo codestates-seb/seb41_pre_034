@@ -5,8 +5,8 @@ import SignupForm from '../components/SignupForm';
 
 function SignUp() {
   return (
-    <div className="flex justify-center mt-[50px] pt-[50px] w-full bg-[#f1f2f3]">
-      <div className="justify-center items-center">
+    <div className="flex justify-center mt-[50px] pt-[50px] w-full min-h-[calc(100vh-50px)] bg-[#f1f2f3]">
+      <div className="flex flex-col justify-center items-center">
         <div className="flex">
           <div className="mr-[48px] mb-[128px] flex flex-col justify-center">
             <h1 className="mb-[32px] text-[27px]">
