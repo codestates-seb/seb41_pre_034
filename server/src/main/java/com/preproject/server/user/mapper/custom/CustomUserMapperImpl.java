@@ -51,7 +51,7 @@ public class CustomUserMapperImpl implements CustomUserMapper{
         userResponseDto.setQuestions( questionListToQuestionResponseDtoList( user.getQuestions() ) );
         userResponseDto.setAnswers( answerListToAnswerResponseDtoList( user.getAnswers() ) );
 
-        return mapperUtil(userResponseDto);
+        return userResponseDtoMappingUtil(userResponseDto);
     }
 
     protected List<QuestionResponseDto> questionListToQuestionResponseDtoList(List<Question> list) {
@@ -80,17 +80,21 @@ public class CustomUserMapperImpl implements CustomUserMapper{
         return list1;
     }
 
-    protected static UserResponseDto mapperUtil(
+
+    /* TODO 현재 User가 작성한 모든 데이터를 조회하여 최근 데이터만 잘라 응답중
+    *   추후 엔티티 조회시 최근 데이터만 조회 하도록 Refactoring 필요 */
+    protected static UserResponseDto userResponseDtoMappingUtil(
             UserResponseDto userResponseDto
     ) {
         List<QuestionResponseDto> questions =
                 userResponseDto.getQuestions();
         List<AnswerResponseDto> answers =
                 userResponseDto.getAnswers();
-        List<TagResponseDto> tags = new ArrayList<>();
+        List<TagResponseDto> dtos = new ArrayList<>();
         questions.forEach(
-                q -> tags.addAll(q.getTags())
+                q -> dtos.addAll(q.getTags())
         );
+        List<TagResponseDto> tags = dtos.stream().distinct().collect(Collectors.toList());
         userResponseDto.setTags(tags);
 
         if (!(questions.isEmpty()) && questions.size() > 4) {
