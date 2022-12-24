@@ -81,7 +81,7 @@ public interface QuestionMapper {
         questionResponseDto.setDisplayName(question.getUser().getDisplayName());
 
         //Todo QuestionTag 매핑
-        questionResponseDto.setTags();
+//        questionResponseDto.setTags();
         List<QuestionTag> questionTags = question.getQuestionTags();
 
         return questionResponseDto;
