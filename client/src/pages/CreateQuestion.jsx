@@ -1,9 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Footer from '../components/Footer';
 import MdArea from '../components/MdArea';
 import BlueButton from '../components/buttons/BlueButton';
+import Tag from '../components/Tag';
 
 function CreateQuestion(props) {
+  const initialTags = ['axios', 'fetch'];
+  const [tags, setTags] = useState(initialTags);
+
+  function removeTags(indexToRemove) {
+    setTags(tags.filter((el, index) => index !== indexToRemove));
+  }
+
+  function addTags(event) {
+    let inputValue = event.target.value;
+    if (
+      inputValue.length !== 0 &&
+      !tags.includes(inputValue) &&
+      event.key === 'Enter'
+    ) {
+      setTags([...tags, inputValue]);
+      event.target.value = '';
+    }
+  }
   return (
     <div className="max-w-[100%] flex flex-col justify-center items-center ">
       <div className="mt-[50px] px-[24px] pb-[24px] max-w-[1264px]">
@@ -66,11 +85,32 @@ function CreateQuestion(props) {
             <label htmlFor="tags" className="font-[600] my-[2px]">
               Tags
             </label>
-            <input
-              id="tags"
-              placeholder="e.g.(ajax wpf sql)"
-              className="border-[1px] border-[#e5e7e8] my-[2px] py-[7.8px] px-[9.1px] text-[13px] rounded-[3px] h-[32px] focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-300 focus:shadow-md focus:shadow-sky-200"
-            ></input>
+            <div className="flex items-center border-[1px] rounded-[3px] border-[#e5e7e8] text-[13px] h-[37px] focus-within:outline-none focus-within:border-sky-500 focus-within:ring-1 focus-within:ring-sky-300 focus-within:shadow-md focus-within:shadow-sky-200">
+              <ul className="flex ml-[8px]">
+                {tags.map((tag, index) => (
+                  <li
+                    key={index}
+                    className="group/tag w-[auto] h-[30px] flex items-center justify-center bg-[#e1ecf4] hover:bg-[#d0e3f1] mx-[2px] rounded-[5px]"
+                  >
+                    <Tag text={tag} />
+                    <span
+                      onClick={() => removeTags(index)}
+                      className="block w-[20px] h-[20px] text-[#39739d] font-[700] text-center cursor-pointer hover:bg-[#39739d] hover:rounded-[3px] hover:text-[#e1ecf4]"
+                    >
+                      x
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <input
+                id="tags"
+                onKeyUp={(e) => {
+                  addTags(e);
+                }}
+                placeholder="e.g.(ajax wpf sql)"
+                className="my-[2px] py-[7.8px] h-[20px] w-[100%] px-[9.1px] text-[13px] rounded-[3px] focus:ring-0 focus:outline-none"
+              ></input>
+            </div>
           </div>
           <div className="w-[250px] h-[60px] mt-[12px] m-[16px]  p-[10.4px]">
             <BlueButton text="Post your question" />
