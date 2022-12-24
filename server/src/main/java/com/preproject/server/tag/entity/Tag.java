@@ -14,6 +14,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @ToString
@@ -68,6 +69,18 @@ public class Tag {
 
     public void addQuestionTag(QuestionTag questionTag) {
         questionTags.add(questionTag);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        return tagId != null && tagId.equals(((Tag) obj).getTagId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tag, description, createAt, updateAt);
     }
 
 }
