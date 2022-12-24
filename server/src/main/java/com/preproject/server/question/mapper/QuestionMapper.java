@@ -42,6 +42,8 @@ public interface QuestionMapper {
 
     QuestionVote questionVotePostDtoToEntity(QuestionVotePostDto questionVotePostDto);
 
+
+    // Todo QuestionResponseDtoList 조회 구현 필요
     List<QuestionResponseDto> questionListToResponseDtoList(List<Question> questionList);
 
     default Question questionPatchDtoToEntity(QuestionPatchDto questionPatchDto) {

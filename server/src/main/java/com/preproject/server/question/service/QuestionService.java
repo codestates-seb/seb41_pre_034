@@ -67,7 +67,7 @@ public class QuestionService {
         Optional.ofNullable(question.getTitle())
                 .ifPresent(title -> findQuestion.setTitle(title));
 
-//  to 태그 수정 미완성
+//  Todo 태그 수정 미완성
 //          Toto Tag patch
 //        List<Tag> tagList = findQuestion.getQuestionTags().stream().map(questionTags -> {
 //                    QuestionTag questionTag = new QuestionTag();
@@ -81,6 +81,7 @@ public class QuestionService {
 
         return findQuestion;
     }
+    // Todo Question 전체 조회 로직 구현
 
     public void delete(Long questionId) {
         Question question = findVerifiedQuestion(questionId);
