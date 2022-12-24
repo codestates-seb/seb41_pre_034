@@ -93,6 +93,7 @@ public class Question {
     @ToString.Exclude
     @OrderBy("questionTagId")
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+    @Setter
     private List<QuestionTag> questionTags = new ArrayList<>();
 
     public void addUser(User user) {
