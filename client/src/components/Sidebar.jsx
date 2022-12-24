@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import ROUTE_PATH from '../constants/routePath';
 
 function Sidebar() {
   const [currentMenu, setCurrentMenu] = useState(0);
   // 클릭 이벤트가 발생하면 해당 li 요소로 focus가 이동한다
   const menuArr = [
-    { name: 'Home', link: '/' },
-    { name: 'Tags', link: '/tags' },
-    { name: 'Users', link: '/users' },
+    { name: 'Home', link: ROUTE_PATH.HOME },
+    { name: 'Tags', link: ROUTE_PATH.TAGS },
+    { name: 'Users', link: ROUTE_PATH.USERS },
   ];
 
   const selectMenuHandler = (index) => {
