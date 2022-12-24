@@ -6,7 +6,6 @@ import com.preproject.server.question.dto.QuestionPatchDto;
 import com.preproject.server.question.dto.QuestionPostDto;
 import com.preproject.server.question.dto.QuestionResponseDto;
 import com.preproject.server.question.entity.Question;
-import com.preproject.server.question.entity.QuestionComment;
 import com.preproject.server.question.mapper.QuestionMapper;
 import com.preproject.server.question.service.QuestionService;
 import com.preproject.server.user.entity.User;
@@ -22,7 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -42,9 +40,9 @@ public class QuestionController {
             @RequestBody QuestionPostDto questionPostDto) {
         User user = userService.findUser(questionPostDto.getUserId());
 
-        Question question = questionMapper.QuestionPostDtotoEntity(questionPostDto);
+        Question question = questionMapper.questionPostDtoToEntity(questionPostDto);
         question.addUser(user);
-        Question saved = questionService.save(question);
+        Question saved = questionService.save(question, questionPostDto.getTags());
 
         return new ResponseEntity<>(
                 ResponseDto.of(questionMapper.QuestionEntityToResponseDto(saved)),
@@ -59,9 +57,7 @@ public class QuestionController {
     }
 
     //    질문 단건 조회
-    @Transactional(readOnly = true)
     @GetMapping("/{questionId}")
-    @Transactional(readOnly = true)
     public ResponseEntity getQuestion(
             @PathVariable Long questionId) {
         Question question = questionService.get(questionId);
@@ -78,7 +74,7 @@ public class QuestionController {
             @PathVariable Long questionId,
             @RequestBody QuestionPatchDto questionPatchDto) {
 
-        Question question = questionMapper.QuestionPatchDtoToEntity(questionPatchDto);
+        Question question = questionMapper.questionPatchDtoToEntity(questionPatchDto);
         Question newQuestion = questionService.patch(questionId,question);
 
 
@@ -104,7 +100,7 @@ public class QuestionController {
             Pageable pageable
     ) {
         List<Question> questionList = questionService.findAll();
-        List<QuestionResponseDto> questionListToResponseDtoList = questionMapper.QuestionListToResponseDtoList(questionList);
+        List<QuestionResponseDto> questionListToResponseDtoList = questionMapper.questionListToResponseDtoList(questionList);
         List<QuestionResponseDto> questionResponseDto = questionListToResponseDtoList;
 
         Page<QuestionResponseDto> questionResponseDtoPage =
