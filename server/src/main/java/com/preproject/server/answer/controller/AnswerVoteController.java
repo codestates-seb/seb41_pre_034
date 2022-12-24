@@ -4,7 +4,7 @@ import com.preproject.server.answer.dto.AnswerVotePatchDto;
 import com.preproject.server.answer.dto.AnswerVotePostDto;
 import com.preproject.server.answer.dto.AnswerVoteResponseDto;
 import com.preproject.server.answer.entity.AnswerVote;
-import com.preproject.server.answer.mapper.AnswerVoteMapper;
+import com.preproject.server.answer.mapper.AnswerMapper;
 import com.preproject.server.answer.service.AnswerVoteService;
 import com.preproject.server.dto.ResponseDto;
 import com.preproject.server.user.entity.User;
@@ -24,7 +24,7 @@ public class AnswerVoteController {
 
     private final UserService userService;
 
-    private final AnswerVoteMapper answerVoteMapper;
+    private final AnswerMapper answerMapper;
 
     private final AnswerVoteService answerVoteService;
 
@@ -37,15 +37,14 @@ public class AnswerVoteController {
         User findUser = userService.verifiedUserById(answerVotePostDto.getUserId());
 
         AnswerVote answerVote =
-                answerVoteMapper.answerVotePostDtoToEntity(answerVotePostDto);
+                answerMapper.answerVotePostDtoToEntity(answerVotePostDto);
         answerVote.addUser(findUser);
 
         AnswerVote save =
                 answerVoteService.createVote(answerVote, answerId);
 
         AnswerVoteResponseDto response =
-                answerVoteMapper.EntityToResponseDto(save);
-        response.setUserId(findUser.getUserId());
+                answerMapper.answerVoteToAnswerVoteResponseDto(save);
 
         return new ResponseEntity<>(
                 ResponseDto.of(response),
@@ -59,14 +58,13 @@ public class AnswerVoteController {
             @RequestBody AnswerVotePatchDto answerVotePatchDto
     ) {
         AnswerVote answerVote =
-                answerVoteMapper.answerVotePatchDtoToEntity(answerVotePatchDto);
+                answerMapper.answerVotePatchDtoToEntity(answerVotePatchDto);
 
         AnswerVote update =
                 answerVoteService.updateVote(answerVote, answerVoteId);
 
         AnswerVoteResponseDto response =
-                answerVoteMapper.EntityToResponseDto(update);
-        response.setUserId(answerVotePatchDto.getUserId());
+                answerMapper.answerVoteToAnswerVoteResponseDto(update);
 
         return new ResponseEntity<>(
                 ResponseDto.of(response),

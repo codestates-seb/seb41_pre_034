@@ -53,10 +53,8 @@ public class AnswerController {
         Answer save = answerService.createAnswer(answer);
 
         AnswerResponseDto response =
-                answerMapper.EntityToResponseDto(answer);
+                answerMapper.entityToResponseDto(answer);
 
-        response.setUserId(findUser.getUserId());
-        response.setDisplayName(findUser.getDisplayName());
 
         return new ResponseEntity<>(
                 ResponseDto.of(response),
@@ -73,8 +71,10 @@ public class AnswerController {
                 answerMapper.answerPatchDtoToEntity(answerPatchDto);
         answer.setAnswerId(answerId);
         Answer update = answerService.updateAnswer(answer);
+        AnswerResponseDto response =
+                answerMapper.entityToResponseDto(update);
         return new ResponseEntity<>(
-                ResponseDto.of(update),
+                ResponseDto.of(response),
                 HttpStatus.OK);
     }
 
