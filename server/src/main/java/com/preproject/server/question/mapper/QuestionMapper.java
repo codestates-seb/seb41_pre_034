@@ -23,19 +23,7 @@ import java.util.stream.Collectors;
 public interface QuestionMapper {
 
 
-
-    default Question questionPostDtoToEntity(QuestionPostDto questionPostDto) {
-        if ( questionPostDto == null ) {
-            return null;
-        }
-
-        Question question = new Question();
-
-        question.setTitle( questionPostDto.getTitle() );
-        question.setBody( questionPostDto.getBody() );
-
-        return question;
-    }
+    Question questionPostDtoToEntity(QuestionPostDto questionPostDto);
 
     QuestionComment questionCommentDtoToEntity(QuestionCommentPostDto questionCommentPostDto);
 

@@ -64,7 +64,7 @@ public class Tag {
 
     @ToString.Exclude
     @OrderBy("questionTagId")
-    @OneToMany(mappedBy = "tag", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL)
     private List<QuestionTag> questionTags = new ArrayList<>();
 
     public void addQuestionTag(QuestionTag questionTag) {
