@@ -11,7 +11,7 @@ function SignupForm(props) {
       <div className="box-content rounded-[7px] shadow-lg bg-[#ffffff] w-[268px] h-[610.406px] p-[24px] mb-[24px]">
         <form className="flex flex-col">
           <div className="flex flex-col w-[268px] h-[60.203px] my-[6px]">
-            <label htmlfor="name" className="px-[2px] my-[2px] font-[700] ">
+            <label htmlFor="name" className="px-[2px] my-[2px] font-[700] ">
               Display name
             </label>
             <div>
@@ -24,7 +24,7 @@ function SignupForm(props) {
             </div>
           </div>
           <div className="flex flex-col w-[268px] h-[60.203px] my-[6px]">
-            <label htmlfor="email" className="font-[700] px-[2px] my-[2px]">
+            <label htmlFor="email" className="font-[700] px-[2px] my-[2px]">
               Email
             </label>
             <div>
@@ -43,7 +43,7 @@ function SignupForm(props) {
             </div>
           </div>
           <div className="flex flex-col w-[268px] h-[60.203px] my-[6px]">
-            <label htmlfor="Password" className="font-[700] px-[2px] my-[2px]">
+            <label htmlFor="Password" className="font-[700] px-[2px] my-[2px]">
               Password
             </label>
             <div>
