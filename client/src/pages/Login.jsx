@@ -2,13 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import LoginForm from '../components/LoginForm';
 import OpenIdButton from '../components/OpenIdButton';
+import ROUTE_PATH from '../constants/routePath';
 
 function Login() {
   return (
     <div className="flex justify-center items-center mt-[50px] pt-[50px] w-full min-h-[calc(100vh-50px)] bg-[#f1f2f3]">
       <div className="justify-center items-center">
         <div className="flex text-center justify-center mb-[24px] mx-auto">
-          <Link to={'/'}>
+          <Link to={ROUTE_PATH.HOME}>
             <svg width="32" height="37" viewBox="0 0 32 37">
               <path d="M26 33v-9h4v13H0V24h4v9h22Z" fill="#BCBBBB"></path>
               <path
@@ -30,12 +31,12 @@ function Login() {
         <LoginForm></LoginForm>
         <div className="mx-auto fs-body1 p-[16px] pb-[0px] mb-[24px] w-full text-xs text-center mt-[24px]">
           Don’t have an account?
-          <Link to={'/signup'}>
+          <Link to={ROUTE_PATH.SIGNUP}>
             <span className="text-[#0074cc] ml-[5px]">Sign up</span>
           </Link>
           <div className="mt-[12px] flex justify-center">
             Are you an employer?
-            <Link to={'/signup'}>
+            <Link to={ROUTE_PATH.SIGNUP}>
               <span className="text-[#0074cc] ml-[5px]">Sign up on Talent</span>
             </Link>
             <svg
