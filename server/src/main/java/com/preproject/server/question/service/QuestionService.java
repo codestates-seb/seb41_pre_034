@@ -36,23 +36,10 @@ public class QuestionService {
         question.setQuestionStatus(QuestionStatus.OPENED);
         question.setViewCounting(0);
         Question saved = questionRepository.save(question);
+
         tagByString.forEach(tag -> new QuestionTag(saved, tag));
 
         return saved;
-    }
-
-
-    public Question findVerifiedQuestion(long questionId) {
-        Optional<Question> optionalQuestion =
-                questionRepository.findById(questionId);
-        Question findQuestion =
-                optionalQuestion.orElseThrow(() -> new ServiceLogicException(ErrorCode.QUESTION_NOT_FOUND));
-
-        return findQuestion;
-    }
-
-    public void deleteAll() {
-        questionRepository.deleteAll();
     }
 
 
@@ -63,10 +50,6 @@ public class QuestionService {
         return question;
     }
 
-    public void delete(Long questionId) {
-        Question question = findVerifiedQuestion(questionId);
-        questionRepository.delete(question);
-    }
 
 
     public List<Question> findAll() {
@@ -99,11 +82,29 @@ public class QuestionService {
         return findQuestion;
     }
 
+    public void delete(Long questionId) {
+        Question question = findVerifiedQuestion(questionId);
+        questionRepository.delete(question);
+    }
+
+    public void deleteAll() {
+        questionRepository.deleteAll();
+    }
+
     private User verifiedUserById(Long userId) {
         Optional<User> findUser = userRepository.findById(userId);
         return findUser.orElseThrow(
                 () -> new ServiceLogicException(ErrorCode.QUESTION_NOT_FOUND)
         );
+    }
+
+    public Question findVerifiedQuestion(long questionId) {
+        Optional<Question> optionalQuestion =
+                questionRepository.findById(questionId);
+        Question findQuestion =
+                optionalQuestion.orElseThrow(() -> new ServiceLogicException(ErrorCode.QUESTION_NOT_FOUND));
+
+        return findQuestion;
     }
 
 }

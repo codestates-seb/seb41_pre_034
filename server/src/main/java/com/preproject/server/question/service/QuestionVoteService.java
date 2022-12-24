@@ -3,7 +3,9 @@ package com.preproject.server.question.service;
 import com.preproject.server.constant.ErrorCode;
 import com.preproject.server.constant.VoteStatus;
 import com.preproject.server.exception.ServiceLogicException;
+import com.preproject.server.question.entity.Question;
 import com.preproject.server.question.entity.QuestionVote;
+import com.preproject.server.question.repository.QuestionRepository;
 import com.preproject.server.question.repository.QuestionVoteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,16 +21,14 @@ public class QuestionVoteService {
 
     private final QuestionVoteRepository questionVoteRepository;
 
+    private final QuestionRepository questionRepository;
+
     public QuestionVote post(QuestionVote questionVote, Long questionId) {
 
-        QuestionVote findQuestionVote = findVerifiedQuestionVote(questionId);
-
-
-        if(questionVote.getQuestionVoteId() == findQuestionVote.getQuestionVoteId()){
-            questionVoteRepository.save(questionVote);
-        }
-
-        return questionVote;
+        Question findQuestion = questionRepository.findById(questionId)
+                .orElseThrow(() -> new ServiceLogicException(ErrorCode.QUESTION_NOT_FOUND));
+        questionVote.addQuestion(findQuestion);
+        return questionVoteRepository.save(questionVote);
     }
 
     public QuestionVote patch(QuestionVote questionVote, Long questionVoteId) {
@@ -61,8 +61,9 @@ public class QuestionVoteService {
         Optional<QuestionVote> optionalQuestionVote =
                 questionVoteRepository.findById(questionVoteId);
         QuestionVote questionVote =
-                optionalQuestionVote.orElseThrow(() -> new ServiceLogicException(ErrorCode.QUESTION_NOT_FOUND));
-
+                optionalQuestionVote.orElseThrow(
+                        () -> new ServiceLogicException(ErrorCode.NOT_FOUND)
+                );
         return questionVote;
     }
 }
