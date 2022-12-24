@@ -41,7 +41,7 @@ public class Tag {
     private Long tagId;
 
     @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String tag;
 
     @Setter
