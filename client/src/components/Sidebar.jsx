@@ -25,7 +25,7 @@ function Sidebar() {
           <ol>
             {menuArr.map((el, idx) => {
               return (
-                <Link to={el.link}>
+                <Link to={el.link} key={idx}>
                   <li
                     className={
                       idx === currentMenu
