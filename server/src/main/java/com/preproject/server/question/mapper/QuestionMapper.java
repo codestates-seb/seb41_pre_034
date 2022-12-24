@@ -11,10 +11,13 @@ import com.preproject.server.question.entity.Question;
 import com.preproject.server.question.entity.QuestionComment;
 import com.preproject.server.question.entity.QuestionTag;
 import com.preproject.server.question.entity.QuestionVote;
+import com.preproject.server.tag.dto.TagResponseDto;
+import com.preproject.server.tag.entity.Tag;
 import org.mapstruct.Mapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface QuestionMapper {
@@ -43,8 +46,18 @@ public interface QuestionMapper {
     QuestionVote questionVotePostDtoToEntity(QuestionVotePostDto questionVotePostDto);
 
 
-    // Todo QuestionResponseDtoList 조회 구현 필요
-    List<QuestionResponseDto> questionListToResponseDtoList(List<Question> questionList);
+    default List<QuestionResponseDto> questionListToResponseDtoList(List<Question> questionList) {
+        if ( questionList == null ) {
+            return null;
+        }
+
+        List<QuestionResponseDto> list = new ArrayList<QuestionResponseDto>( questionList.size() );
+        for ( Question question : questionList ) {
+            list.add( QuestionEntityToResponseDto( question ) );
+        }
+
+        return list;
+    }
 
     default Question questionPatchDtoToEntity(QuestionPatchDto questionPatchDto) {
         if ( questionPatchDto == null ) {
@@ -58,6 +71,7 @@ public interface QuestionMapper {
 
         return question;
     }
+
 
     default QuestionResponseDto QuestionEntityToResponseDto(Question question) {
         if ( question == null ) {
@@ -82,11 +96,38 @@ public interface QuestionMapper {
         questionResponseDto.setUserId(question.getUser().getUserId());
         questionResponseDto.setDisplayName(question.getUser().getDisplayName());
 
-        //Todo QuestionTag 매핑
-//        questionResponseDto.setTags();
-        List<QuestionTag> questionTags = question.getQuestionTags();
+        List<Tag> tags = question.getQuestionTags()
+                .stream().map(QuestionTag::getTag).collect(Collectors.toList());
+        questionResponseDto.setTags(tagListToTagResponseDtoList(tags));
 
         return questionResponseDto;
+    }
+
+    default List<TagResponseDto> tagListToTagResponseDtoList(List<Tag> tags) {
+        if ( tags == null ) {
+            return null;
+        }
+
+        List<TagResponseDto> list = new ArrayList<TagResponseDto>( tags.size() );
+        for ( Tag tag : tags ) {
+            list.add( tagToTagResponseDto( tag ) );
+        }
+
+        return list;
+    }
+    default TagResponseDto tagToTagResponseDto(Tag tag) {
+        if ( tag == null ) {
+            return null;
+        }
+
+        TagResponseDto tagResponseDto = new TagResponseDto();
+
+        tagResponseDto.setTagId( tag.getTagId() );
+        tagResponseDto.setTag( tag.getTag() );
+        tagResponseDto.setDescription( tag.getDescription() );
+        tagResponseDto.setCreateAt( tag.getCreateAt() );
+
+        return tagResponseDto;
     }
 
     default List<QuestionVoteResponseDto> questionVoteListToQuestionVoteResponseDtoList(List<QuestionVote> list) {
