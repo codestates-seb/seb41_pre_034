@@ -1,21 +1,21 @@
 package com.preproject.server.answer.mapper;
 
-import com.preproject.server.answer.dto.AnswerCommentResponseDto;
+import com.preproject.server.answer.dto.AnswerCommentPatchDto;
+import com.preproject.server.answer.dto.AnswerCommentPostDto;
 import com.preproject.server.answer.dto.AnswerPatchDto;
 import com.preproject.server.answer.dto.AnswerPostDto;
-import com.preproject.server.answer.dto.AnswerResponseDto;
-import com.preproject.server.answer.dto.AnswerVoteResponseDto;
+import com.preproject.server.answer.dto.AnswerVotePatchDto;
+import com.preproject.server.answer.dto.AnswerVotePostDto;
 import com.preproject.server.answer.entity.Answer;
 import com.preproject.server.answer.entity.AnswerComment;
 import com.preproject.server.answer.entity.AnswerVote;
-import java.util.ArrayList;
-import java.util.List;
+import com.preproject.server.constant.VoteStatus;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-12-24T00:04:54+0900",
+    date = "2022-12-24T14:36:46+0900",
     comments = "version: 1.5.3.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-7.5.1.jar, environment: Java 11.0.16 (Azul Systems, Inc.)"
 )
 @Component
@@ -49,77 +49,58 @@ public class AnswerMapperImpl implements AnswerMapper {
     }
 
     @Override
-    public AnswerResponseDto EntityToResponseDto(Answer answer) {
-        if ( answer == null ) {
+    public AnswerComment AnswerPostDtoToEntity(AnswerCommentPostDto answerPostDto) {
+        if ( answerPostDto == null ) {
             return null;
         }
 
-        AnswerResponseDto answerResponseDto = new AnswerResponseDto();
+        AnswerComment answerComment = new AnswerComment();
 
-        answerResponseDto.setAnswerId( answer.getAnswerId() );
-        answerResponseDto.setBody( answer.getBody() );
-        answerResponseDto.setCheck( answer.getCheck() );
-        answerResponseDto.setCreateAt( answer.getCreateAt() );
-        answerResponseDto.setUpdateAt( answer.getUpdateAt() );
-        answerResponseDto.setAnswerComments( answerCommentListToAnswerCommentResponseDtoList( answer.getAnswerComments() ) );
-        answerResponseDto.setAnswerVotes( answerVoteListToAnswerVoteResponseDtoList( answer.getAnswerVotes() ) );
+        answerComment.setComment( answerPostDto.getComment() );
 
-        return answerResponseDto;
+        return answerComment;
     }
 
-    protected AnswerCommentResponseDto answerCommentToAnswerCommentResponseDto(AnswerComment answerComment) {
-        if ( answerComment == null ) {
+    @Override
+    public AnswerComment AnswerPatchDtoToEntity(AnswerCommentPatchDto answerPatchDto) {
+        if ( answerPatchDto == null ) {
             return null;
         }
 
-        AnswerCommentResponseDto answerCommentResponseDto = new AnswerCommentResponseDto();
+        AnswerComment answerComment = new AnswerComment();
 
-        answerCommentResponseDto.setAnswerCommentId( answerComment.getAnswerCommentId() );
-        answerCommentResponseDto.setComment( answerComment.getComment() );
-        answerCommentResponseDto.setCreateAt( answerComment.getCreateAt() );
-        answerCommentResponseDto.setUpdateAt( answerComment.getUpdateAt() );
+        answerComment.setComment( answerPatchDto.getComment() );
 
-        return answerCommentResponseDto;
+        return answerComment;
     }
 
-    protected List<AnswerCommentResponseDto> answerCommentListToAnswerCommentResponseDtoList(List<AnswerComment> list) {
-        if ( list == null ) {
+    @Override
+    public AnswerVote answerVotePostDtoToEntity(AnswerVotePostDto answerVotePostDto) {
+        if ( answerVotePostDto == null ) {
             return null;
         }
 
-        List<AnswerCommentResponseDto> list1 = new ArrayList<AnswerCommentResponseDto>( list.size() );
-        for ( AnswerComment answerComment : list ) {
-            list1.add( answerCommentToAnswerCommentResponseDto( answerComment ) );
+        AnswerVote answerVote = new AnswerVote();
+
+        if ( answerVotePostDto.getVoteStatus() != null ) {
+            answerVote.setVoteStatus( Enum.valueOf( VoteStatus.class, answerVotePostDto.getVoteStatus() ) );
         }
 
-        return list1;
+        return answerVote;
     }
 
-    protected AnswerVoteResponseDto answerVoteToAnswerVoteResponseDto(AnswerVote answerVote) {
-        if ( answerVote == null ) {
+    @Override
+    public AnswerVote answerVotePatchDtoToEntity(AnswerVotePatchDto answerVotePatchDto) {
+        if ( answerVotePatchDto == null ) {
             return null;
         }
 
-        AnswerVoteResponseDto answerVoteResponseDto = new AnswerVoteResponseDto();
+        AnswerVote answerVote = new AnswerVote();
 
-        answerVoteResponseDto.setAnswerVoteId( answerVote.getAnswerVoteId() );
-        if ( answerVote.getVoteStatus() != null ) {
-            answerVoteResponseDto.setVoteStatus( answerVote.getVoteStatus().name() );
+        if ( answerVotePatchDto.getVoteStatus() != null ) {
+            answerVote.setVoteStatus( Enum.valueOf( VoteStatus.class, answerVotePatchDto.getVoteStatus() ) );
         }
 
-        return answerVoteResponseDto;
-    }
-
-    protected List<AnswerVoteResponseDto> answerVoteListToAnswerVoteResponseDtoList(List<AnswerVote> list) {
-        if ( list == null ) {
-            return null;
-        }
-
-        List<AnswerVoteResponseDto> list1 = new ArrayList<AnswerVoteResponseDto>( list.size() );
-        for ( AnswerVote answerVote : list ) {
-            list1.add( answerVoteToAnswerVoteResponseDto( answerVote ) );
-        }
-
-        return list1;
+        return answerVote;
     }
 }
