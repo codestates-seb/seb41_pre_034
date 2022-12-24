@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import OpenIdButton from '../components/OpenIdButton';
 import SignupForm from '../components/SignupForm';
+import ROUTE_PATH from '../constants/routePath';
 
 function SignUp() {
   return (
@@ -84,13 +85,13 @@ function SignUp() {
             <SignupForm></SignupForm>
             <div className="mx-auto p-[16px] pb-[0px] mb-[24px] w-full text-center text-[13px]">
               Already have an account?
-              <Link to="/login" className="text-[#0a95ff] ml-[5px]">
+              <Link to={ROUTE_PATH.LOGIN} className="text-[#0a95ff] ml-[5px]">
                 Log in
               </Link>
               <div className="mt-[12px] flex justify-center">
                 Are you an employer?
                 <span className="text-[#0a95ff] ml-[5px] flex items-center">
-                  Sign up on Talent{' '}
+                  Sign up on Talent
                   <svg
                     className="ml-[5px]"
                     width="14"
