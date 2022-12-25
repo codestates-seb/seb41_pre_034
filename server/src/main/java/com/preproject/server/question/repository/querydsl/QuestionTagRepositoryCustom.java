@@ -1,12 +1,12 @@
 package com.preproject.server.question.repository.querydsl;
 
-import com.preproject.server.question.entity.QuestionTag;
+import com.preproject.server.question.dto.QuestionSimpleResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface QuestionTagRepositoryCustom {
 
-    Page<QuestionTag> findQuestionPageBySearchParams(
+    Page<QuestionSimpleResponseDto> findQuestionPageBySearchParams(
             String keyWord,
             String displayName,
             String tag,

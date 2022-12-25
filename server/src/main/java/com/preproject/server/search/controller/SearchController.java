@@ -2,8 +2,7 @@ package com.preproject.server.search.controller;
 
 
 import com.preproject.server.dto.PageResponseDto;
-import com.preproject.server.question.dto.QuestionResponseDto;
-import com.preproject.server.question.entity.QuestionTag;
+import com.preproject.server.question.dto.QuestionSimpleResponseDto;
 import com.preproject.server.question.mapper.QuestionMapper;
 import com.preproject.server.question.service.QuestionService;
 import com.preproject.server.tag.dto.TagResponseDto;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/search")
@@ -39,16 +37,11 @@ public class SearchController {
     @GetMapping
     public ResponseEntity search(
             @RequestParam Map<String, Object> param,
-            @PageableDefault(page = 0, size = 10, sort = "questionTagId", direction = Sort.Direction.DESC)
+            @PageableDefault(page = 0, size = 10, sort = "questionId", direction = Sort.Direction.DESC)
             Pageable pageable
     ) {
-        Page<QuestionTag> allByParam = questionService.findAllByParam(param, pageable);
-        List<QuestionResponseDto> questionList =
-                allByParam.stream()
-                        .map(QuestionTag::getQuestion)
-                        .map(questionMapper::QuestionEntityToResponseDto)
-                        .collect(Collectors.toList());
-
+        Page<QuestionSimpleResponseDto> allByParam = questionService.findAllByParam(param, pageable);
+        List<QuestionSimpleResponseDto> questionList = allByParam.getContent();
         PageResponseDto response = PageResponseDto.of(
                 questionList,
                 new PageImpl<>(

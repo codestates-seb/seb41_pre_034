@@ -2,9 +2,10 @@ package com.preproject.server.question.repository.querydsl;
 
 import com.preproject.server.constant.ErrorCode;
 import com.preproject.server.exception.ServiceLogicException;
+import com.preproject.server.question.dto.QuestionSimpleResponseDto;
+import com.preproject.server.question.entity.QQuestion;
 import com.preproject.server.question.entity.QQuestionTag;
 import com.preproject.server.question.entity.Question;
-import com.preproject.server.question.entity.QuestionTag;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.domain.Page;
@@ -23,36 +24,43 @@ public class QuestionTagRepositoryCustomImpl
     }
 
     @Override
-    public Page<QuestionTag> findQuestionPageBySearchParams(
+    public Page<QuestionSimpleResponseDto> findQuestionPageBySearchParams(
             String keyWord,
             String displayName,
             String tag,
             Pageable pageable
     ) {
 
+        QQuestion qQuestion = QQuestion.question;
         QQuestionTag qQuestionTag = QQuestionTag.questionTag;
-        JPQLQuery<QuestionTag> query = from(qQuestionTag)
+        JPQLQuery<QuestionSimpleResponseDto> query = from(qQuestion)
                 .select(Projections.constructor(
-                        QuestionTag.class,
-                        qQuestionTag.questionTagId,
-                        qQuestionTag.createAt,
-                        qQuestionTag.updateAt,
-                        qQuestionTag.question,
-                        qQuestionTag.tag
+                        QuestionSimpleResponseDto.class,
+                        qQuestion.questionId,
+                        qQuestion.user.userId,
+                        qQuestion.user.displayName,
+                        qQuestion.title,
+                        qQuestion.body,
+                        qQuestion.questionStatus,
+                        qQuestion.createAt,
+                        qQuestion.updateAt,
+                        qQuestion.countingVote,
+                        qQuestion.viewCounting,
+                        qQuestion.answerCounting,
+                        qQuestion.tagString
                 ));
         if (keyWord != null && !keyWord.isBlank()) {
-            query.where(qQuestionTag.question.title.containsIgnoreCase(keyWord));
-        }
-        if (keyWord != null && !keyWord.isBlank()) {
-            query.where(qQuestionTag.question.body.containsIgnoreCase(keyWord));
+            query
+                    .where(qQuestion.title.containsIgnoreCase(keyWord))
+                    .where(qQuestion.body.containsIgnoreCase(keyWord));
         }
         if (displayName != null && !displayName.isBlank()) {
-            query.where(qQuestionTag.question.user.displayName.containsIgnoreCase(displayName));
+            query.where(qQuestion.user.displayName.containsIgnoreCase(displayName));
         }
         if (tag != null && !tag.isBlank()) {
-            query.where(qQuestionTag.tag.tag.containsIgnoreCase(tag));
+            query.where(qQuestion.tagString.containsIgnoreCase(tag));
         }
-        List<QuestionTag> questionTags = Optional.ofNullable(getQuerydsl())
+        List<QuestionSimpleResponseDto> questionTags = Optional.ofNullable(getQuerydsl())
                 .orElseThrow(() -> new ServiceLogicException(
                         ErrorCode.INTERNAL_SERVER_ERROR))
                 .applyPagination(pageable, query)

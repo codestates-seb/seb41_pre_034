@@ -1,10 +1,14 @@
 package com.preproject.server.question.service;
 
+import com.preproject.server.answer.entity.Answer;
 import com.preproject.server.constant.ErrorCode;
 import com.preproject.server.constant.QuestionStatus;
+import com.preproject.server.constant.VoteStatus;
 import com.preproject.server.exception.ServiceLogicException;
+import com.preproject.server.question.dto.QuestionSimpleResponseDto;
 import com.preproject.server.question.entity.Question;
 import com.preproject.server.question.entity.QuestionTag;
+import com.preproject.server.question.entity.QuestionVote;
 import com.preproject.server.question.repository.QuestionRepository;
 import com.preproject.server.question.repository.QuestionTagRepository;
 import com.preproject.server.tag.entity.Tag;
@@ -44,6 +48,7 @@ public class QuestionService {
         question.setQuestionStatus(QuestionStatus.OPENED);
         question.setViewCounting(0);
         tagByString.forEach(tag -> new QuestionTag(question, tag));
+        question.setTagString(buildTagString(question.getQuestionTags()));
         return questionRepository.save(question);
     }
 
@@ -52,6 +57,9 @@ public class QuestionService {
 
         Question question = findVerifiedQuestion(questionId);
         question.setViewCounting(question.getViewCounting() + 1);
+        question.setCountingVote(countingVote(question.getQuestionVotes()));
+        question.setAnswerCounting(countingAnswer(question.getAnswers()));
+        question.setTagString(buildTagString(question.getQuestionTags()));
         return question;
     }
 
@@ -82,7 +90,7 @@ public class QuestionService {
         return questionRepository.findAll(pageable);
     }
 
-    public Page<QuestionTag> findAllByParam(
+    public Page<QuestionSimpleResponseDto> findAllByParam(
             Map<String, Object> param,
             Pageable pageable) {
         return questionTagRepository.findQuestionPageBySearchParams(
@@ -110,6 +118,39 @@ public class QuestionService {
                 optionalQuestion.orElseThrow(() -> new ServiceLogicException(ErrorCode.QUESTION_NOT_FOUND));
 
         return findQuestion;
+    }
+
+    /* util  메소드 */
+
+    private String buildTagString(List<QuestionTag> questionTags ) {
+        if (questionTags == null) return "";
+        List<Tag> tags = questionTags.stream()
+                .map(QuestionTag::getTag)
+                .collect(Collectors.toList());
+        StringBuilder sb = new StringBuilder();
+        tags.forEach(t -> sb.append(t.getTag()).append(","));
+        return sb.toString().replaceFirst(".$", "");
+    }
+
+    private int countingAnswer(List<Answer> answers) {
+        if (answers != null) {
+            return answers.size();
+        } else {
+            return 0;
+        }
+    }
+
+
+    private int countingVote(List<QuestionVote> questionVotes) {
+        if (questionVotes != null) {
+            int up = (int) questionVotes.stream()
+                    .filter(dto -> dto.getVoteStatus().equals(VoteStatus.UP.toString())).count();
+            int down = (int) questionVotes.stream()
+                    .filter(dto -> dto.getVoteStatus().equals(VoteStatus.DOWN.toString())).count();
+            return up - down;
+        } else {
+            return 0;
+        }
     }
 
 }
