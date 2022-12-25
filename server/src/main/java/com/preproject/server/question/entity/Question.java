@@ -23,6 +23,7 @@ import java.util.List;
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 public class Question {
 
     /* 생성자 */
