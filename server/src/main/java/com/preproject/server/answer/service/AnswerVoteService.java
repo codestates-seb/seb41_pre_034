@@ -7,6 +7,8 @@ import com.preproject.server.answer.repository.AnswerVoteRepository;
 import com.preproject.server.constant.ErrorCode;
 import com.preproject.server.constant.VoteStatus;
 import com.preproject.server.exception.ServiceLogicException;
+import com.preproject.server.user.entity.User;
+import com.preproject.server.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +20,15 @@ public class AnswerVoteService {
     private final AnswerRepository answerRepository;
     private final AnswerVoteRepository answerVoteRepository;
 
+    private final UserService userService;
+
     public AnswerVote createVote(
             AnswerVote answerVote,
-            Long answerId
+            Long answerId,
+            Long userId
     ) {
+        User findUser = userService.verifiedUserById(userId);
+        answerVote.addUser(findUser);
         Answer answer = verifiedAnswerById(answerId);
         answerVote.addAnswer(answer);
         return answerVoteRepository.save(answerVote);

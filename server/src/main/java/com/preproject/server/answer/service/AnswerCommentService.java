@@ -6,6 +6,8 @@ import com.preproject.server.answer.repository.AnswerCommentRepository;
 import com.preproject.server.answer.repository.AnswerRepository;
 import com.preproject.server.constant.ErrorCode;
 import com.preproject.server.exception.ServiceLogicException;
+import com.preproject.server.user.entity.User;
+import com.preproject.server.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +19,17 @@ public class AnswerCommentService {
     private final AnswerRepository answerRepository;
     private final AnswerCommentRepository answerCommentRepository;
 
+    private final UserService userService;
+
 
     public AnswerComment createComment(
             AnswerComment answerComment,
-            Long answerId
+            Long answerId,
+            Long userId
     ) {
+        User findUser =
+                userService.verifiedUserById(userId);
+        answerComment.addUser(findUser);
         Answer answer = verifiedAnswerById(answerId);
         answerComment.addAnswer(answer);
         return answerCommentRepository.save(answerComment);

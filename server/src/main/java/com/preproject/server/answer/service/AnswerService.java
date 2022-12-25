@@ -4,6 +4,10 @@ import com.preproject.server.answer.entity.Answer;
 import com.preproject.server.answer.repository.AnswerRepository;
 import com.preproject.server.constant.ErrorCode;
 import com.preproject.server.exception.ServiceLogicException;
+import com.preproject.server.question.entity.Question;
+import com.preproject.server.question.service.QuestionService;
+import com.preproject.server.user.entity.User;
+import com.preproject.server.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +18,19 @@ import java.util.Optional;
 public class AnswerService {
     private final AnswerRepository answerRepository;
 
+    private final QuestionService questionService;
+
+    private final UserService userService;
+
     public Answer createAnswer(
-            Answer answer
+            Answer answer,
+            Long questionId,
+            Long userId
     ) {
+        User findUser = userService.verifiedUserById(userId);
+        Question findQuestion = questionService.get(questionId);
+        answer.addQuestion(findQuestion);
+        answer.addUser(findUser);
         answer.setCheck(false);
         return answerRepository.save(answer);
     }

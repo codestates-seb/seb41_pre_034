@@ -2,16 +2,10 @@ package com.preproject.server.answer.controller;
 
 import com.preproject.server.answer.dto.AnswerPatchDto;
 import com.preproject.server.answer.dto.AnswerPostDto;
-import com.preproject.server.answer.dto.AnswerResponseDto;
 import com.preproject.server.answer.entity.Answer;
 import com.preproject.server.answer.mapper.AnswerMapper;
 import com.preproject.server.answer.service.AnswerService;
 import com.preproject.server.dto.ResponseDto;
-import com.preproject.server.question.entity.Question;
-import com.preproject.server.question.service.QuestionService;
-import com.preproject.server.user.entity.User;
-import com.preproject.server.user.service.UserService;
-import com.preproject.server.utils.StubDtoUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +15,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/answers")
 @RequiredArgsConstructor
 public class AnswerController {
-
-    private final StubDtoUtils stubDtoUtils;
-
-    private final QuestionService questionService;
-
-    private final UserService userService;
 
     private final AnswerMapper answerMapper;
 
@@ -38,26 +26,14 @@ public class AnswerController {
     public ResponseEntity postAnswer(
             @RequestBody AnswerPostDto answerPostDto
     ) {
-        Long questionId = answerPostDto.getQuestionId();
-        Long userId = answerPostDto.getUserId();
-
-        User findUser = userService.verifiedUserById(userId);
-        Question findQuestion = questionService.get(questionId);
-
-        Answer answer =
-                answerMapper.answerPostDtoToEntity(answerPostDto);
-
-        answer.addQuestion(findQuestion);
-        answer.addUser(findUser);
-
-        Answer save = answerService.createAnswer(answer);
-
-        AnswerResponseDto response =
-                answerMapper.entityToResponseDto(answer);
-
+        Answer save = answerService.createAnswer(
+                answerMapper.answerPostDtoToEntity(answerPostDto),
+                answerPostDto.getQuestionId(),
+                answerPostDto.getUserId()
+                );
 
         return new ResponseEntity<>(
-                ResponseDto.of(response),
+                ResponseDto.of(answerMapper.entityToResponseDto(save)),
                 HttpStatus.CREATED);
     }
 
@@ -71,10 +47,8 @@ public class AnswerController {
                 answerMapper.answerPatchDtoToEntity(answerPatchDto);
         answer.setAnswerId(answerId);
         Answer update = answerService.updateAnswer(answer);
-        AnswerResponseDto response =
-                answerMapper.entityToResponseDto(update);
         return new ResponseEntity<>(
-                ResponseDto.of(response),
+                ResponseDto.of(answerMapper.entityToResponseDto(update)),
                 HttpStatus.OK);
     }
 
