@@ -3,9 +3,11 @@ package com.preproject.server.search.controller;
 
 import com.preproject.server.dto.PageResponseDto;
 import com.preproject.server.question.dto.QuestionResponseDto;
+import com.preproject.server.question.entity.QuestionTag;
+import com.preproject.server.question.mapper.QuestionMapper;
+import com.preproject.server.question.service.QuestionService;
 import com.preproject.server.tag.dto.TagResponseDto;
 import com.preproject.server.tag.service.TagService;
-import com.preproject.server.utils.StubDtoUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -21,27 +23,38 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/search")
 @RequiredArgsConstructor
 public class SearchController {
 
-    private final StubDtoUtils stubDtoUtils;
-
     private final TagService tagService;
+
+    private final QuestionService questionService;
+
+    private final QuestionMapper questionMapper;
 
     @GetMapping
     public ResponseEntity search(
             @RequestParam Map<String, Object> param,
-            @PageableDefault(page = 0, size = 10, sort = "questionId", direction = Sort.Direction.DESC)
+            @PageableDefault(page = 0, size = 10, sort = "questionTagId", direction = Sort.Direction.DESC)
             Pageable pageable
     ) {
-        Page<QuestionResponseDto> questionResponseDtoPage =
-                stubDtoUtils.createQuestionResponseDtoPage(pageable);
+        Page<QuestionTag> allByParam = questionService.findAllByParam(param, pageable);
+        List<QuestionResponseDto> questionList =
+                allByParam.stream()
+                        .map(QuestionTag::getQuestion)
+                        .map(questionMapper::QuestionEntityToResponseDto)
+                        .collect(Collectors.toList());
+
         PageResponseDto response = PageResponseDto.of(
-                questionResponseDtoPage.getContent()
-                , questionResponseDtoPage);
+                questionList,
+                new PageImpl<>(
+                        questionList,
+                        allByParam.getPageable(),
+                        allByParam.getTotalElements()));
 
         return new ResponseEntity<>(
                 response,

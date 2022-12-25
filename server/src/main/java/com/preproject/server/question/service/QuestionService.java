@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -81,7 +82,19 @@ public class QuestionService {
         return questionRepository.findAll(pageable);
     }
 
+    public Page<QuestionTag> findAllByParam(
+            Map<String, Object> param,
+            Pageable pageable) {
+        return questionTagRepository.findQuestionPageBySearchParams(
+                (String) param.get("keyWord"),
+                (String) param.get("displayName"),
+                (String) param.get("tag"),
+                pageable
+        );
+    }
+
     public void delete(Long questionId) {
+
         Question question = findVerifiedQuestion(questionId);
         questionRepository.delete(question);
     }
