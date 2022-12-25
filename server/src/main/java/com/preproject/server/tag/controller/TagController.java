@@ -10,7 +10,6 @@ import com.preproject.server.tag.dto.TagResponseDto;
 import com.preproject.server.tag.entity.Tag;
 import com.preproject.server.tag.mapper.TagMapper;
 import com.preproject.server.tag.service.TagService;
-import com.preproject.server.utils.StubDtoUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -31,8 +30,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/tags")
 @RequiredArgsConstructor
 public class TagController {
-
-    private final StubDtoUtils stubDtoUtils;
 
     private final TagService tagService;
 
