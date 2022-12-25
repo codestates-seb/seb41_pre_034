@@ -22,9 +22,13 @@ public class QQuestion extends EntityPathBase<Question> {
 
     public static final QQuestion question = new QQuestion("question");
 
+    public final NumberPath<Integer> answerCounting = createNumber("answerCounting", Integer.class);
+
     public final ListPath<com.preproject.server.answer.entity.Answer, com.preproject.server.answer.entity.QAnswer> answers = this.<com.preproject.server.answer.entity.Answer, com.preproject.server.answer.entity.QAnswer>createList("answers", com.preproject.server.answer.entity.Answer.class, com.preproject.server.answer.entity.QAnswer.class, PathInits.DIRECT2);
 
     public final StringPath body = createString("body");
+
+    public final NumberPath<Integer> countingVote = createNumber("countingVote", Integer.class);
 
     public final DateTimePath<java.time.LocalDateTime> createAt = createDateTime("createAt", java.time.LocalDateTime.class);
 
@@ -37,6 +41,8 @@ public class QQuestion extends EntityPathBase<Question> {
     public final ListPath<QuestionTag, QQuestionTag> questionTags = this.<QuestionTag, QQuestionTag>createList("questionTags", QuestionTag.class, QQuestionTag.class, PathInits.DIRECT2);
 
     public final ListPath<QuestionVote, QQuestionVote> questionVotes = this.<QuestionVote, QQuestionVote>createList("questionVotes", QuestionVote.class, QQuestionVote.class, PathInits.DIRECT2);
+
+    public final StringPath tagString = createString("tagString");
 
     public final StringPath title = createString("title");
 
