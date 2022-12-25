@@ -6,16 +6,19 @@ import com.preproject.server.exception.ServiceLogicException;
 import com.preproject.server.question.entity.Question;
 import com.preproject.server.question.entity.QuestionTag;
 import com.preproject.server.question.repository.QuestionRepository;
+import com.preproject.server.question.repository.QuestionTagRepository;
 import com.preproject.server.tag.entity.Tag;
 import com.preproject.server.tag.service.TagService;
-import com.preproject.server.user.entity.User;
 import com.preproject.server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,39 +28,31 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
 
+    private final QuestionTagRepository questionTagRepository;
+
     private final UserRepository userRepository;
 
     private final TagService tagService;
 
     public Question save(Question question, String tags) {
         List<Tag> tagByString = tagService.createTagByString(tags);
-
-
         question.setQuestionStatus(QuestionStatus.OPENED);
         question.setViewCounting(0);
-        Question saved = questionRepository.save(question);
-
-        tagByString.forEach(tag -> new QuestionTag(saved, tag));
-
-        return saved;
+        tagByString.forEach(tag -> new QuestionTag(question, tag));
+        return questionRepository.save(question);
     }
 
 
     public Question get(Long questionId) {
 
         Question question = findVerifiedQuestion(questionId);
-        question.setViewCounting(question.getViewCounting()+1);
+        question.setViewCounting(question.getViewCounting() + 1);
         return question;
     }
 
 
 
-    public List<Question> findAll() {
-        List<Question> questionList = questionRepository.findAll();
-        return questionList;
-    }
-
-    public Question patch(Long questionId, Question question) {
+    public Question patch(Long questionId, Question question, String tags) {
 
         Question findQuestion = findVerifiedQuestion(questionId);
 
@@ -66,20 +61,20 @@ public class QuestionService {
 
         Optional.ofNullable(question.getTitle())
                 .ifPresent(title -> findQuestion.setTitle(title));
-
-//  to 태그 수정 미완성
-//          Toto Tag patch
-//        List<Tag> tagList = findQuestion.getQuestionTags().stream().map(questionTags -> {
-//                    QuestionTag questionTag = new QuestionTag();
-//                    Tag tag = new Tag();
-//                    questionTag.setQuestion(questionTags.getQuestion());
-//                    return questionTag.getTag();
-//                }).collect(Collectors.toList());
-//
-//
-//        System.out.println("tagList: "+tagList);
-
+        List<QuestionTag> questionTags = findQuestion.getQuestionTags();
+        if (!tags.isEmpty()) {
+            List<Tag> tagByString = tagService.createTagByString(tags);
+            List<QuestionTag> addTags = tagByString.stream()
+                    .map(tag -> new QuestionTag(findQuestion, tag))
+                    .collect(Collectors.toList());
+            findQuestion.setQuestionTags(addTags);
+        }
+        questionTagRepository.deleteAll(questionTags);
         return findQuestion;
+    }
+
+    public Page<Question> findAll(Pageable pageable) {
+        return questionRepository.findAll(pageable);
     }
 
     public void delete(Long questionId) {
@@ -89,13 +84,6 @@ public class QuestionService {
 
     public void deleteAll() {
         questionRepository.deleteAll();
-    }
-
-    private User verifiedUserById(Long userId) {
-        Optional<User> findUser = userRepository.findById(userId);
-        return findUser.orElseThrow(
-                () -> new ServiceLogicException(ErrorCode.QUESTION_NOT_FOUND)
-        );
     }
 
     public Question findVerifiedQuestion(long questionId) {

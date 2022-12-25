@@ -19,7 +19,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -73,12 +72,17 @@ public class QuestionController {
             @PathVariable Long questionId,
             @RequestBody QuestionPatchDto questionPatchDto) {
 
-        Question question = questionMapper.questionPatchDtoToEntity(questionPatchDto);
-        Question newQuestion = questionService.patch(questionId,question);
+        Question question =
+                questionMapper.questionPatchDtoToEntity(questionPatchDto);
+        Question patch =
+                questionService.patch(
+                        questionId,
+                        question,
+                        questionPatchDto.getTags());
 
 
         return new ResponseEntity<>(
-                ResponseDto.of(questionMapper.QuestionEntityToResponseDto(newQuestion)),
+                ResponseDto.of(questionMapper.QuestionEntityToResponseDto(patch)),
                 HttpStatus.OK);
     }
 
@@ -93,20 +97,22 @@ public class QuestionController {
 
     //    질문 전체 조회 페이지
     @GetMapping
-    @Transactional(readOnly = true)
     public ResponseEntity getQuestions(
             @PageableDefault(page = 0, size = 10, sort = "questionId", direction = Sort.Direction.DESC)
             Pageable pageable
     ) {
-        List<Question> questionList = questionService.findAll();
-        List<QuestionResponseDto> questionListToResponseDtoList = questionMapper.questionListToResponseDtoList(questionList);
-        List<QuestionResponseDto> questionResponseDto = questionListToResponseDtoList;
+        Page<Question> findQuestions = questionService.findAll(pageable);
+        List<Question> questionList = findQuestions.getContent();
+        List<QuestionResponseDto> questionResponseDtos =
+                questionMapper.questionListToResponseDtoList(questionList);
 
-        Page<QuestionResponseDto> questionResponseDtoPage =
-                new PageImpl<>(questionResponseDto, pageable, questionResponseDto.size());
+
         PageResponseDto response = PageResponseDto.of(
-                questionResponseDtoPage.getContent()
-                , questionResponseDtoPage);
+                questionResponseDtos
+                , new PageImpl<>(
+                        questionResponseDtos,
+                        findQuestions.getPageable(),
+                        findQuestions.getTotalElements()));
 
         return new ResponseEntity<>(
                 response,
