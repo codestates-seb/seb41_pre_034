@@ -4,14 +4,9 @@ package com.preproject.server.question.controller;
 import com.preproject.server.dto.ResponseDto;
 import com.preproject.server.question.dto.QuestionCommentPatchDto;
 import com.preproject.server.question.dto.QuestionCommentPostDto;
-import com.preproject.server.question.entity.Question;
 import com.preproject.server.question.entity.QuestionComment;
 import com.preproject.server.question.mapper.QuestionMapper;
 import com.preproject.server.question.service.QuestionCommentService;
-import com.preproject.server.question.service.QuestionService;
-import com.preproject.server.user.entity.User;
-import com.preproject.server.user.service.UserService;
-import com.preproject.server.utils.StubDtoUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,24 +17,23 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class QuestionCommentController {
 
-    private final StubDtoUtils stubDtoUtils;
     private final QuestionMapper questionMapper;
+
     private final QuestionCommentService questionCommentService;
-    private final UserService userService;
-    private final QuestionService questionService;
+
 
     // 질문의 comment 생성
     @PostMapping("/{questionId}")
     public ResponseEntity postQuestionComment(
             @PathVariable Long questionId,
-            @RequestBody QuestionCommentPostDto questionCommentPostDto) {
+            @RequestBody QuestionCommentPostDto questionCommentPostDto
+    ) {
 
-        QuestionComment questionComment = questionMapper.questionCommentDtoToEntity(questionCommentPostDto);
-        User user = userService.findUser(questionCommentPostDto.getUserId());
-        questionComment.addUser(user);
-        Question verifiedQuestion = questionService.findVerifiedQuestion(questionId);
-        questionComment.addQuestion(verifiedQuestion);
-        QuestionComment saved = questionCommentService.save(questionComment);
+        QuestionComment saved = questionCommentService.save(
+                questionMapper.questionCommentDtoToEntity(questionCommentPostDto),
+                questionCommentPostDto.getUserId(),
+                questionId
+                );
 
         return new ResponseEntity<>(
                 ResponseDto.of(questionMapper.questionCommentToQuestionCommentResponseDto(saved)),
@@ -52,10 +46,10 @@ public class QuestionCommentController {
             @PathVariable Long questionCommentId,
             @RequestBody QuestionCommentPatchDto questionCommentPatchDto
     ) {
-        QuestionComment questionComment = questionMapper.questionCommentPatchDtoToEntity(questionCommentPatchDto);
-        User user = questionCommentService.findUser(questionCommentPatchDto.getUserId());
-        questionComment.setUser(user);
-        QuestionComment update = questionCommentService.patch(questionComment,questionCommentId);
+        QuestionComment update = questionCommentService.patch(
+                questionMapper.questionCommentPatchDtoToEntity(questionCommentPatchDto),
+                questionCommentId,
+                questionCommentPatchDto.getUserId());
 
         return new ResponseEntity<>(
                 ResponseDto.of(questionMapper.questionCommentToQuestionCommentResponseDto(update)),

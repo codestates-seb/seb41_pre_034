@@ -9,7 +9,8 @@ import com.preproject.server.question.repository.QuestionRepository;
 import com.preproject.server.question.repository.QuestionTagRepository;
 import com.preproject.server.tag.entity.Tag;
 import com.preproject.server.tag.service.TagService;
-import com.preproject.server.user.repository.UserRepository;
+import com.preproject.server.user.entity.User;
+import com.preproject.server.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,11 +31,14 @@ public class QuestionService {
 
     private final QuestionTagRepository questionTagRepository;
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     private final TagService tagService;
 
-    public Question save(Question question, String tags) {
+    public Question save(Question question, String tags, Long userId) {
+        User user = userService.findUser(userId);
+        question.addUser(user);
+
         List<Tag> tagByString = tagService.createTagByString(tags);
         question.setQuestionStatus(QuestionStatus.OPENED);
         question.setViewCounting(0);
