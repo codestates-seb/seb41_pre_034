@@ -3,6 +3,7 @@ package com.preproject.server.answer.service;
 import com.preproject.server.answer.entity.Answer;
 import com.preproject.server.answer.repository.AnswerRepository;
 import com.preproject.server.constant.ErrorCode;
+import com.preproject.server.constant.QuestionStatus;
 import com.preproject.server.exception.ServiceLogicException;
 import com.preproject.server.question.entity.Question;
 import com.preproject.server.question.service.QuestionService;
@@ -10,11 +11,13 @@ import com.preproject.server.user.entity.User;
 import com.preproject.server.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AnswerService {
     private final AnswerRepository answerRepository;
 
@@ -56,7 +59,10 @@ public class AnswerService {
         Optional.ofNullable(answer.getCheck())
                 .ifPresent(answerCheck->findAnswer.setCheck(answerCheck));
 
-        return findAnswer;
+        if (findAnswer.getCheck()) {
+            findAnswer.getQuestion().setQuestionStatus(QuestionStatus.CLOSED);
+        }
+        return answerRepository.save(findAnswer);
     }
 
     public Answer verifiedAnswerById(Long answerId) {
