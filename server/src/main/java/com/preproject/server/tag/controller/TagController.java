@@ -2,7 +2,7 @@ package com.preproject.server.tag.controller;
 
 
 import com.preproject.server.dto.PageResponseDto;
-import com.preproject.server.question.dto.QuestionResponseDto;
+import com.preproject.server.question.dto.QuestionSimpleResponseDto;
 import com.preproject.server.question.entity.QuestionTag;
 import com.preproject.server.question.mapper.QuestionMapper;
 import com.preproject.server.question.repository.QuestionTagRepository;
@@ -49,9 +49,9 @@ public class TagController {
         Tag tag = tagService.findTag(tagId);
 
         Page<QuestionTag> tags = questionTagRepository.findAllByTag(tag, pageable);
-        List<QuestionResponseDto> questionList = tags.getContent().stream()
+        List<QuestionSimpleResponseDto> questionList = tags.getContent().stream()
                 .map(QuestionTag::getQuestion)
-                .map(questionMapper::QuestionEntityToResponseDto)
+                .map(questionMapper::questionEntityQuestionSimpleResponseDto)
                 .collect(Collectors.toList());
 
         PageResponseDto response = PageResponseDto.of(
