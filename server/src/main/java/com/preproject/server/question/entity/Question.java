@@ -68,6 +68,17 @@ public class Question {
     @LastModifiedDate
     private LocalDateTime updateAt;
 
+    @Column(nullable = false)
+    @Setter
+    private int countingVote;
+
+    @Column(nullable = false)
+    @Setter
+    private int answerCounting;
+
+    @Column(nullable = false)
+    @Setter
+    private String tagString;
 
 
     /* 연관 관계 */

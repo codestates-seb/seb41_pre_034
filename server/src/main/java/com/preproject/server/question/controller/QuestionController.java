@@ -4,7 +4,7 @@ import com.preproject.server.dto.PageResponseDto;
 import com.preproject.server.dto.ResponseDto;
 import com.preproject.server.question.dto.QuestionPatchDto;
 import com.preproject.server.question.dto.QuestionPostDto;
-import com.preproject.server.question.dto.QuestionResponseDto;
+import com.preproject.server.question.dto.QuestionSimpleResponseDto;
 import com.preproject.server.question.entity.Question;
 import com.preproject.server.question.mapper.QuestionMapper;
 import com.preproject.server.question.service.QuestionService;
@@ -98,8 +98,8 @@ public class QuestionController {
     ) {
         Page<Question> findQuestions = questionService.findAll(pageable);
         List<Question> questionList = findQuestions.getContent();
-        List<QuestionResponseDto> questionResponseDtos =
-                questionMapper.questionListToResponseDtoList(questionList);
+        List<QuestionSimpleResponseDto> questionResponseDtos =
+                questionMapper.questionListToSimpleResponseDtoList(questionList);
 
 
         PageResponseDto response = PageResponseDto.of(
