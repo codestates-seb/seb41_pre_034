@@ -10,7 +10,6 @@ import com.preproject.server.user.entity.User;
 import com.preproject.server.user.mapper.UserMapper;
 import com.preproject.server.user.mapper.custom.CustomUserMapper;
 import com.preproject.server.user.service.UserService;
-import com.preproject.server.utils.StubDtoUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -27,8 +26,6 @@ import java.util.List;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
-
-    private final StubDtoUtils stubDtoUtils;
 
     private final UserService userService;
 
