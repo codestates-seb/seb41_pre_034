@@ -3,6 +3,9 @@ package com.preproject.server.tag.controller;
 
 import com.preproject.server.dto.PageResponseDto;
 import com.preproject.server.question.dto.QuestionResponseDto;
+import com.preproject.server.question.entity.QuestionTag;
+import com.preproject.server.question.mapper.QuestionMapper;
+import com.preproject.server.question.repository.QuestionTagRepository;
 import com.preproject.server.tag.dto.TagResponseDto;
 import com.preproject.server.tag.entity.Tag;
 import com.preproject.server.tag.mapper.TagMapper;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/tags")
@@ -32,20 +36,33 @@ public class TagController {
 
     private final TagService tagService;
 
+    private final QuestionTagRepository questionTagRepository;
+
+    private final QuestionMapper questionMapper;
+
     private final TagMapper tagMapper;
 
     @GetMapping("/{tagId}")
     public ResponseEntity getQuestionsByTag(
-            @PageableDefault(page = 0, size = 10, sort = "questionId", direction = Sort.Direction.DESC)
+            @PageableDefault(page = 0, size = 10, sort = "questionTagId", direction = Sort.Direction.DESC)
             Pageable pageable,
-            @PathVariable String tagId
+            @PathVariable Long tagId
     ) {
-        // Todo Question 응답 객체 수정 해야됨
-        Page<QuestionResponseDto> questionResponseDtoPage =
-                stubDtoUtils.createQuestionResponseDtoPage(pageable);
+
+        Tag tag = tagService.findTag(tagId);
+
+        Page<QuestionTag> tags = questionTagRepository.findAllByTag(tag, pageable);
+        List<QuestionResponseDto> questionList = tags.getContent().stream()
+                .map(QuestionTag::getQuestion)
+                .map(questionMapper::QuestionEntityToResponseDto)
+                .collect(Collectors.toList());
+
         PageResponseDto response = PageResponseDto.of(
-                questionResponseDtoPage.getContent(),
-                questionResponseDtoPage);
+                questionList,
+                new PageImpl<>(
+                        questionList,
+                        tags.getPageable(),
+                        tags.getTotalElements()));
         return new ResponseEntity<>(
                 response,
                 HttpStatus.OK);
