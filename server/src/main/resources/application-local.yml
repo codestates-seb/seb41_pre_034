@@ -5,6 +5,7 @@ spring:
       path: /h2
   datasource:
     url: jdbc:h2:mem:test;MODE=MySQL
+    driver-class-name: org.h2.Driver
   jpa:
     defer-datasource-initialization: true
     hibernate:

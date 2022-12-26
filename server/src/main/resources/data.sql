@@ -1,11 +1,11 @@
 insert into `users` (`display_name`, `email`, `email_notice`, `login_type`, `password`,`user_status`)
 values
-    ('testUser', 'test@test', 1, 'BASIC', '{noop}1111!', 'ACTIVITY'),
-    ('testUser1', 'test1@test', 1, 'BASIC', '{noop}1111!', 'ACTIVITY'),
-    ('testUser2', 'test2@test', 1, 'BASIC', '{noop}1111!', 'ACTIVITY'),
-    ('testUser3', 'test3@test', 1, 'BASIC', '{noop}1111!', 'ACTIVITY'),
-    ('testUser4', 'test4@test', 1, 'BASIC', '{noop}1111!', 'ACTIVITY'),
-    ('testUser5', 'test5@test', 1, 'BASIC', '{noop}1111!', 'ACTIVITY')
+    ('testUser', 'test@test.com', 1, 'BASIC', '{noop}1111!', 'ACTIVITY'),
+    ('testUser1', 'test1@test.com', 1, 'BASIC', '{noop}1111!', 'ACTIVITY'),
+    ('testUser2', 'test2@test.com', 1, 'BASIC', '{noop}1111!', 'ACTIVITY'),
+    ('testUser3', 'test3@test.com', 1, 'BASIC', '{noop}1111!', 'ACTIVITY'),
+    ('testUser4', 'test4@test.com', 1, 'BASIC', '{noop}1111!', 'ACTIVITY'),
+    ('testUser5', 'test5@test.com', 1, 'BASIC', '{noop}1111!', 'ACTIVITY')
 ;
 
 insert into `questions` (`user_user_id`, `body`, `title`, `answer_counting`, `counting_vote`, `question_status`, `view_counting`, `tag_string`)
