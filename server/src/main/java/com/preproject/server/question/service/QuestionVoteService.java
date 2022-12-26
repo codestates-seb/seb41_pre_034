@@ -42,7 +42,6 @@ public class QuestionVoteService {
     }
 
     public QuestionVote patch(QuestionVote questionVote, Long questionVoteId) {
-
         QuestionVote vote = findVerifiedQuestionVote(questionVoteId);
         VoteStatus comp = vote.getVoteStatus();
         if (questionVote.getVoteStatus() != null) {
@@ -57,15 +56,19 @@ public class QuestionVoteService {
                 if (comp.equals(VoteStatus.DOWN)) {
                     return vote;
                 } else {
-                    Optional.ofNullable(questionVote.getVoteStatus())
-                            .ifPresent(vote::setVoteStatus);
+                    if (comp.equals(VoteStatus.UP)) {
+                        vote.setVoteStatus(VoteStatus.NONE);
+                    }else {
+                        Optional.ofNullable(questionVote.getVoteStatus())
+                                .ifPresent(vote::setVoteStatus);
+                    }
                 }
             }
         }
+        int countingVote = countingVote(vote.getQuestion());
+        vote.getQuestion().setCountingVote(countingVote);
         return vote;
     }
-
-
 
     public QuestionVote findVerifiedQuestionVote(long questionVoteId) {
         Optional<QuestionVote> optionalQuestionVote =
@@ -76,4 +79,18 @@ public class QuestionVoteService {
                 );
         return questionVote;
     }
+
+    private int countingVote(Question question) {
+        if (!question.getQuestionVotes().isEmpty()) {
+            int up = (int) question.getQuestionVotes()
+                    .stream().filter(vote -> vote.getVoteStatus().equals(VoteStatus.UP)).count();
+            int down = (int) question.getQuestionVotes()
+                    .stream().filter(vote -> vote.getVoteStatus().equals(VoteStatus.DOWN)).count();
+            return up - down;
+        } else {
+            return 0;
+        }
+    }
+
+
 }

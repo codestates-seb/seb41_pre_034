@@ -44,6 +44,7 @@ public interface AnswerMapper {
 
         answerResponseDto.setUserId(answer.getUser().getUserId());
         answerResponseDto.setDisplayName(answer.getUser().getDisplayName());
+        answerResponseDto.setCountingVote(answer.getCountingVote());
 
         return answerResponseDto;
     }

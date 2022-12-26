@@ -1,7 +1,6 @@
 package com.preproject.server.answer.dto;
 
 
-import com.preproject.server.constant.VoteStatus;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -32,18 +31,8 @@ public class AnswerResponseDto {
 
     private List<AnswerVoteResponseDto> answerVotes;
 
-    private int countingVote = countingVote();
+    private int countingVote;
 
 
-    private int countingVote() {
-        if (this.answerVotes != null) {
-            int up = (int) this.answerVotes.stream()
-                    .filter(dto -> dto.getVoteStatus().equals(VoteStatus.UP.toString())).count();
-            int down = (int) this.answerVotes.stream()
-                    .filter(dto -> dto.getVoteStatus().equals(VoteStatus.DOWN.toString())).count();
-            return up - down;
-        } else {
-            return 0;
-        }
-    }
+
 }
