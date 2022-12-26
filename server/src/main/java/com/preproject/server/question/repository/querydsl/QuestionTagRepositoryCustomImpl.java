@@ -1,11 +1,14 @@
 package com.preproject.server.question.repository.querydsl;
 
+import com.preproject.server.answer.entity.QAnswer;
+import com.preproject.server.answer.entity.QAnswerComment;
+import com.preproject.server.answer.entity.QAnswerVote;
 import com.preproject.server.constant.ErrorCode;
 import com.preproject.server.exception.ServiceLogicException;
 import com.preproject.server.question.dto.QuestionSimpleResponseDto;
-import com.preproject.server.question.entity.QQuestion;
-import com.preproject.server.question.entity.QQuestionTag;
-import com.preproject.server.question.entity.Question;
+import com.preproject.server.question.entity.*;
+import com.preproject.server.tag.entity.QTag;
+import com.preproject.server.user.entity.QUser;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.domain.Page;
@@ -32,7 +35,6 @@ public class QuestionTagRepositoryCustomImpl
     ) {
 
         QQuestion qQuestion = QQuestion.question;
-        QQuestionTag qQuestionTag = QQuestionTag.questionTag;
         JPQLQuery<QuestionSimpleResponseDto> query = from(qQuestion)
                 .select(Projections.constructor(
                         QuestionSimpleResponseDto.class,
@@ -66,5 +68,55 @@ public class QuestionTagRepositoryCustomImpl
                 .applyPagination(pageable, query)
                 .fetch();
         return new PageImpl<>(questionTags, pageable, query.fetchCount());
+    }
+
+    @Override
+    public Question findCustomById(Long questionId) {
+        QQuestion question = QQuestion.question;
+        QQuestionComment questionComment = QQuestionComment.questionComment;
+        QQuestionVote questionVote = QQuestionVote.questionVote;
+        QQuestionTag questionTag = QQuestionTag.questionTag;
+        QUser user = QUser.user;
+        QAnswer answer = QAnswer.answer;
+        QAnswerComment answerComment = QAnswerComment.answerComment;
+        QAnswerVote answerVote = QAnswerVote.answerVote;
+        QTag tag = QTag.tag1;
+
+
+        JPQLQuery<Question> query =
+                from(question)
+                        .leftJoin(question.questionComments,questionComment)
+                        .fetchJoin()
+                        .leftJoin(question.questionVotes,questionVote)
+                        .fetchJoin()
+                        .leftJoin(questionVote.user,user)
+                        .fetchJoin()
+                        .leftJoin(questionComment.user,user)
+                        .fetchJoin()
+                        .leftJoin(question.questionTags,questionTag)
+                        .fetchJoin()
+                        .leftJoin(questionTag.tag,tag)
+                        .fetchJoin()
+                        .leftJoin(question.user,user)
+                        .fetchJoin()
+                        .leftJoin(question.answers,answer)
+                        .fetchJoin()
+                        .leftJoin(answer.answerComments, answerComment)
+                        .fetchJoin()
+                        .leftJoin(answerComment.user,user)
+                        .fetchJoin()
+                        .leftJoin(answer.answerVotes, answerVote)
+                        .fetchJoin()
+                        .leftJoin(answerVote.user, user)
+                        .fetchJoin()
+                        .leftJoin(answer.user, user)
+                        .fetchJoin()
+                        .distinct()
+                ;
+
+        if (questionId != null) {
+            query.where(question.questionId.eq(questionId));
+        }
+        return query.fetchOne();
     }
 }
