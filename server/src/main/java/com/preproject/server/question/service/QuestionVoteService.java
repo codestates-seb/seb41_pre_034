@@ -34,10 +34,13 @@ public class QuestionVoteService {
             Long questionId,
             Long userId) {
         User user = userService.verifiedUserById(userId);
-        questionVote.addUser(user);
         Question findQuestion = questionRepository.findById(questionId)
                 .orElseThrow(() -> new ServiceLogicException(ErrorCode.QUESTION_NOT_FOUND));
+        verifiedQuestion(findQuestion,userId);
+        questionVote.addUser(user);
         questionVote.addQuestion(findQuestion);
+        int countingVote = countingVote(findQuestion);
+        findQuestion.setCountingVote(countingVote);
         return questionVoteRepository.save(questionVote);
     }
 
@@ -49,8 +52,12 @@ public class QuestionVoteService {
                 if (comp.equals(VoteStatus.UP)) {
                     return vote;
                 } else {
-                    Optional.ofNullable(questionVote.getVoteStatus())
-                            .ifPresent(vote::setVoteStatus);
+                    if (comp.equals(VoteStatus.NONE)) {
+                        Optional.ofNullable(questionVote.getVoteStatus())
+                                .ifPresent(vote::setVoteStatus);
+                    } else {
+                        vote.setVoteStatus(VoteStatus.NONE);
+                    }
                 }
             } else {
                 if (comp.equals(VoteStatus.DOWN)) {
@@ -67,7 +74,7 @@ public class QuestionVoteService {
         }
         int countingVote = countingVote(vote.getQuestion());
         vote.getQuestion().setCountingVote(countingVote);
-        return vote;
+        return questionVoteRepository.save(vote);
     }
 
     public QuestionVote findVerifiedQuestionVote(long questionVoteId) {
@@ -89,6 +96,15 @@ public class QuestionVoteService {
             return up - down;
         } else {
             return 0;
+        }
+    }
+
+    private void verifiedQuestion(Question question, Long userId) {
+        Optional<QuestionVote> first = question.getQuestionVotes().stream()
+                .filter(vote -> vote.getUser().getUserId().equals(userId))
+                .findFirst();
+        if (first.isPresent()) {
+            throw new ServiceLogicException(ErrorCode.VOTE_EXISTS);
         }
     }
 
