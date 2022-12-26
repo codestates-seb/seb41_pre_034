@@ -19,7 +19,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @ToString
@@ -99,32 +101,32 @@ public class User {
     @ToString.Exclude
     @OrderBy("questionId")
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<Question> questions = new ArrayList<>();
+    private Set<Question> questions = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("answerId")
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<Answer> answers = new ArrayList<>();
+    private Set<Answer> answers = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("answerVoteId")
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<AnswerVote> answerVotes = new ArrayList<>();
+    private Set<AnswerVote> answerVotes = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("answerCommentId")
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<AnswerComment> answerComments = new ArrayList<>();
+    private Set<AnswerComment> answerComments = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("questionCommentId")
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<QuestionComment> questionComments = new ArrayList<>();
+    private Set<QuestionComment> questionComments = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("questionVoteId")
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<QuestionVote> questionVotes = new ArrayList<>();
+    private Set<QuestionVote> questionVotes = new LinkedHashSet<>();
 
     public void addQuestion(Question question) {
         questions.add(question);

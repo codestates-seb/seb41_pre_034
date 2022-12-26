@@ -24,7 +24,7 @@ public class QQuestion extends EntityPathBase<Question> {
 
     public final NumberPath<Integer> answerCounting = createNumber("answerCounting", Integer.class);
 
-    public final ListPath<com.preproject.server.answer.entity.Answer, com.preproject.server.answer.entity.QAnswer> answers = this.<com.preproject.server.answer.entity.Answer, com.preproject.server.answer.entity.QAnswer>createList("answers", com.preproject.server.answer.entity.Answer.class, com.preproject.server.answer.entity.QAnswer.class, PathInits.DIRECT2);
+    public final SetPath<com.preproject.server.answer.entity.Answer, com.preproject.server.answer.entity.QAnswer> answers = this.<com.preproject.server.answer.entity.Answer, com.preproject.server.answer.entity.QAnswer>createSet("answers", com.preproject.server.answer.entity.Answer.class, com.preproject.server.answer.entity.QAnswer.class, PathInits.DIRECT2);
 
     public final StringPath body = createString("body");
 
@@ -32,15 +32,15 @@ public class QQuestion extends EntityPathBase<Question> {
 
     public final DateTimePath<java.time.LocalDateTime> createAt = createDateTime("createAt", java.time.LocalDateTime.class);
 
-    public final ListPath<QuestionComment, QQuestionComment> questionComments = this.<QuestionComment, QQuestionComment>createList("questionComments", QuestionComment.class, QQuestionComment.class, PathInits.DIRECT2);
+    public final SetPath<QuestionComment, QQuestionComment> questionComments = this.<QuestionComment, QQuestionComment>createSet("questionComments", QuestionComment.class, QQuestionComment.class, PathInits.DIRECT2);
 
     public final NumberPath<Long> questionId = createNumber("questionId", Long.class);
 
     public final EnumPath<com.preproject.server.constant.QuestionStatus> questionStatus = createEnum("questionStatus", com.preproject.server.constant.QuestionStatus.class);
 
-    public final ListPath<QuestionTag, QQuestionTag> questionTags = this.<QuestionTag, QQuestionTag>createList("questionTags", QuestionTag.class, QQuestionTag.class, PathInits.DIRECT2);
+    public final SetPath<QuestionTag, QQuestionTag> questionTags = this.<QuestionTag, QQuestionTag>createSet("questionTags", QuestionTag.class, QQuestionTag.class, PathInits.DIRECT2);
 
-    public final ListPath<QuestionVote, QQuestionVote> questionVotes = this.<QuestionVote, QQuestionVote>createList("questionVotes", QuestionVote.class, QQuestionVote.class, PathInits.DIRECT2);
+    public final SetPath<QuestionVote, QQuestionVote> questionVotes = this.<QuestionVote, QQuestionVote>createSet("questionVotes", QuestionVote.class, QQuestionVote.class, PathInits.DIRECT2);
 
     public final StringPath tagString = createString("tagString");
 

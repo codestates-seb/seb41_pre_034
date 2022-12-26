@@ -54,7 +54,7 @@ public class AnswerComment {
     private Answer answer;
 
     @Setter
-    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @ManyToOne(optional = true, fetch = FetchType.EAGER)
     private User user;
 
     public void addAnswer(Answer answer) {

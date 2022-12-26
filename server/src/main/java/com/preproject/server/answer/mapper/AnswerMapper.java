@@ -38,9 +38,9 @@ public interface AnswerMapper {
         answerResponseDto.setCreateAt( answer.getCreateAt() );
         answerResponseDto.setUpdateAt( answer.getUpdateAt() );
         answerResponseDto.setAnswerComments(
-                answerCommentListToAnswerCommentResponseDtoList( answer.getAnswerComments() ) );
+                answerCommentListToAnswerCommentResponseDtoList( new ArrayList<>(answer.getAnswerComments()) ) );
         answerResponseDto.setAnswerVotes(
-                answerVoteListToAnswerVoteResponseDtoList( answer.getAnswerVotes() ) );
+                answerVoteListToAnswerVoteResponseDtoList( new ArrayList<>(answer.getAnswerVotes()) ) );
 
         answerResponseDto.setUserId(answer.getUser().getUserId());
         answerResponseDto.setDisplayName(answer.getUser().getDisplayName());

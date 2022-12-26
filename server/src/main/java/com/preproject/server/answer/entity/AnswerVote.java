@@ -53,7 +53,7 @@ public class AnswerVote {
     private Answer answer;
 
     @Setter
-    @ManyToOne(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(optional = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private User user;
 
     public void addAnswer(Answer answer) {

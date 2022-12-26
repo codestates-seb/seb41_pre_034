@@ -51,11 +51,11 @@ public class QuestionComment {
     /* 연관 관계 */
 
     @Setter
-    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @ManyToOne(optional = true, fetch = FetchType.EAGER)
     private User user;
 
     @Setter
-    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @ManyToOne(optional = true, fetch = FetchType.EAGER)
     private Question question;
 
     public void addUser(User user) {

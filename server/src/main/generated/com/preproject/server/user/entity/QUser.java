@@ -20,11 +20,11 @@ public class QUser extends EntityPathBase<User> {
 
     public static final QUser user = new QUser("user");
 
-    public final ListPath<com.preproject.server.answer.entity.AnswerComment, com.preproject.server.answer.entity.QAnswerComment> answerComments = this.<com.preproject.server.answer.entity.AnswerComment, com.preproject.server.answer.entity.QAnswerComment>createList("answerComments", com.preproject.server.answer.entity.AnswerComment.class, com.preproject.server.answer.entity.QAnswerComment.class, PathInits.DIRECT2);
+    public final SetPath<com.preproject.server.answer.entity.AnswerComment, com.preproject.server.answer.entity.QAnswerComment> answerComments = this.<com.preproject.server.answer.entity.AnswerComment, com.preproject.server.answer.entity.QAnswerComment>createSet("answerComments", com.preproject.server.answer.entity.AnswerComment.class, com.preproject.server.answer.entity.QAnswerComment.class, PathInits.DIRECT2);
 
-    public final ListPath<com.preproject.server.answer.entity.Answer, com.preproject.server.answer.entity.QAnswer> answers = this.<com.preproject.server.answer.entity.Answer, com.preproject.server.answer.entity.QAnswer>createList("answers", com.preproject.server.answer.entity.Answer.class, com.preproject.server.answer.entity.QAnswer.class, PathInits.DIRECT2);
+    public final SetPath<com.preproject.server.answer.entity.Answer, com.preproject.server.answer.entity.QAnswer> answers = this.<com.preproject.server.answer.entity.Answer, com.preproject.server.answer.entity.QAnswer>createSet("answers", com.preproject.server.answer.entity.Answer.class, com.preproject.server.answer.entity.QAnswer.class, PathInits.DIRECT2);
 
-    public final ListPath<com.preproject.server.answer.entity.AnswerVote, com.preproject.server.answer.entity.QAnswerVote> answerVotes = this.<com.preproject.server.answer.entity.AnswerVote, com.preproject.server.answer.entity.QAnswerVote>createList("answerVotes", com.preproject.server.answer.entity.AnswerVote.class, com.preproject.server.answer.entity.QAnswerVote.class, PathInits.DIRECT2);
+    public final SetPath<com.preproject.server.answer.entity.AnswerVote, com.preproject.server.answer.entity.QAnswerVote> answerVotes = this.<com.preproject.server.answer.entity.AnswerVote, com.preproject.server.answer.entity.QAnswerVote>createSet("answerVotes", com.preproject.server.answer.entity.AnswerVote.class, com.preproject.server.answer.entity.QAnswerVote.class, PathInits.DIRECT2);
 
     public final DateTimePath<java.time.LocalDateTime> createAt = createDateTime("createAt", java.time.LocalDateTime.class);
 
@@ -38,11 +38,11 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath password = createString("password");
 
-    public final ListPath<com.preproject.server.question.entity.QuestionComment, com.preproject.server.question.entity.QQuestionComment> questionComments = this.<com.preproject.server.question.entity.QuestionComment, com.preproject.server.question.entity.QQuestionComment>createList("questionComments", com.preproject.server.question.entity.QuestionComment.class, com.preproject.server.question.entity.QQuestionComment.class, PathInits.DIRECT2);
+    public final SetPath<com.preproject.server.question.entity.QuestionComment, com.preproject.server.question.entity.QQuestionComment> questionComments = this.<com.preproject.server.question.entity.QuestionComment, com.preproject.server.question.entity.QQuestionComment>createSet("questionComments", com.preproject.server.question.entity.QuestionComment.class, com.preproject.server.question.entity.QQuestionComment.class, PathInits.DIRECT2);
 
-    public final ListPath<com.preproject.server.question.entity.Question, com.preproject.server.question.entity.QQuestion> questions = this.<com.preproject.server.question.entity.Question, com.preproject.server.question.entity.QQuestion>createList("questions", com.preproject.server.question.entity.Question.class, com.preproject.server.question.entity.QQuestion.class, PathInits.DIRECT2);
+    public final SetPath<com.preproject.server.question.entity.Question, com.preproject.server.question.entity.QQuestion> questions = this.<com.preproject.server.question.entity.Question, com.preproject.server.question.entity.QQuestion>createSet("questions", com.preproject.server.question.entity.Question.class, com.preproject.server.question.entity.QQuestion.class, PathInits.DIRECT2);
 
-    public final ListPath<com.preproject.server.question.entity.QuestionVote, com.preproject.server.question.entity.QQuestionVote> questionVotes = this.<com.preproject.server.question.entity.QuestionVote, com.preproject.server.question.entity.QQuestionVote>createList("questionVotes", com.preproject.server.question.entity.QuestionVote.class, com.preproject.server.question.entity.QQuestionVote.class, PathInits.DIRECT2);
+    public final SetPath<com.preproject.server.question.entity.QuestionVote, com.preproject.server.question.entity.QQuestionVote> questionVotes = this.<com.preproject.server.question.entity.QuestionVote, com.preproject.server.question.entity.QQuestionVote>createSet("questionVotes", com.preproject.server.question.entity.QuestionVote.class, com.preproject.server.question.entity.QQuestionVote.class, PathInits.DIRECT2);
 
     public final ListPath<String, StringPath> roles = this.<String, StringPath>createList("roles", String.class, StringPath.class, PathInits.DIRECT2);
 
