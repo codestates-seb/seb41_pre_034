@@ -2,11 +2,11 @@ import React from 'react';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
 import Inputbox from '../components/Inputbox';
-import zinwon from '../assets/zinwon.png';
+import jinwon from '../assets/jinwon.png';
 import minkyung from '../assets/minkyung.JPG';
 import suyoung from '../assets/suyoung.jpeg';
-import choiU from '../assets/choiU.jpeg';
-import onedo from '../assets/onedo.png';
+import choiyu from '../assets/choiyu.jpeg';
+import wondo from '../assets/wondo.png';
 import seonghun from '../assets/seonghun.jpeg';
 import Tabs from '../components/Tabs';
 
@@ -62,8 +62,8 @@ function Users() {
                 language="javaScript, React"
               />
               <UserCard
-                name="Zinwon"
-                img={zinwon}
+                name="Jinwon"
+                img={jinwon}
                 country="south korea"
                 reputation="153,112"
                 language="javaScript, React"
@@ -83,15 +83,15 @@ function Users() {
                 language="java, Spring"
               />
               <UserCard
-                name="ChoiU"
-                img={choiU}
+                name="Choiyu"
+                img={choiyu}
                 country="south korea"
                 reputation="153,112"
                 language="java, Spring"
               />
               <UserCard
-                name="Onedo"
-                img={onedo}
+                name="Wondo"
+                img={wondo}
                 country="south korea"
                 reputation="153,112"
                 language="java, Spring"
