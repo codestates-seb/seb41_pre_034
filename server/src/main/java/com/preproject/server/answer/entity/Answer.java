@@ -12,8 +12,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @ToString
@@ -55,24 +55,28 @@ public class Answer {
     @LastModifiedDate
     private LocalDateTime updateAt;
 
+    @Column(nullable = false)
+    @Setter
+    private int countingVote;
+
     /* 연관 관계 */
 
     @ToString.Exclude
     @OrderBy("answerCommentId")
     @OneToMany(mappedBy = "answer", cascade = CascadeType.REMOVE)
-    private List<AnswerComment> answerComments = new ArrayList<>();
+    private Set<AnswerComment> answerComments = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("answerVoteId")
     @OneToMany(mappedBy = "answer", cascade = CascadeType.REMOVE)
-    private List<AnswerVote> answerVotes = new ArrayList<>();
+    private Set<AnswerVote> answerVotes = new LinkedHashSet<>();
 
     @Setter
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     private Question question;
 
     @Setter
-    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @ManyToOne(optional = true, fetch = FetchType.EAGER)
     private User user;
 
     public void addAnswerComment(AnswerComment answerComment) {

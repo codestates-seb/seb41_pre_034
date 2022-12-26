@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -51,9 +52,12 @@ public class QuestionCommentService {
             Long questionCommentId,
             Long userId
     ) {
-        User user = userService.verifiedUserById(userId);
-        questionComment.setUser(user);
         QuestionComment findQuestionComment = findVerifiedQuestionComment(questionCommentId);
+
+        if (!Objects.equals(findQuestionComment.getUser().getUserId(), userId)) {
+            throw new ServiceLogicException(ErrorCode.ACCESS_DENIED);
+        }
+
         Optional.ofNullable(questionComment.getComment())
                 .ifPresent(comment -> findQuestionComment.setComment(comment));
 

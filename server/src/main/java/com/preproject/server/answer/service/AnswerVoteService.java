@@ -49,12 +49,17 @@ public class AnswerVoteService {
                 if (comp.equals(VoteStatus.DOWN)) {
                     return vote;
                 } else {
-                    Optional.ofNullable(answerVote.getVoteStatus())
-                            .ifPresent(vote::setVoteStatus);
+                    if (comp.equals(VoteStatus.UP)) {
+                        vote.setVoteStatus(VoteStatus.NONE);
+                    }else {
+                        Optional.ofNullable(answerVote.getVoteStatus())
+                                .ifPresent(vote::setVoteStatus);
+                    }
                 }
             }
         }
-
+        int countingVote = countingVote(vote.getAnswer());
+        vote.getAnswer().setCountingVote(countingVote);
         return vote;
     }
 
@@ -70,5 +75,16 @@ public class AnswerVoteService {
         return findVote.orElseThrow(
                 () -> new ServiceLogicException(ErrorCode.ANSWER_NOT_FOUND)
         );
+    }
+    private int countingVote(Answer answer) {
+        if (!answer.getAnswerVotes().isEmpty()) {
+            int up = (int) answer.getAnswerVotes()
+                    .stream().filter(vote -> vote.getVoteStatus().equals(VoteStatus.UP)).count();
+            int down = (int) answer.getAnswerVotes()
+                    .stream().filter(vote -> vote.getVoteStatus().equals(VoteStatus.DOWN)).count();
+            return up - down;
+        } else {
+            return 0;
+        }
     }
 }

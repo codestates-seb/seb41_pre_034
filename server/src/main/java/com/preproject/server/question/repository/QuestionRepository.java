@@ -2,6 +2,7 @@ package com.preproject.server.question.repository;
 
 import com.preproject.server.question.entity.QQuestion;
 import com.preproject.server.question.entity.Question;
+import com.preproject.server.question.repository.querydsl.QuestionTagRepositoryCustom;
 import com.querydsl.core.types.dsl.StringExpression;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,7 @@ import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
 import org.springframework.data.querydsl.binding.QuerydslBindings;
 
 public interface QuestionRepository extends JpaRepository<Question, Long>,
+        QuestionTagRepositoryCustom,
         QuerydslPredicateExecutor<Question>,
         QuerydslBinderCustomizer<QQuestion>
 {

@@ -11,8 +11,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @ToString
@@ -84,29 +84,29 @@ public class Question {
     /* 연관 관계 */
 
     @Setter
-    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @ManyToOne(optional = true, fetch = FetchType.EAGER)
     private User user;
 
     @ToString.Exclude
     @OrderBy("answerId")
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
-    private List<Answer> answers = new ArrayList<>();
+    private Set<Answer> answers = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("questionCommentId")
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
-    private List<QuestionComment> questionComments = new ArrayList<>();
+    private Set<QuestionComment> questionComments = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("questionVoteId")
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
-    private List<QuestionVote> questionVotes = new ArrayList<>();
+    private Set<QuestionVote> questionVotes = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("questionTagId")
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     @Setter
-    private List<QuestionTag> questionTags = new ArrayList<>();
+    private Set<QuestionTag> questionTags = new LinkedHashSet<>();
 
     public void addUser(User user) {
         this.user = user;

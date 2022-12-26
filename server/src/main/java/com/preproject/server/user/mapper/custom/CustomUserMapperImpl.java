@@ -48,8 +48,8 @@ public class CustomUserMapperImpl implements CustomUserMapper{
         }
         userResponseDto.setCreateAt( user.getCreateAt() );
         userResponseDto.setUpdateAt( user.getUpdateAt() );
-        userResponseDto.setQuestions( questionListToQuestionResponseDtoList( user.getQuestions() ) );
-        userResponseDto.setAnswers( answerListToAnswerResponseDtoList( user.getAnswers() ) );
+        userResponseDto.setQuestions( questionListToQuestionResponseDtoList( new ArrayList<>(user.getQuestions()) ) );
+        userResponseDto.setAnswers( answerListToAnswerResponseDtoList( new ArrayList<>(user.getAnswers()) ) );
 
         return userResponseDtoMappingUtil(userResponseDto);
     }
