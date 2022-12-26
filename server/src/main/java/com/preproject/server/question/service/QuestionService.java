@@ -54,7 +54,6 @@ public class QuestionService {
     public Question get(Long questionId) {
         Question question = findVerifiedQuestion(questionId);
         question.setViewCounting(question.getViewCounting() + 1);
-        question.setCountingVote(countingVote(question.getQuestionVotes()));
         question.setAnswerCounting(countingAnswer(question.getAnswers()));
         question.setTagString(buildTagString(question.getQuestionTags()));
         return question;

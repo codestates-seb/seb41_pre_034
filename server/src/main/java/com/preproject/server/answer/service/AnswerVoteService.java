@@ -28,9 +28,12 @@ public class AnswerVoteService {
             Long userId
     ) {
         User findUser = userService.verifiedUserById(userId);
-        answerVote.addUser(findUser);
         Answer answer = verifiedAnswerById(answerId);
+        verifiedAnswer(answer,userId);
+        answerVote.addUser(findUser);
         answerVote.addAnswer(answer);
+        int countingVote = countingVote(answer);
+        answer.setCountingVote(countingVote);
         return answerVoteRepository.save(answerVote);
     }
 
@@ -42,8 +45,12 @@ public class AnswerVoteService {
                 if (comp.equals(VoteStatus.UP)) {
                     return vote;
                 } else {
-                    Optional.ofNullable(answerVote.getVoteStatus())
-                            .ifPresent(vote::setVoteStatus);
+                    if (comp.equals(VoteStatus.NONE)) {
+                        Optional.ofNullable(answerVote.getVoteStatus())
+                                .ifPresent(vote::setVoteStatus);
+                    } else {
+                        vote.setVoteStatus(VoteStatus.NONE);
+                    }
                 }
             } else {
                 if (comp.equals(VoteStatus.DOWN)) {
@@ -60,7 +67,7 @@ public class AnswerVoteService {
         }
         int countingVote = countingVote(vote.getAnswer());
         vote.getAnswer().setCountingVote(countingVote);
-        return vote;
+        return answerVoteRepository.save(vote);
     }
 
     public Answer verifiedAnswerById(Long answerId) {
@@ -85,6 +92,15 @@ public class AnswerVoteService {
             return up - down;
         } else {
             return 0;
+        }
+    }
+
+    private void verifiedAnswer(Answer answer, Long userId) {
+        Optional<AnswerVote> first = answer.getAnswerVotes().stream()
+                .filter(vote -> vote.getUser().getUserId().equals(userId))
+                .findFirst();
+        if (first.isPresent()) {
+            throw new ServiceLogicException(ErrorCode.VOTE_EXISTS);
         }
     }
 }
