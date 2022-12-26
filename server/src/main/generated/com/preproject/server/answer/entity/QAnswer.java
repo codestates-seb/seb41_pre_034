@@ -32,6 +32,8 @@ public class QAnswer extends EntityPathBase<Answer> {
 
     public final BooleanPath check = createBoolean("check");
 
+    public final NumberPath<Integer> countingVote = createNumber("countingVote", Integer.class);
+
     public final DateTimePath<java.time.LocalDateTime> createAt = createDateTime("createAt", java.time.LocalDateTime.class);
 
     public final com.preproject.server.question.entity.QQuestion question;
