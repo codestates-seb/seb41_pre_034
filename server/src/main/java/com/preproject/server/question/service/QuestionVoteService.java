@@ -7,6 +7,8 @@ import com.preproject.server.question.entity.Question;
 import com.preproject.server.question.entity.QuestionVote;
 import com.preproject.server.question.repository.QuestionRepository;
 import com.preproject.server.question.repository.QuestionVoteRepository;
+import com.preproject.server.user.entity.User;
+import com.preproject.server.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,8 +25,16 @@ public class QuestionVoteService {
 
     private final QuestionRepository questionRepository;
 
-    public QuestionVote post(QuestionVote questionVote, Long questionId) {
+    private final UserService userService;
 
+    private final QuestionService questionService;
+
+    public QuestionVote post(
+            QuestionVote questionVote,
+            Long questionId,
+            Long userId) {
+        User user = userService.verifiedUserById(userId);
+        questionVote.addUser(user);
         Question findQuestion = questionRepository.findById(questionId)
                 .orElseThrow(() -> new ServiceLogicException(ErrorCode.QUESTION_NOT_FOUND));
         questionVote.addQuestion(findQuestion);

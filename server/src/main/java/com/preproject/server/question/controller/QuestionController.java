@@ -4,13 +4,10 @@ import com.preproject.server.dto.PageResponseDto;
 import com.preproject.server.dto.ResponseDto;
 import com.preproject.server.question.dto.QuestionPatchDto;
 import com.preproject.server.question.dto.QuestionPostDto;
-import com.preproject.server.question.dto.QuestionResponseDto;
+import com.preproject.server.question.dto.QuestionSimpleResponseDto;
 import com.preproject.server.question.entity.Question;
 import com.preproject.server.question.mapper.QuestionMapper;
 import com.preproject.server.question.service.QuestionService;
-import com.preproject.server.user.entity.User;
-import com.preproject.server.user.service.UserService;
-import com.preproject.server.utils.StubDtoUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -28,20 +25,20 @@ import java.util.List;
 @RequiredArgsConstructor
 public class QuestionController {
 
-    private final StubDtoUtils stubDtoUtils;
     private final QuestionService questionService;
     private final QuestionMapper questionMapper;
-    private final UserService userService;
 
     //    질문 생성
     @PostMapping
     public ResponseEntity postQuestion(
             @RequestBody QuestionPostDto questionPostDto) {
-        User user = userService.findUser(questionPostDto.getUserId());
 
         Question question = questionMapper.questionPostDtoToEntity(questionPostDto);
-        question.addUser(user);
-        Question saved = questionService.save(question, questionPostDto.getTags());
+
+        Question saved = questionService.save(
+                question,
+                questionPostDto.getTags(),
+                questionPostDto.getUserId());
 
         return new ResponseEntity<>(
                 ResponseDto.of(questionMapper.QuestionEntityToResponseDto(saved)),
@@ -72,12 +69,10 @@ public class QuestionController {
             @PathVariable Long questionId,
             @RequestBody QuestionPatchDto questionPatchDto) {
 
-        Question question =
-                questionMapper.questionPatchDtoToEntity(questionPatchDto);
         Question patch =
                 questionService.patch(
                         questionId,
-                        question,
+                        questionMapper.questionPatchDtoToEntity(questionPatchDto),
                         questionPatchDto.getTags());
 
 
@@ -103,8 +98,8 @@ public class QuestionController {
     ) {
         Page<Question> findQuestions = questionService.findAll(pageable);
         List<Question> questionList = findQuestions.getContent();
-        List<QuestionResponseDto> questionResponseDtos =
-                questionMapper.questionListToResponseDtoList(questionList);
+        List<QuestionSimpleResponseDto> questionResponseDtos =
+                questionMapper.questionListToSimpleResponseDtoList(questionList);
 
 
         PageResponseDto response = PageResponseDto.of(

@@ -45,7 +45,7 @@ public class Tag {
     private String tag;
 
     @Setter
-    @Column(nullable = true)
+    @Column(nullable = true, length = 1000)
     private String description;
 
     @Column(nullable = false, insertable = false, updatable = false,

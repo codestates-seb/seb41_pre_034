@@ -2,10 +2,7 @@ package com.preproject.server.question.entity;
 
 
 import com.preproject.server.tag.entity.Tag;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -22,6 +19,7 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 public class QuestionTag {
 
     public QuestionTag(

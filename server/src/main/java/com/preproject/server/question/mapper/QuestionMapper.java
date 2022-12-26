@@ -47,6 +47,19 @@ public interface QuestionMapper {
         return list;
     }
 
+    default List<QuestionSimpleResponseDto> questionListToSimpleResponseDtoList(List<Question> questionList) {
+        if ( questionList == null ) {
+            return null;
+        }
+
+        List<QuestionSimpleResponseDto> list = new ArrayList<QuestionSimpleResponseDto>( questionList.size() );
+        for ( Question question : questionList ) {
+            list.add( questionEntityQuestionSimpleResponseDto( question ) );
+        }
+
+        return list;
+    }
+
     default Question questionPatchDtoToEntity(QuestionPatchDto questionPatchDto) {
         if ( questionPatchDto == null ) {
             return null;
@@ -58,6 +71,29 @@ public interface QuestionMapper {
         question.setBody( questionPatchDto.getBody() );
 
         return question;
+    }
+
+    default QuestionSimpleResponseDto questionEntityQuestionSimpleResponseDto(Question question) {
+        if ( question == null ) {
+            return null;
+        }
+        QuestionSimpleResponseDto questionResponseDto = new QuestionSimpleResponseDto();
+
+        questionResponseDto.setQuestionId( question.getQuestionId() );
+        questionResponseDto.setTitle( question.getTitle() );
+        questionResponseDto.setBody( question.getBody() );
+        questionResponseDto.setUserId(question.getUser().getUserId());
+        questionResponseDto.setDisplayName(question.getUser().getDisplayName());
+        if ( question.getQuestionStatus() != null ) {
+            questionResponseDto.setQuestionStatus( question.getQuestionStatus().name() );
+        }
+        questionResponseDto.setCreateAt( question.getCreateAt() );
+        questionResponseDto.setUpdateAt( question.getUpdateAt() );
+        questionResponseDto.setCountingVote(question.getCountingVote());
+        questionResponseDto.setViewCounting( question.getViewCounting() );
+        questionResponseDto.setAnswerCounting(question.getAnswerCounting());
+        questionResponseDto.setTags(question.getTagString());
+        return questionResponseDto;
     }
 
 
@@ -83,6 +119,8 @@ public interface QuestionMapper {
 
         questionResponseDto.setUserId(question.getUser().getUserId());
         questionResponseDto.setDisplayName(question.getUser().getDisplayName());
+        questionResponseDto.setCountingVote(question.getCountingVote());
+        questionResponseDto.setAnswerCounting(question.getAnswerCounting());
 
         List<Tag> tags = question.getQuestionTags()
                 .stream().map(QuestionTag::getTag).collect(Collectors.toList());

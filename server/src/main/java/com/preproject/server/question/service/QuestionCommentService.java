@@ -2,11 +2,13 @@ package com.preproject.server.question.service;
 
 import com.preproject.server.constant.ErrorCode;
 import com.preproject.server.exception.ServiceLogicException;
+import com.preproject.server.question.entity.Question;
 import com.preproject.server.question.entity.QuestionComment;
 import com.preproject.server.question.repository.QuestionCommentRepository;
 import com.preproject.server.question.repository.QuestionRepository;
 import com.preproject.server.user.entity.User;
 import com.preproject.server.user.repository.UserRepository;
+import com.preproject.server.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,15 +26,33 @@ public class QuestionCommentService {
 
     private final QuestionRepository questionRepository;
 
-    public QuestionComment save(QuestionComment questionComment) {
+    private final QuestionService questionService;
 
-        QuestionComment save = questionCommentRepository.save(questionComment);
+    private final UserService userService;
 
-        return save;
+
+
+    public QuestionComment save(
+            QuestionComment questionComment,
+            Long userId,
+            Long questionId
+    ) {
+        User user = userService.verifiedUserById(userId);
+        questionComment.addUser(user);
+        Question verifiedQuestion = questionService.findVerifiedQuestion(questionId);
+        questionComment.addQuestion(verifiedQuestion);
+
+        return questionCommentRepository.save(questionComment);
 
     }
 
-    public QuestionComment patch(QuestionComment questionComment, Long questionCommentId) {
+    public QuestionComment patch(
+            QuestionComment questionComment,
+            Long questionCommentId,
+            Long userId
+    ) {
+        User user = userService.verifiedUserById(userId);
+        questionComment.setUser(user);
         QuestionComment findQuestionComment = findVerifiedQuestionComment(questionCommentId);
         Optional.ofNullable(questionComment.getComment())
                 .ifPresent(comment -> findQuestionComment.setComment(comment));

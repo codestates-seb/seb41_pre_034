@@ -23,6 +23,7 @@ import java.util.List;
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 public class Question {
 
     /* 생성자 */
@@ -67,6 +68,17 @@ public class Question {
     @LastModifiedDate
     private LocalDateTime updateAt;
 
+    @Column(nullable = false)
+    @Setter
+    private int countingVote;
+
+    @Column(nullable = false)
+    @Setter
+    private int answerCounting;
+
+    @Column(nullable = false)
+    @Setter
+    private String tagString;
 
 
     /* 연관 관계 */

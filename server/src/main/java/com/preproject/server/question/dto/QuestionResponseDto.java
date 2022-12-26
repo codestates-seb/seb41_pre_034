@@ -1,7 +1,6 @@
 package com.preproject.server.question.dto;
 
 import com.preproject.server.answer.dto.AnswerResponseDto;
-import com.preproject.server.constant.VoteStatus;
 import com.preproject.server.tag.dto.TagResponseDto;
 import lombok.*;
 
@@ -33,27 +32,17 @@ public class QuestionResponseDto {
 
     private LocalDateTime updateAt;
 
+    private int countingVote;
+
+    private int answerCounting;
+
     private List<QuestionVoteResponseDto> questionVotes;
 
-    private int countingVote = countingVote();
     private List<AnswerResponseDto> answers;
-
-    private int countingAnswers;
 
     private List<QuestionCommentResponseDto> questionComments;
 
     private List<TagResponseDto> tags;
 
-    private int countingVote() {
-        if (this.questionVotes != null) {
-            int up = (int) this.questionVotes.stream()
-                    .filter(dto -> dto.getVoteStatus().equals(VoteStatus.UP.toString())).count();
-            int down = (int) this.questionVotes.stream()
-                    .filter(dto -> dto.getVoteStatus().equals(VoteStatus.DOWN.toString())).count();
-            return up - down;
-        } else {
-            return 0;
-        }
-    }
 
 }
