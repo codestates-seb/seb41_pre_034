@@ -64,18 +64,18 @@ values
     ('UP', 5, 6)
 ;
 
-insert into `answers` (`body`, `checked`, `question_question_id`, `user_user_id`)
+insert into `answers` (`body`, `checked`, `question_question_id`, `user_user_id`, `counting_vote`)
 values
-    ('Test Body', 'FALSE', 1, 2),
-    ('Test Body', 'FALSE', 1, 3),
-    ('Test Body', 'FALSE', 1, 4),
-    ('Test Body', 'FALSE', 1, 3),
-    ('Test Body', 'FALSE', 1, 6),
-    ('Test Body', 'FALSE', 2, 1),
-    ('Test Body', 'FALSE', 3, 3),
-    ('Test Body', 'FALSE', 4, 4),
-    ('Test Body', 'FALSE', 5, 2),
-    ('Test Body', 'FALSE', 5, 1)
+    ('Test Body', 'FALSE', 1, 2, 0),
+    ('Test Body', 'FALSE', 1, 3, 0),
+    ('Test Body', 'FALSE', 1, 4, 0),
+    ('Test Body', 'FALSE', 1, 3, 0),
+    ('Test Body', 'FALSE', 1, 6, 0),
+    ('Test Body', 'FALSE', 2, 1, 0),
+    ('Test Body', 'FALSE', 3, 3, 0),
+    ('Test Body', 'FALSE', 4, 4, 0),
+    ('Test Body', 'FALSE', 5, 2, 0),
+    ('Test Body', 'FALSE', 5, 1, 0)
 ;
 
 insert into `answer_comment` (`comment`, `answer_answer_id`, `user_user_id`)
