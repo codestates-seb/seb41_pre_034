@@ -49,11 +49,11 @@ public class AnswerVote {
     /* 연관 관계 */
 
     @Setter
-    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @ManyToOne(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Answer answer;
 
     @Setter
-    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @ManyToOne(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User user;
 
     public void addAnswer(Answer answer) {

@@ -55,6 +55,10 @@ public class Answer {
     @LastModifiedDate
     private LocalDateTime updateAt;
 
+    @Column(nullable = false)
+    @Setter
+    private int countingVote;
+
     /* 연관 관계 */
 
     @ToString.Exclude
