@@ -1,11 +1,11 @@
 insert into `users` (`display_name`, `email`, `email_notice`, `login_type`, `password`,`user_status`)
 values
-    ('testUser', 'test@test', 'true', 'BASIC', '{noop}1111!', 'ACTIVITY'),
-    ('testUser1', 'test1@test', 'true', 'BASIC', '{noop}1111!', 'ACTIVITY'),
-    ('testUser2', 'test2@test', 'true', 'BASIC', '{noop}1111!', 'ACTIVITY'),
-    ('testUser3', 'test3@test', 'true', 'BASIC', '{noop}1111!', 'ACTIVITY'),
-    ('testUser4', 'test4@test', 'true', 'BASIC', '{noop}1111!', 'ACTIVITY'),
-    ('testUser5', 'test5@test', 'true', 'BASIC', '{noop}1111!', 'ACTIVITY')
+    ('testUser', 'test@test', 1, 'BASIC', '{noop}1111!', 'ACTIVITY'),
+    ('testUser1', 'test1@test', 1, 'BASIC', '{noop}1111!', 'ACTIVITY'),
+    ('testUser2', 'test2@test', 1, 'BASIC', '{noop}1111!', 'ACTIVITY'),
+    ('testUser3', 'test3@test', 1, 'BASIC', '{noop}1111!', 'ACTIVITY'),
+    ('testUser4', 'test4@test', 1, 'BASIC', '{noop}1111!', 'ACTIVITY'),
+    ('testUser5', 'test5@test', 1, 'BASIC', '{noop}1111!', 'ACTIVITY')
 ;
 
 insert into `questions` (`user_user_id`, `body`, `title`, `answer_counting`, `counting_vote`, `question_status`, `view_counting`, `tag_string`)
@@ -66,16 +66,16 @@ values
 
 insert into `answers` (`body`, `checked`, `question_question_id`, `user_user_id`, `counting_vote`)
 values
-    ('Test Body', 'FALSE', 1, 2, 0),
-    ('Test Body', 'FALSE', 1, 3, 0),
-    ('Test Body', 'FALSE', 1, 4, 0),
-    ('Test Body', 'FALSE', 1, 3, 0),
-    ('Test Body', 'FALSE', 1, 6, 0),
-    ('Test Body', 'FALSE', 2, 1, 0),
-    ('Test Body', 'FALSE', 3, 3, 0),
-    ('Test Body', 'FALSE', 4, 4, 0),
-    ('Test Body', 'FALSE', 5, 2, 0),
-    ('Test Body', 'FALSE', 5, 1, 0)
+    ('Test Body', 0, 1, 2, 0),
+    ('Test Body', 0, 1, 3, 0),
+    ('Test Body', 0, 1, 4, 0),
+    ('Test Body', 0, 1, 3, 0),
+    ('Test Body', 0, 1, 6, 0),
+    ('Test Body', 0, 2, 1, 0),
+    ('Test Body', 0, 3, 3, 0),
+    ('Test Body', 0, 4, 4, 0),
+    ('Test Body', 0, 5, 2, 0),
+    ('Test Body', 0, 5, 1, 0)
 ;
 
 insert into `answer_comment` (`comment`, `answer_answer_id`, `user_user_id`)
