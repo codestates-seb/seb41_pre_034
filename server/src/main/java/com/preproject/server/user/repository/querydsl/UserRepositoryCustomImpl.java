@@ -52,17 +52,6 @@ public class UserRepositoryCustomImpl extends QuerydslRepositorySupport implemen
                         .fetchJoin()
                         .leftJoin(answer.answerVotes, answerVote)
                         .fetchJoin()
-
-//                        .leftJoin(questionComment.user,user)
-//                        .fetchJoin()
-//                        .leftJoin(user.answerComments,answerComment)
-//                        .fetchJoin()
-//                        .leftJoin(answerComment.user,user)
-//                        .fetchJoin()
-//                        .leftJoin(answerVote.user, user)
-//                        .fetchJoin()
-//                        .leftJoin(answer.user, user)
-//                        .fetchJoin()
                         .distinct()
                 ;
 
