@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -74,12 +75,13 @@ public class QuestionService {
 
         Optional.ofNullable(question.getTitle())
                 .ifPresent(title -> findQuestion.setTitle(title));
-        List<QuestionTag> questionTags = findQuestion.getQuestionTags();
+        List<QuestionTag> questionTags = findQuestion.getQuestionTags()
+                .stream().collect(Collectors.toList());
         if (!tags.isEmpty()) {
             List<Tag> tagByString = tagService.createTagByString(tags);
-            List<QuestionTag> addTags = tagByString.stream()
+            Set<QuestionTag> addTags = tagByString.stream()
                     .map(tag -> new QuestionTag(findQuestion, tag))
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toSet());
             findQuestion.setQuestionTags(addTags);
         }
         questionTagRepository.deleteAll(questionTags);
@@ -113,7 +115,7 @@ public class QuestionService {
 
     public Question findVerifiedQuestion(long questionId) {
         Optional<Question> optionalQuestion =
-                questionRepository.findById(questionId);
+                Optional.ofNullable(questionRepository.findCustomById(questionId));
         Question findQuestion =
                 optionalQuestion.orElseThrow(() -> new ServiceLogicException(ErrorCode.QUESTION_NOT_FOUND));
 
@@ -122,7 +124,7 @@ public class QuestionService {
 
     /* util  메소드 */
 
-    private String buildTagString(List<QuestionTag> questionTags ) {
+    private String buildTagString(Set<QuestionTag> questionTags ) {
         if (questionTags == null) return "";
         List<Tag> tags = questionTags.stream()
                 .map(QuestionTag::getTag)
@@ -132,7 +134,7 @@ public class QuestionService {
         return sb.toString().replaceFirst(".$", "");
     }
 
-    private int countingAnswer(List<Answer> answers) {
+    private int countingAnswer(Set<Answer> answers) {
         if (answers != null) {
             return answers.size();
         } else {
@@ -141,7 +143,7 @@ public class QuestionService {
     }
 
 
-    private int countingVote(List<QuestionVote> questionVotes) {
+    private int countingVote(Set<QuestionVote> questionVotes) {
         if (questionVotes != null) {
             int up = (int) questionVotes.stream()
                     .filter(dto -> dto.getVoteStatus().equals(VoteStatus.UP.toString())).count();

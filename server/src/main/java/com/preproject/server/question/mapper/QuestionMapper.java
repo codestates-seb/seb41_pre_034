@@ -113,9 +113,9 @@ public interface QuestionMapper {
         }
         questionResponseDto.setCreateAt( question.getCreateAt() );
         questionResponseDto.setUpdateAt( question.getUpdateAt() );
-        questionResponseDto.setQuestionVotes( questionVoteListToQuestionVoteResponseDtoList( question.getQuestionVotes() ) );
-        questionResponseDto.setAnswers( answerListToAnswerResponseDtoList( question.getAnswers() ) );
-        questionResponseDto.setQuestionComments( questionCommentListToQuestionCommentResponseDtoList( question.getQuestionComments() ) );
+        questionResponseDto.setQuestionVotes( questionVoteListToQuestionVoteResponseDtoList( new ArrayList<>(question.getQuestionVotes()) ) );
+        questionResponseDto.setAnswers( answerListToAnswerResponseDtoList( new ArrayList<>(question.getAnswers()) ) );
+        questionResponseDto.setQuestionComments( questionCommentListToQuestionCommentResponseDtoList( new ArrayList<>(question.getQuestionComments()) ) );
 
         questionResponseDto.setUserId(question.getUser().getUserId());
         questionResponseDto.setDisplayName(question.getUser().getDisplayName());
@@ -210,8 +210,8 @@ public interface QuestionMapper {
         answerResponseDto.setCheck( answer.getCheck() );
         answerResponseDto.setCreateAt( answer.getCreateAt() );
         answerResponseDto.setUpdateAt( answer.getUpdateAt() );
-        answerResponseDto.setAnswerComments( answerCommentListToAnswerCommentResponseDtoList( answer.getAnswerComments() ) );
-        answerResponseDto.setAnswerVotes( answerVoteListToAnswerVoteResponseDtoList( answer.getAnswerVotes() ) );
+        answerResponseDto.setAnswerComments( answerCommentListToAnswerCommentResponseDtoList( new ArrayList<>(answer.getAnswerComments()) ) );
+        answerResponseDto.setAnswerVotes( answerVoteListToAnswerVoteResponseDtoList( new ArrayList<>(answer.getAnswerVotes()) ) );
 
         answerResponseDto.setUserId(answer.getUser().getUserId());
         answerResponseDto.setDisplayName(answer.getUser().getDisplayName());
