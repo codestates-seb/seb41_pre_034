@@ -56,7 +56,7 @@ public class UserService {
 
     /* 사용자 단건 조회 */
     public User findUser(Long userId) {
-        User user = verifiedUserById(userId);
+        User user = userRepository.findCustomById(userId);
 
         return user;
     }
@@ -94,7 +94,8 @@ public class UserService {
     }
 
     public User verifiedUserById(Long userId) {
-        Optional<User> findUser = userRepository.findById(userId);
+        Optional<User> findUser =
+                Optional.ofNullable(userRepository.findCustomById(userId));
         return findUser.orElseThrow(
                 () -> new ServiceLogicException(ErrorCode.USER_NOT_FOUND)
         );

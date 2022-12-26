@@ -22,11 +22,11 @@ public class QAnswer extends EntityPathBase<Answer> {
 
     public static final QAnswer answer = new QAnswer("answer");
 
-    public final ListPath<AnswerComment, QAnswerComment> answerComments = this.<AnswerComment, QAnswerComment>createList("answerComments", AnswerComment.class, QAnswerComment.class, PathInits.DIRECT2);
+    public final SetPath<AnswerComment, QAnswerComment> answerComments = this.<AnswerComment, QAnswerComment>createSet("answerComments", AnswerComment.class, QAnswerComment.class, PathInits.DIRECT2);
 
     public final NumberPath<Long> answerId = createNumber("answerId", Long.class);
 
-    public final ListPath<AnswerVote, QAnswerVote> answerVotes = this.<AnswerVote, QAnswerVote>createList("answerVotes", AnswerVote.class, QAnswerVote.class, PathInits.DIRECT2);
+    public final SetPath<AnswerVote, QAnswerVote> answerVotes = this.<AnswerVote, QAnswerVote>createSet("answerVotes", AnswerVote.class, QAnswerVote.class, PathInits.DIRECT2);
 
     public final StringPath body = createString("body");
 
