@@ -2,6 +2,7 @@ package com.preproject.server.search.controller;
 
 
 import com.preproject.server.dto.PageResponseDto;
+import com.preproject.server.question.dto.QuestionSimpleDto;
 import com.preproject.server.question.dto.QuestionSimpleResponseDto;
 import com.preproject.server.question.mapper.QuestionMapper;
 import com.preproject.server.question.service.QuestionService;
@@ -40,12 +41,13 @@ public class SearchController {
             @PageableDefault(page = 0, size = 10, sort = "questionId", direction = Sort.Direction.DESC)
             Pageable pageable
     ) {
-        Page<QuestionSimpleResponseDto> allByParam = questionService.findAllByParam(param, pageable);
-        List<QuestionSimpleResponseDto> questionList = allByParam.getContent();
+        Page<QuestionSimpleDto> allByParam = questionService.findAllByParam(param, pageable);
+        List<QuestionSimpleResponseDto> dtoList =
+                questionMapper.questionDtoListToSimpleResponseDtoList(allByParam.getContent());
         PageResponseDto response = PageResponseDto.of(
-                questionList,
+                dtoList,
                 new PageImpl<>(
-                        questionList,
+                        dtoList,
                         allByParam.getPageable(),
                         allByParam.getTotalElements()));
 

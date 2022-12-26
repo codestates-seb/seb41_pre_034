@@ -1,17 +1,17 @@
 package com.preproject.server.question.dto;
 
 
+import com.preproject.server.constant.QuestionStatus;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @ToString
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuestionSimpleResponseDto {
+public class QuestionSimpleDto {
 
     private Long questionId;
 
@@ -23,7 +23,7 @@ public class QuestionSimpleResponseDto {
 
     private String body;
 
-    private String questionStatus;
+    private QuestionStatus questionStatus;
 
     private LocalDateTime createAt;
 
@@ -35,6 +35,5 @@ public class QuestionSimpleResponseDto {
 
     private int answerCounting;
 
-    private List<String> tags;
-
+    private String tags;
 }

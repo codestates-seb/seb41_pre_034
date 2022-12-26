@@ -5,7 +5,7 @@ import com.preproject.server.constant.ErrorCode;
 import com.preproject.server.constant.QuestionStatus;
 import com.preproject.server.constant.VoteStatus;
 import com.preproject.server.exception.ServiceLogicException;
-import com.preproject.server.question.dto.QuestionSimpleResponseDto;
+import com.preproject.server.question.dto.QuestionSimpleDto;
 import com.preproject.server.question.entity.Question;
 import com.preproject.server.question.entity.QuestionTag;
 import com.preproject.server.question.entity.QuestionVote;
@@ -89,7 +89,7 @@ public class QuestionService {
         return questionRepository.findAll(pageable);
     }
 
-    public Page<QuestionSimpleResponseDto> findAllByParam(
+    public Page<QuestionSimpleDto> findAllByParam(
             Map<String, Object> param,
             Pageable pageable) {
         return questionTagRepository.findQuestionPageBySearchParams(
