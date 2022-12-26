@@ -67,13 +67,16 @@ public class QuestionController {
     @PatchMapping("/{questionId}")
     public ResponseEntity patchQuestion(
             @PathVariable Long questionId,
-            @RequestBody QuestionPatchDto questionPatchDto) {
+            @RequestBody QuestionPatchDto questionPatchDto
+    ) {
 
         Question patch =
                 questionService.patch(
                         questionId,
                         questionMapper.questionPatchDtoToEntity(questionPatchDto),
-                        questionPatchDto.getTags());
+                        questionPatchDto.getTags(),
+                        questionPatchDto.getUserId()
+                );
 
 
         return new ResponseEntity<>(

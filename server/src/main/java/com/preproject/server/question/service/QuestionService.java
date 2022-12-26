@@ -21,10 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,7 +52,6 @@ public class QuestionService {
 
 
     public Question get(Long questionId) {
-
         Question question = findVerifiedQuestion(questionId);
         question.setViewCounting(question.getViewCounting() + 1);
         question.setCountingVote(countingVote(question.getQuestionVotes()));
@@ -66,9 +62,11 @@ public class QuestionService {
 
 
 
-    public Question patch(Long questionId, Question question, String tags) {
-
+    public Question patch(Long questionId, Question question, String tags, Long userId) {
         Question findQuestion = findVerifiedQuestion(questionId);
+        if (!Objects.equals(findQuestion.getUser().getUserId(), userId)) {
+            throw new ServiceLogicException(ErrorCode.ACCESS_DENIED);
+        }
 
         Optional.ofNullable(question.getBody())
                 .ifPresent(body -> findQuestion.setBody(body));
