@@ -14,6 +14,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @ToString
@@ -40,11 +41,11 @@ public class Tag {
     private Long tagId;
 
     @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String tag;
 
     @Setter
-    @Column(nullable = true)
+    @Column(nullable = true, length = 1000)
     private String description;
 
     @Column(nullable = false, insertable = false, updatable = false,
@@ -63,11 +64,23 @@ public class Tag {
 
     @ToString.Exclude
     @OrderBy("questionTagId")
-    @OneToMany(mappedBy = "tag", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL)
     private List<QuestionTag> questionTags = new ArrayList<>();
 
     public void addQuestionTag(QuestionTag questionTag) {
         questionTags.add(questionTag);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        return tagId != null && tagId.equals(((Tag) obj).getTagId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tag, description, createAt, updateAt);
     }
 
 }

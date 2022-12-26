@@ -20,7 +20,7 @@ import java.util.List;
 @Table(indexes = {
         @Index(columnList = "createAt"),
         @Index(columnList = "updateAt")
-})
+},name="ANSWERS")
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 @NoArgsConstructor
@@ -34,6 +34,7 @@ public class Answer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter
     private Long answerId;
 
     @Setter
@@ -41,7 +42,7 @@ public class Answer {
     private String body;
 
     @Setter
-    @Column(nullable = false)
+    @Column(name = "checked",nullable = false)
     private Boolean check;
 
     @Column(nullable = false, insertable = false, updatable = false,

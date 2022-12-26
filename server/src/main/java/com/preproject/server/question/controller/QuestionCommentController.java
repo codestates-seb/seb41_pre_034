@@ -5,9 +5,8 @@ import com.preproject.server.dto.ResponseDto;
 import com.preproject.server.question.dto.QuestionCommentPatchDto;
 import com.preproject.server.question.dto.QuestionCommentPostDto;
 import com.preproject.server.question.entity.QuestionComment;
-import com.preproject.server.question.mapper.QuestionCommentMapper;
+import com.preproject.server.question.mapper.QuestionMapper;
 import com.preproject.server.question.service.QuestionCommentService;
-import com.preproject.server.utils.StubDtoUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,21 +17,26 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class QuestionCommentController {
 
-    private final StubDtoUtils stubDtoUtils;
-    private final QuestionCommentMapper questionCommentMapper;
+    private final QuestionMapper questionMapper;
+
     private final QuestionCommentService questionCommentService;
+
 
     // 질문의 comment 생성
     @PostMapping("/{questionId}")
     public ResponseEntity postQuestionComment(
             @PathVariable Long questionId,
-            @RequestBody QuestionCommentPostDto questionCommentPostDto) {
+            @RequestBody QuestionCommentPostDto questionCommentPostDto
+    ) {
 
-        QuestionComment questionComment = questionCommentMapper.QuestionCommentDtoToEntity(questionCommentPostDto);
-        QuestionComment saved = questionCommentService.save(questionComment,questionId);
+        QuestionComment saved = questionCommentService.save(
+                questionMapper.questionCommentDtoToEntity(questionCommentPostDto),
+                questionCommentPostDto.getUserId(),
+                questionId
+                );
 
         return new ResponseEntity<>(
-                ResponseDto.of(questionCommentMapper.QuestionCommentEntityToDto(saved)),
+                ResponseDto.of(questionMapper.questionCommentToQuestionCommentResponseDto(saved)),
                 HttpStatus.CREATED);
     }
 
@@ -42,8 +46,13 @@ public class QuestionCommentController {
             @PathVariable Long questionCommentId,
             @RequestBody QuestionCommentPatchDto questionCommentPatchDto
     ) {
+        QuestionComment update = questionCommentService.patch(
+                questionMapper.questionCommentPatchDtoToEntity(questionCommentPatchDto),
+                questionCommentId,
+                questionCommentPatchDto.getUserId());
+
         return new ResponseEntity<>(
-                ResponseDto.of(stubDtoUtils.createQuestionCommentResponseDto()),
+                ResponseDto.of(questionMapper.questionCommentToQuestionCommentResponseDto(update)),
                 HttpStatus.OK);
     }
 
@@ -56,3 +65,5 @@ public class QuestionCommentController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
+
+

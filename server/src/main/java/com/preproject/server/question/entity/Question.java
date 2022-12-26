@@ -23,6 +23,7 @@ import java.util.List;
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 public class Question {
 
     /* 생성자 */
@@ -67,6 +68,17 @@ public class Question {
     @LastModifiedDate
     private LocalDateTime updateAt;
 
+    @Column(nullable = false)
+    @Setter
+    private int countingVote;
+
+    @Column(nullable = false)
+    @Setter
+    private int answerCounting;
+
+    @Column(nullable = false)
+    @Setter
+    private String tagString;
 
 
     /* 연관 관계 */
@@ -77,22 +89,23 @@ public class Question {
 
     @ToString.Exclude
     @OrderBy("answerId")
-    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     private List<Answer> answers = new ArrayList<>();
 
     @ToString.Exclude
     @OrderBy("questionCommentId")
-    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     private List<QuestionComment> questionComments = new ArrayList<>();
 
     @ToString.Exclude
     @OrderBy("questionVoteId")
-    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     private List<QuestionVote> questionVotes = new ArrayList<>();
 
     @ToString.Exclude
     @OrderBy("questionTagId")
-    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+    @Setter
     private List<QuestionTag> questionTags = new ArrayList<>();
 
     public void addUser(User user) {

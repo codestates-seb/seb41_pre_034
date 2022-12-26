@@ -4,14 +4,13 @@ import com.preproject.server.dto.PageResponseDto;
 import com.preproject.server.dto.ResponseDto;
 import com.preproject.server.question.dto.QuestionPatchDto;
 import com.preproject.server.question.dto.QuestionPostDto;
-import com.preproject.server.question.dto.QuestionResponseDto;
+import com.preproject.server.question.dto.QuestionSimpleResponseDto;
 import com.preproject.server.question.entity.Question;
-import com.preproject.server.question.entity.QuestionComment;
 import com.preproject.server.question.mapper.QuestionMapper;
 import com.preproject.server.question.service.QuestionService;
-import com.preproject.server.utils.StubDtoUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -26,7 +25,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class QuestionController {
 
-    private final StubDtoUtils stubDtoUtils;
     private final QuestionService questionService;
     private final QuestionMapper questionMapper;
 
@@ -34,9 +32,13 @@ public class QuestionController {
     @PostMapping
     public ResponseEntity postQuestion(
             @RequestBody QuestionPostDto questionPostDto) {
-        Question question = questionMapper.QuestionPostDtotoEntity(questionPostDto);
-        System.out.println("question: "+question);
-        Question saved = questionService.save(question);
+
+        Question question = questionMapper.questionPostDtoToEntity(questionPostDto);
+
+        Question saved = questionService.save(
+                question,
+                questionPostDto.getTags(),
+                questionPostDto.getUserId());
 
         return new ResponseEntity<>(
                 ResponseDto.of(questionMapper.QuestionEntityToResponseDto(saved)),
@@ -56,7 +58,6 @@ public class QuestionController {
             @PathVariable Long questionId) {
         Question question = questionService.get(questionId);
 
-
         return new ResponseEntity<>(
                 ResponseDto.of(questionMapper.QuestionEntityToResponseDto(question)),
                 HttpStatus.OK);
@@ -68,12 +69,15 @@ public class QuestionController {
             @PathVariable Long questionId,
             @RequestBody QuestionPatchDto questionPatchDto) {
 
-        Question question = questionMapper.QuestionPatchDtoToEntity(questionPatchDto);
-        Question newQuestion = questionService.patch(questionId,question);
+        Question patch =
+                questionService.patch(
+                        questionId,
+                        questionMapper.questionPatchDtoToEntity(questionPatchDto),
+                        questionPatchDto.getTags());
 
 
         return new ResponseEntity<>(
-                ResponseDto.of(questionMapper.QuestionEntityToResponseDto(newQuestion)),
+                ResponseDto.of(questionMapper.QuestionEntityToResponseDto(patch)),
                 HttpStatus.OK);
     }
 
@@ -92,13 +96,18 @@ public class QuestionController {
             @PageableDefault(page = 0, size = 10, sort = "questionId", direction = Sort.Direction.DESC)
             Pageable pageable
     ) {
-        List<Question> questionList = questionService.findAll();
-        List<QuestionResponseDto> questionListToResponseDtoList = questionMapper.QuestionListToResponseDtoList(questionList);
-        Page<QuestionResponseDto> questionResponseDtoPage =
-                questionService.createQuestionResponseDtoPage(pageable,questionListToResponseDtoList);
+        Page<Question> findQuestions = questionService.findAll(pageable);
+        List<Question> questionList = findQuestions.getContent();
+        List<QuestionSimpleResponseDto> questionResponseDtos =
+                questionMapper.questionListToSimpleResponseDtoList(questionList);
+
+
         PageResponseDto response = PageResponseDto.of(
-                questionResponseDtoPage.getContent()
-                , questionResponseDtoPage);
+                questionResponseDtos
+                , new PageImpl<>(
+                        questionResponseDtos,
+                        findQuestions.getPageable(),
+                        findQuestions.getTotalElements()));
 
         return new ResponseEntity<>(
                 response,

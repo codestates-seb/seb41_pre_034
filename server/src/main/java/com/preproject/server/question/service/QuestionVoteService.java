@@ -1,39 +1,68 @@
 package com.preproject.server.question.service;
 
-import com.preproject.server.question.dto.QuestionVoteResponseDto;
+import com.preproject.server.constant.ErrorCode;
+import com.preproject.server.constant.VoteStatus;
+import com.preproject.server.exception.ServiceLogicException;
 import com.preproject.server.question.entity.Question;
 import com.preproject.server.question.entity.QuestionVote;
+import com.preproject.server.question.repository.QuestionRepository;
 import com.preproject.server.question.repository.QuestionVoteRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.preproject.server.user.entity.User;
+import com.preproject.server.user.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
+@Transactional
 public class QuestionVoteService {
 
-    @Autowired
-    private QuestionVoteRepository questionVoteRepository;
 
-    public QuestionVote post(QuestionVote questionVote, Long questionId) {
+    private final QuestionVoteRepository questionVoteRepository;
 
-        QuestionVote findQuestionVote = findVerifiedQuestionVote(questionId);
+    private final QuestionRepository questionRepository;
 
+    private final UserService userService;
 
-        if(questionVote.getQuestionVoteId() == findQuestionVote.getQuestionVoteId()){
-            questionVoteRepository.save(questionVote);
-        }
+    private final QuestionService questionService;
 
-        return questionVote;
+    public QuestionVote post(
+            QuestionVote questionVote,
+            Long questionId,
+            Long userId) {
+        User user = userService.verifiedUserById(userId);
+        questionVote.addUser(user);
+        Question findQuestion = questionRepository.findById(questionId)
+                .orElseThrow(() -> new ServiceLogicException(ErrorCode.QUESTION_NOT_FOUND));
+        questionVote.addQuestion(findQuestion);
+        return questionVoteRepository.save(questionVote);
     }
 
     public QuestionVote patch(QuestionVote questionVote, Long questionVoteId) {
 
-        QuestionVote findQuestionVote = findVerifiedQuestionVote(questionVoteId);
-        Optional.ofNullable(questionVote.getVoteStatus())
-                .ifPresent(voteStatus -> findQuestionVote.setVoteStatus(voteStatus));
-
-        return questionVote;
+        QuestionVote vote = findVerifiedQuestionVote(questionVoteId);
+        VoteStatus comp = vote.getVoteStatus();
+        if (questionVote.getVoteStatus() != null) {
+            if (questionVote.getVoteStatus().equals(VoteStatus.UP)) {
+                if (comp.equals(VoteStatus.UP)) {
+                    return vote;
+                } else {
+                    Optional.ofNullable(questionVote.getVoteStatus())
+                            .ifPresent(vote::setVoteStatus);
+                }
+            } else {
+                if (comp.equals(VoteStatus.DOWN)) {
+                    return vote;
+                } else {
+                    Optional.ofNullable(questionVote.getVoteStatus())
+                            .ifPresent(vote::setVoteStatus);
+                }
+            }
+        }
+        return vote;
     }
 
 
@@ -41,9 +70,10 @@ public class QuestionVoteService {
     public QuestionVote findVerifiedQuestionVote(long questionVoteId) {
         Optional<QuestionVote> optionalQuestionVote =
                 questionVoteRepository.findById(questionVoteId);
-        QuestionVote findQuestionVote =
-                optionalQuestionVote.orElseThrow(NullPointerException::new);
-
-        return findQuestionVote;
+        QuestionVote questionVote =
+                optionalQuestionVote.orElseThrow(
+                        () -> new ServiceLogicException(ErrorCode.NOT_FOUND)
+                );
+        return questionVote;
     }
 }
