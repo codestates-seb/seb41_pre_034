@@ -58,7 +58,7 @@ public class User {
     private String email;
 
     @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1000)
     private String password;
 
     @Setter
