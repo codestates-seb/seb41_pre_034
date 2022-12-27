@@ -1,4 +1,5 @@
-const BASE_URL = 'https://c8fe-121-176-2-166.jp.ngrok.io/';
+const BASE_URL =
+  'http://ec2-54-180-142-199.ap-northeast-2.compute.amazonaws.com:8080';
 // const TODO_URL = 'http://localhost:3000/todo/';
 
 export const fetchCreate = (url, data) => {

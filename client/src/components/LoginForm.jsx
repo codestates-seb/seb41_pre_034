@@ -12,9 +12,43 @@ function LoginForm() {
     setPassword(e.target.value);
   }
 
+  async function handleLogin(event) {
+    event.preventDefault();
+
+    const response = await fetch('/auth/login', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: email,
+        password: password,
+      }),
+    });
+
+    const accessToken = response.headers.get('Authorization');
+    const refreshToken = response.headers.get('Refresh');
+
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('refreshToken', refreshToken);
+
+    if (accessToken === null) {
+      alert('아이디, 비밀번호를 확인해주세요.');
+
+      return;
+    }
+
+    if (accessToken !== null) {
+      window.location.href = '/';
+    }
+  }
+
   return (
     <div className="w-[306.59px] h-[281.58px] p-[24px] rounded-[7px] shadow-lg bg-[#ffffff] flex justify-center items-center">
-      <form className="flex flex-col justify-center w-[240.45px] h-[198.2px] my-[-6px]">
+      <form
+        onSubmit={handleLogin}
+        className="flex flex-col justify-center w-[240.45px] h-[198.2px] my-[-6px]"
+      >
         <div className="flex flex-col my-[6px] ">
           <label htmlFor="email" className="text-[12.6px] my-[2px] font-[600]">
             Email
