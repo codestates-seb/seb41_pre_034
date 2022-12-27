@@ -14,7 +14,7 @@ import ROUTE_PATH from './constants/routePath';
 function App() {
   return (
     <Router basename="/">
-      <Navbar />
+      <Navbar isLogin={localStorage.getItem('accessToken')} />
       <Routes>
         <Route path={ROUTE_PATH.HOME} element={<Home />} />
         <Route path={ROUTE_PATH.LOGIN} element={<Login />} />
