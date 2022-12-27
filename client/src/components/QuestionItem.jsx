@@ -1,11 +1,10 @@
 import React from 'react';
 import profile from '../assets/profile.jpeg';
+import { timeForToday } from '../util/timeForToday';
 import useFetch from '../util/useFetch';
 
 function QuestionItem(props) {
   //props.tags가 string이기 때문에 map이안됨
-  const tags = props.tags.split(',');
-  console.log(props);
   return (
     <div className="relative flex justify-center w-[719px] items-center p-[16px] border-b-[1px] border-[#e8eaec] my-5">
       <div className="flex flex-col gap-2 justify-start w-[108px] h-[99.859px] mr-[16px] mb-[4px] text-[13px]">
@@ -30,7 +29,7 @@ function QuestionItem(props) {
         <div className="flex h-[38.594px]">
           <div className="flex">
             <ul className="flex list-none ml-0 mt-[4px]">
-              {tags.map((el, idx) => (
+              {props.tags.map((el, idx) => (
                 <li key={idx} className="mr-[4px]">
                   <a className="border-solid border-[#e1ecf4] bg-[#e1ecf4] text-[#39739d] hover:bg-[#B3D3EA] rounded text-xs py-[4.8px] px-[6px] border-[1px] mr-[2px] mb-[2px]">
                     {el}
@@ -58,7 +57,9 @@ function QuestionItem(props) {
                   </li>
                 </ul>
               </div>
-              <time className="flex ml-[2px]">modified 7 secs ago</time>
+              <time className="flex ml-[2px]">{`modified ${timeForToday(
+                props.createAt
+              )}`}</time>
             </div>
           </div>
         </div>

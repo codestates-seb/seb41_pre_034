@@ -8,24 +8,22 @@ const useFetch = (url) => {
 
   /* useFetch 안의 중심 로직을 작성해주세요. */
   useEffect(() => {
-    setTimeout(() => {
-      fetch(url)
-        .then((res) => {
-          if (!res.ok) {
-            throw Error('could not fetch the data for that resource');
-          }
-          return res.json();
-        })
-        .then((data) => {
-          setIsPending(false);
-          setData(data);
-          setError(null);
-        })
-        .catch((err) => {
-          setIsPending(false);
-          setError(err.message);
-        });
-    }, 1000);
+    fetch(url)
+      .then((res) => {
+        if (!res.ok) {
+          throw Error('could not fetch the data for that resource');
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setIsPending(false);
+        setData(data);
+        setError(null);
+      })
+      .catch((err) => {
+        setIsPending(false);
+        setError(err.message);
+      });
   }, []);
   return { data, isPending, error };
 };
