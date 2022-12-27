@@ -5,7 +5,7 @@ import com.preproject.server.answer.entity.QAnswerComment;
 import com.preproject.server.answer.entity.QAnswerVote;
 import com.preproject.server.constant.ErrorCode;
 import com.preproject.server.exception.ServiceLogicException;
-import com.preproject.server.question.dto.QuestionSimpleResponseDto;
+import com.preproject.server.question.dto.QuestionSimpleDto;
 import com.preproject.server.question.entity.*;
 import com.preproject.server.tag.entity.QTag;
 import com.preproject.server.user.entity.QUser;
@@ -27,47 +27,50 @@ public class QuestionTagRepositoryCustomImpl
     }
 
     @Override
-    public Page<QuestionSimpleResponseDto> findQuestionPageBySearchParams(
+    public Page<QuestionSimpleDto> findQuestionPageBySearchParams(
             String keyWord,
             String displayName,
-            String tag,
+            String tags,
             Pageable pageable
     ) {
+        QQuestion question = QQuestion.question;
 
-        QQuestion qQuestion = QQuestion.question;
-        JPQLQuery<QuestionSimpleResponseDto> query = from(qQuestion)
-                .select(Projections.constructor(
-                        QuestionSimpleResponseDto.class,
-                        qQuestion.questionId,
-                        qQuestion.user.userId,
-                        qQuestion.user.displayName,
-                        qQuestion.title,
-                        qQuestion.body,
-                        qQuestion.questionStatus,
-                        qQuestion.createAt,
-                        qQuestion.updateAt,
-                        qQuestion.countingVote,
-                        qQuestion.viewCounting,
-                        qQuestion.answerCounting,
-                        qQuestion.tagString
-                ));
+        JPQLQuery<QuestionSimpleDto> query = from(question)
+                .select(
+                        Projections.constructor(
+                                QuestionSimpleDto.class,
+                                question.questionId,
+                                question.user.userId,
+                                question.user.displayName,
+                                question.title,
+                                question.body,
+                                question.questionStatus,
+                                question.createAt,
+                                question.updateAt,
+                                question.countingVote,
+                                question.viewCounting,
+                                question.answerCounting,
+                                question.tagString)
+                );
+
+
         if (keyWord != null && !keyWord.isBlank()) {
             query
-                    .where(qQuestion.title.containsIgnoreCase(keyWord))
-                    .where(qQuestion.body.containsIgnoreCase(keyWord));
+                    .where(question.title.containsIgnoreCase(keyWord))
+                    .where(question.body.containsIgnoreCase(keyWord));
         }
         if (displayName != null && !displayName.isBlank()) {
-            query.where(qQuestion.user.displayName.containsIgnoreCase(displayName));
+            query.where(question.user.displayName.containsIgnoreCase(displayName));
         }
-        if (tag != null && !tag.isBlank()) {
-            query.where(qQuestion.tagString.containsIgnoreCase(tag));
+        if (tags != null && !tags.isBlank()) {
+            query.where(question.tagString.containsIgnoreCase(tags));
         }
-        List<QuestionSimpleResponseDto> questionTags = Optional.ofNullable(getQuerydsl())
+        List<QuestionSimpleDto> questionList = Optional.ofNullable(getQuerydsl())
                 .orElseThrow(() -> new ServiceLogicException(
                         ErrorCode.INTERNAL_SERVER_ERROR))
                 .applyPagination(pageable, query)
                 .fetch();
-        return new PageImpl<>(questionTags, pageable, query.fetchCount());
+        return new PageImpl<>(questionList, pageable, query.fetchCount());
     }
 
     @Override

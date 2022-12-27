@@ -100,10 +100,8 @@ public class QuestionController {
             Pageable pageable
     ) {
         Page<Question> findQuestions = questionService.findAll(pageable);
-        List<Question> questionList = findQuestions.getContent();
         List<QuestionSimpleResponseDto> questionResponseDtos =
-                questionMapper.questionListToSimpleResponseDtoList(questionList);
-
+                questionMapper.questionListToSimpleResponseDtoList(findQuestions.getContent());
 
         PageResponseDto response = PageResponseDto.of(
                 questionResponseDtos
