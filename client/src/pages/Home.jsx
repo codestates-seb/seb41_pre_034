@@ -7,58 +7,10 @@ import Sidebar from '../components/Sidebar';
 import ROUTE_PATH from '../constants/routePath';
 import { Link } from 'react-router-dom';
 import Tabs from '../components/Tabs';
+import useFetch from '../util/useFetch';
 
 function Home(props) {
-  const example = [
-    {
-      id: 0,
-      vote: 10,
-      answers: 1,
-      views: 78,
-      title: 'how can i make the lines variable in a file?',
-      text: 'I am working on a single page application (SPA) app that grants access to specific paths in the application, based on roles setup in Azure AD for the user logging in.',
-      tags: ['javascript', 'css', 'HTML'],
-      author: 'z1nun',
-      img: '이미지 경로 들어갈 자리',
-      createAt: '게시글이 작성된 시간 들어갈 자리',
-    },
-    {
-      id: 0,
-      vote: 10,
-      answers: 1,
-      views: 78,
-      title: 'how can i make the lines variable in a file?',
-      text: 'I am working on a single page application (SPA) app that grants access to specific paths in the application, based on roles setup in Azure AD for the user logging in.',
-      tags: ['javascript', 'css', 'HTML'],
-      author: 'z1nun',
-      img: '이미지 경로 들어갈 자리',
-      createAt: '게시글이 작성된 시간 들어갈 자리',
-    },
-    {
-      id: 0,
-      vote: 10,
-      answers: 1,
-      views: 78,
-      title: 'how can i make the lines variable in a file?',
-      text: 'I am working on a single page application (SPA) app that grants access to specific paths in the application, based on roles setup in Azure AD for the user logging in.',
-      tags: ['javascript', 'css', 'HTML'],
-      author: 'z1nun',
-      img: '이미지 경로 들어갈 자리',
-      createAt: '게시글이 작성된 시간 들어갈 자리',
-    },
-    {
-      id: 0,
-      vote: 10,
-      answers: 1,
-      views: 78,
-      title: 'how can i make the lines variable in a file?',
-      text: 'I am working on a single page application (SPA) app that grants access to specific paths in the application, based on roles setup in Azure AD for the user logging in.',
-      tags: ['javascript', 'css', 'HTML'],
-      author: 'z1nun',
-      img: '이미지 경로 들어갈 자리',
-      createAt: '게시글이 작성된 시간 들어갈 자리',
-    },
-  ];
+  const $questions = useFetch('/questions');
 
   return (
     <div className="mt-[50px] max-w-[100%] flex flex-col justify-center items-center">
@@ -91,20 +43,22 @@ function Home(props) {
                 />
               </div>
               <div className="border-t-[1px] border-[#e8eaec] ml-[-24px] mb-[20px]">
-                {example.map((el, idx) => (
-                  <QuestionItem
-                    key={idx}
-                    vote={el.vote}
-                    answers={el.answers}
-                    views={el.views}
-                    title={el.title}
-                    text={el.text}
-                    tags={el.tags}
-                    author={el.author}
-                    img={el.img}
-                    createAt={el.createAt}
-                  />
-                ))}
+                {$questions.data &&
+                  $questions.data.data.map((el, idx) => (
+                    <QuestionItem
+                      key={idx}
+                      vote={el.countingVote}
+                      answers={el.answerCounting}
+                      views={el.viewCounting}
+                      title={el.title}
+                      body={el.body}
+                      tags={el.tags}
+                      author={el.displayName}
+                      //프로필 이미지 받아와야함
+                      img={el.img}
+                      createAt={el.createAt}
+                    />
+                  ))}
               </div>
             </div>
             <div className="ml-[24px] mb-[15px]">
