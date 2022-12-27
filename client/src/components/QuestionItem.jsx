@@ -1,7 +1,8 @@
 import React from 'react';
 import profile from '../assets/profile.jpeg';
+import ROUTE_PATH from '../constants/routePath';
 import { timeForToday } from '../util/timeForToday';
-import useFetch from '../util/useFetch';
+import { Link } from 'react-router-dom';
 
 function QuestionItem(props) {
   //props.tags가 string이기 때문에 map이안됨
@@ -23,7 +24,12 @@ function QuestionItem(props) {
       </div>
       <div className="flex flex-col w-[595px] h-[99.859pxpx] text-[12px] mb-[5px]">
         <h3 className="mb-[5px]">
-          <a className="text-[17px] ">{props.title}</a>
+          <Link
+            to={`${ROUTE_PATH.DETAIL}/${props.questionId}`}
+            className="text-[17px] text-[#0074cc] hover:text-[#0a95ff]"
+          >
+            {props.title}
+          </Link>
         </h3>
         <div className="line-clamp-2 mb-[8px]">{props.body}</div>
         <div className="flex h-[38.594px]">

@@ -5,11 +5,10 @@ import Tips from '../components/Tips';
 import BlueButton from '../components/buttons/BlueButton';
 import Sidebar from '../components/Sidebar';
 import ROUTE_PATH from '../constants/routePath';
-import { Link } from 'react-router-dom';
 import Tabs from '../components/Tabs';
 import useFetch from '../util/useFetch';
 
-function Home(props) {
+function Home() {
   const $questions = useFetch('/questions');
 
   async function handleConfirmLogin() {
@@ -98,6 +97,7 @@ function Home(props) {
                       //프로필 이미지 받아와야함
                       img={el.img}
                       createAt={el.createAt}
+                      questionId={el.questionId}
                     />
                   ))}
               </div>

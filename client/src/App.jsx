@@ -24,7 +24,10 @@ function App() {
         <Route path={ROUTE_PATH.MY_PAGE} element={<MyPage />} />
         <Route path={ROUTE_PATH.TAGS} element={<Tags />} />
         <Route path={ROUTE_PATH.USERS} element={<Users />} />
-        <Route path={ROUTE_PATH.DETAIL} element={<QuestionDetail />} />
+        <Route
+          path={ROUTE_PATH.DETAIL + '/:questionId'}
+          element={<QuestionDetail />}
+        />
       </Routes>
     </Router>
   );
