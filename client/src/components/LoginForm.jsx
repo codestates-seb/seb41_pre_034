@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import BlueButton from './buttons/BlueButton';
+import { useDispatch } from 'react-redux';
+import { setUserId } from '../redux/actions/index';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
 
   function handleEmail(e) {
     setEmail(e.target.value);
@@ -35,9 +38,11 @@ function LoginForm() {
     if (response.status === 200) {
       const authorization = response.headers.get('Authorization');
       const refresh = response.headers.get('Refresh');
+      const userId = response.headers.get('userId');
 
       localStorage.setItem('Authorization', authorization);
       localStorage.setItem('Refresh', refresh);
+      dispatch(setUserId(userId));
 
       window.location.href = '/';
     }
