@@ -1,26 +1,89 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import MdArea from '../components/MdArea';
 import BlueButton from '../components/buttons/BlueButton';
 import Footer from '../components/Footer';
 import Tag from '../components/Tag';
+import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import ROUTE_PATH from '../constants/routePath';
 
 function EditQuestion(props) {
-  const initialTags = ['axios', 'fetch'];
-  const [tags, setTags] = useState(initialTags);
+  const { questionId } = useParams();
+  const [title, setTitle] = useState('');
+  const [body, setBody] = useState('');
+  const [tags, setTags] = useState([]);
+  const userId = useSelector((state) => state.userIdReducer);
+
+  useEffect(() => {
+    fetch('/questions/' + questionId)
+      .then((response) => response.json())
+      .then(({ data }) => {
+        setTitle(data.title);
+        setBody(data.body);
+        setTags(data.tags.map((tag) => tag.tag));
+      });
+  }, []);
 
   function removeTags(indexToRemove) {
     setTags(tags.filter((el, index) => index !== indexToRemove));
   }
 
   function addTags(event) {
-    let inputValue = event.target.value;
+    event.preventDefault();
+
+    const inputValue = event.target.value.trim();
+    event.target.value = inputValue;
+
     if (
       inputValue.length !== 0 &&
       !tags.includes(inputValue) &&
-      event.key === 'Enter'
+      event.key === ' '
     ) {
       setTags([...tags, inputValue]);
       event.target.value = '';
+    }
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+
+    const response = await fetch('/questions/' + questionId, {
+      method: 'PATCH',
+      headers: {
+        'content-type': 'application/json',
+        Authorization: localStorage.getItem('Authorization'),
+        Refresh: localStorage.getItem('Refresh'),
+      },
+      body: JSON.stringify({
+        title,
+        body,
+        userId,
+        tags: tags.join(','),
+      }),
+    });
+
+    if (response.ok) {
+      window.location.href = `${ROUTE_PATH.DETAIL}/${questionId}`;
+
+      return;
+    }
+
+    if (response.status === 403) {
+      const response = await fetch('/auth/reissuetoken');
+
+      if (!response.ok) {
+        window.location.href = ROUTE_PATH.LOGIN;
+
+        return;
+      }
+
+      const authorization = response.headers.get('Authorization');
+      const refresh = response.headers.get('Refresh');
+
+      localStorage.setItem('Authorization', authorization);
+      localStorage.setItem('Refresh', refresh);
+
+      alert('엑세스 토큰이 재발급 되었습니다.');
     }
   }
 
@@ -66,12 +129,17 @@ function EditQuestion(props) {
             </ul>
           </div>
         </div>
-        <form className="flex flex-col justify-center item-start">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col justify-center item-start"
+        >
           <div className="p-[24px] m-[16px] w-[70%] flex flex-col border-[1px] border-[#e5e7e8] rounded-[3px]">
             <label htmlFor="title" className="font-[600] my-[2px]">
               Title
             </label>
             <input
+              value={title ?? ''}
+              onChange={({ target }) => setTitle(target.value)}
               type="text"
               id="title"
               placeholder="e.g Is there an R function for finding the index of an element in a vector"
@@ -81,7 +149,7 @@ function EditQuestion(props) {
               <p className="font-[600] my-[4px]">
                 What are the details of your problem?
               </p>
-              <MdArea />
+              <MdArea body={body ?? ''} setBody={setBody} />
             </div>
             <label htmlFor="tags" className="font-[600] my-[2px]">
               Tags
@@ -105,9 +173,7 @@ function EditQuestion(props) {
               </ul>
               <input
                 id="tags"
-                onKeyUp={(e) => {
-                  addTags(e);
-                }}
+                onKeyUp={addTags}
                 placeholder="e.g.(ajax wpf sql)"
                 className="my-[2px] py-[7.8px] h-[20px] w-[100%] px-[9.1px] text-[13px] rounded-[3px] focus:ring-0 focus:outline-none"
               ></input>

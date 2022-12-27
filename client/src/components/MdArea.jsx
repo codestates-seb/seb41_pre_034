@@ -4,7 +4,6 @@ import MDEditor from '@uiw/react-md-editor';
 function MdArea({ body, setBody }) {
   function handleChange(value) {
     setBody(value);
-    console.log(body);
   }
 
   return (

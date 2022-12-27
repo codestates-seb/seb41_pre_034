@@ -20,7 +20,10 @@ function App() {
         <Route path={ROUTE_PATH.LOGIN} element={<Login />} />
         <Route path={ROUTE_PATH.SIGNUP} element={<SignUp />} />
         <Route path={ROUTE_PATH.ADD_QUESTION} element={<CreateQuestion />} />
-        <Route path={ROUTE_PATH.EDIT_QUESTION} element={<EditQuestion />} />
+        <Route
+          path={ROUTE_PATH.EDIT_QUESTION + '/:questionId'}
+          element={<EditQuestion />}
+        />
         <Route path={ROUTE_PATH.MY_PAGE} element={<MyPage />} />
         <Route path={ROUTE_PATH.TAGS} element={<Tags />} />
         <Route path={ROUTE_PATH.USERS} element={<Users />} />

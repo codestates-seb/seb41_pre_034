@@ -184,7 +184,11 @@ function QuestionDetail() {
                               id="question-edit-button"
                               className="mr-[8px] hover:text-[#949ca4]"
                             >
-                              <Link to={ROUTE_PATH.EDIT_QUESTION}>Edit</Link>
+                              <Link
+                                to={`${ROUTE_PATH.EDIT_QUESTION}/${questionId}`}
+                              >
+                                Edit
+                              </Link>
                             </div>
                             <div className="mr-[8px] hover:text-[#949ca4] cursor-help">
                               Follow
