@@ -53,7 +53,7 @@ function Home(props) {
                       title={el.title}
                       body={el.body}
                       tags={el.tags}
-                      author={el.userId}
+                      author={el.displayName}
                       //프로필 이미지 받아와야함
                       img={el.img}
                       createAt={el.createAt}
