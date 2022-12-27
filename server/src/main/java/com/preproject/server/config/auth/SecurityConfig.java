@@ -49,9 +49,14 @@ public class SecurityConfig {
                 .and()
                 .apply(new CustomFilterConfig())
                 .and()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/auth/logout")
+                .and()
                 .authorizeRequests(auth -> auth
                         // Login Verify
                         .mvcMatchers(HttpMethod.GET,"/auth/verify").hasAnyRole("USER","ADMIN")
+                        .mvcMatchers(HttpMethod.GET,"/auth/logout").hasAnyRole("USER","ADMIN")
                         // User
                         .mvcMatchers(HttpMethod.GET,"/users").permitAll()
                         .mvcMatchers(HttpMethod.GET,"/users/**").hasAnyRole("USER","ADMIN")

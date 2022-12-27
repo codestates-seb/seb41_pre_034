@@ -111,7 +111,6 @@ public class JwtTokenizer {
         String base64SecretKey = encodeBase64SecretKey(getSecretKey());
         try {
             verifySignature(refreshToken, base64SecretKey);
-            // Todo refreshToken 검증되면, 토큰 재발급
             reIssueToken(refreshToken, base64SecretKey, response);
         } catch (ExpiredJwtException ee) {
             throw new ServiceLogicException(ErrorCode.EXPIRED_REFRESH_TOKEN);
@@ -145,7 +144,7 @@ public class JwtTokenizer {
                 .parseClaimsJws(jws);
     }
 
-    /* Token의 남은 만료기한을 확인 */
+    /* Token의 만료 기한 설정 */
     public Date getTokenExpiration(int expirationMinutes) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MINUTE, expirationMinutes);

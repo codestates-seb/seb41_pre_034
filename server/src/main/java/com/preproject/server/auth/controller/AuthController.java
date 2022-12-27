@@ -6,6 +6,9 @@ import com.preproject.server.utils.JwtTokenizer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +22,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 @Validated
-public class JwtTokenController {
+public class AuthController {
 
     private final JwtTokenizer jwtTokenizer;
 
@@ -37,6 +40,18 @@ public class JwtTokenController {
         jwtTokenizer.verifyRefreshToken(request.getHeader("Refresh"), response);
 
         return new ResponseEntity<>(AuthSuccessTokenResponseDto.of(response), HttpStatus.OK);
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity logout(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            new SecurityContextLogoutHandler().logout(request,response,authentication);
+        }
+        return ResponseEntity.ok().build();
     }
 
 }

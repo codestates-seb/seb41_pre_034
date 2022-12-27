@@ -50,6 +50,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             Authentication authResult
     ) throws IOException, ServletException {
         User user = (User) authResult.getPrincipal();
+        Long userId = user.getUserId();
+
 
         Token token = jwtTokenizer.delegateToken(user);
         String accessToken = token.getAccessToken();
@@ -57,6 +59,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         response.setHeader("Authorization", "Bearer " + accessToken);
         response.setHeader("Refresh", refreshToken);
+        response.setHeader("userId", userId.toString());
 
         this.getSuccessHandler().onAuthenticationSuccess(request, response, authResult);
     }
