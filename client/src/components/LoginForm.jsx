@@ -26,19 +26,19 @@ function LoginForm() {
       }),
     });
 
-    const accessToken = response.headers.get('Authorization');
-    const refreshToken = response.headers.get('Refresh');
+    const authorization = response.headers.get('Authorization');
+    const refresh = response.headers.get('Refresh');
 
-    localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('refreshToken', refreshToken);
+    localStorage.setItem('Authorization', authorization);
+    localStorage.setItem('Refresh', refresh);
 
-    if (accessToken === null) {
+    if (response.status === 401) {
       alert('아이디, 비밀번호를 확인해주세요.');
 
       return;
     }
 
-    if (accessToken !== null) {
+    if (response.status === 200) {
       window.location.href = '/';
     }
   }

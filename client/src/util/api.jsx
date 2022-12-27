@@ -2,14 +2,14 @@ const BASE_URL =
   'http://ec2-54-180-142-199.ap-northeast-2.compute.amazonaws.com:8080';
 // const TODO_URL = 'http://localhost:3000/todo/';
 
-export const fetchCreate = (url, data) => {
+export const fetchCreate = (url, data, redirectURL = '/') => {
   fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   })
-    .then(() => {
-      window.location.href = BASE_URL;
+    .then((res) => {
+      window.location.href = redirectURL;
     })
     .catch((error) => {
       console.error('Error', error);
