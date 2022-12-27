@@ -5,8 +5,11 @@ import com.preproject.server.answer.repository.AnswerRepository;
 import com.preproject.server.answer.service.AnswerService;
 import com.preproject.server.exception.ServiceLogicException;
 import com.preproject.server.question.entity.Question;
+import com.preproject.server.question.repository.QuestionRepository;
+import com.preproject.server.question.service.QuestionService;
 import com.preproject.server.user.entity.User;
-import org.junit.jupiter.api.Assertions;
+import com.preproject.server.user.repository.UserRepository;
+import com.preproject.server.user.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,17 +19,26 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-public class answerServiceTest {
+public class AnswerServiceTest {
 
     @Mock
     private AnswerRepository answerRepository;
+    @Mock
+    private UserRepository userRepository;
+    @Mock
+    private QuestionRepository questionRepository;
 
     @InjectMocks
     private AnswerService answerService;
+    @InjectMocks
+    private UserService userService;
+    @InjectMocks
+    private QuestionService questionService;
 
     @Test
     @DisplayName("AnswerService Test")
@@ -37,15 +49,16 @@ public class answerServiceTest {
         Question testQuestion = createTestQuestion(1L);
 
         given(answerRepository.findById(anyLong())).willReturn(Optional.of(testAnswer));
+        given(userRepository.findById(anyLong())).willReturn(Optional.of(testUser));
+        given(questionRepository.findById(anyLong())).willReturn(Optional.of(testQuestion));
 
-        Throwable throwable = Assertions.
         // When
         assertThrows(ServiceLogicException.class,
                 () -> answerService.createAnswer(testAnswer, 1L, 1L));
     }
 
     private Answer createTestAnswer(Long answerId) {
-        Answer testAnswer = new Answer("답변 내용");
+        Answer testAnswer = new Answer("Write Answer");
         testAnswer.setAnswerId(answerId);
 
         return testAnswer;
