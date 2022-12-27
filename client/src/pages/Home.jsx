@@ -12,6 +12,46 @@ import useFetch from '../util/useFetch';
 function Home(props) {
   const $questions = useFetch('/questions');
 
+  async function handleConfirmLogin() {
+    const response = await fetch('/auth/verify', {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+        Authorization: localStorage.getItem('Authorization'),
+        Refresh: localStorage.getItem('Refresh'),
+      },
+    });
+
+    if (response.ok) {
+      window.location.href = ROUTE_PATH.ADD_QUESTION;
+
+      return;
+    }
+
+    if (response.status === 401) {
+      alert('로그인 후 질문을 작성할 수 있습니다.');
+      window.location.href = ROUTE_PATH.LOGIN;
+
+      return;
+    }
+
+    if (response.status === 403) {
+      const response = await fetch('/auth/reissuetoken');
+
+      if (!response.ok) {
+        window.location.href = ROUTE_PATH.LOGIN;
+
+        return;
+      }
+
+      const authorization = response.headers.get('Authorization');
+      const refresh = response.headers.get('Refresh');
+
+      localStorage.setItem('Authorization', authorization);
+      localStorage.setItem('Refresh', refresh);
+    }
+  }
+
   return (
     <div className="mt-[50px] max-w-[100%] flex flex-col justify-center items-center">
       <div className="container mt-0 max-w-[1264px] w-full flex justify-between mx-auto my-0 relative z-[1000] flex-[1_0_auto] text-left min-h-[calc(100vh-50px-322px)]">
@@ -24,10 +64,11 @@ function Home(props) {
                 <span className="text-[27px] font-[500] w-[280px] h-[28.594px]">
                   All Questions
                 </span>
-                <div className="w-[103.023px] h-[37.797px]">
-                  <Link to={ROUTE_PATH.ADD_QUESTION}>
-                    <BlueButton text="Ask Question" />
-                  </Link>
+                <div
+                  className="w-[103.023px] h-[37.797px]"
+                  onClick={handleConfirmLogin}
+                >
+                  <BlueButton text="Ask Question" />
                 </div>
               </div>
               <div className="mb-[12px] flex justify-between">

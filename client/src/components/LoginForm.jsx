@@ -26,12 +26,6 @@ function LoginForm() {
       }),
     });
 
-    const authorization = response.headers.get('Authorization');
-    const refresh = response.headers.get('Refresh');
-
-    localStorage.setItem('Authorization', authorization);
-    localStorage.setItem('Refresh', refresh);
-
     if (response.status === 401) {
       alert('아이디, 비밀번호를 확인해주세요.');
 
@@ -39,6 +33,12 @@ function LoginForm() {
     }
 
     if (response.status === 200) {
+      const authorization = response.headers.get('Authorization');
+      const refresh = response.headers.get('Refresh');
+
+      localStorage.setItem('Authorization', authorization);
+      localStorage.setItem('Refresh', refresh);
+
       window.location.href = '/';
     }
   }
