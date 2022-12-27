@@ -35,7 +35,6 @@ function QuestionItem(props) {
                   <a className="border-solid border-[#e1ecf4] bg-[#e1ecf4] text-[#39739d] hover:bg-[#B3D3EA] rounded text-xs py-[4.8px] px-[6px] border-[1px] mr-[2px] mb-[2px]">
                     {el}
                   </a>
-                  s
                 </li>
               ))}
             </ul>
