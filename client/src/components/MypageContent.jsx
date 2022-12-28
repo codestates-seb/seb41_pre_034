@@ -10,6 +10,7 @@ import { BsFillChatSquareTextFill } from 'react-icons/bs';
 import OrangeButton from './buttons/OrangeButton';
 import { timeForToday } from '../util/timeForToday';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 function MypageContent() {
   const [userInfo, setUserInfo] = useState(null);
@@ -76,7 +77,6 @@ function MypageContent() {
             Edit profile
           </a>
           <a className="flex box-content justify-center items-center rounded-[3px] text-[#6a737c] hover:bg-[#f8f9f9] hover:text-[#525960] border-[#9fa6ad] w-[104.730px] h-[13.831px] p-[9.6px] border-[1px] m-[3px] text-[12px]">
-            {/* 아이콘 실제홈페이지와 다름 */}
             <BsFillChatSquareTextFill className="w-[15px] h-[15px] mr-[2px]" />
             Network profile
           </a>
@@ -152,20 +152,67 @@ function MypageContent() {
             <div className="w-[782.250px] h-[27.453px] mb-[8px] text-[21px]">
               Answers
             </div>
-            <div className="box-content p-[32px] w-[716.250px] border-[1px] border-[#D6D9DC] rounded-md bg-[#F8F9F9]">
-              <p className="text-[13px] w-[316px] h-[auto] text-center mx-[auto] text-[#6A737C]">
-                You have not answered any questions
-              </p>
+            <div className="box-content w-[780.250px] border-[1px] border-[#D6D9DC] rounded-md bg-[#F8F9F9]">
+              {userInfo && userInfo.answers.length === 0 ? (
+                <p className="text-[13px] w-[316px] h-[auto] text-center mx-[auto] text-[#6A737C]">
+                  You have not answered any questions
+                </p>
+              ) : (
+                userInfo &&
+                userInfo.answers.map((el) => (
+                  <div
+                    key={el.answerId}
+                    className="first:rounded-t-md last:rounded-b-md w-full h-[40px] flex justify-between items-center bg-[#ffff] border-[1px] border-[#D6D9DC]"
+                  >
+                    <div className="flex justify-evenly w-[500px]">
+                      <div className="text-center text-[13px] mx-[2px] w-[40px] border-[1px] border-[#D6D9DC]">
+                        {el.countingVote}
+                      </div>
+                      <div className="line-clamp-1 text-[13px] w-[400px] mx-[2px]">
+                        {el.body}
+                      </div>
+                    </div>
+                    <div className="text-[13px] mx-[10px]">
+                      {new Date(el.createAt).toDateString()}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
           <div>
             <div className="w-[782.250px] h-[27.453px] mb-[8px] text-[21px]">
               Questions
             </div>
-            <div className="box-content p-[32px] w-[716.250px] border-[1px] border-[#D6D9DC] rounded-md bg-[#F8F9F9]">
-              <p className="text-[13px] w-[316px] h-[auto] text-center mx-[auto] text-[#6A737C]">
-                You have not asked any questions
-              </p>
+            <div className="box-content h-fit w-[780.250px] border-[1px] border-[#D6D9DC] rounded-md bg-[#F8F9F9]">
+              {userInfo && userInfo.questions.length === 0 ? (
+                <p className="text-[13px] w-[316px] h-[auto] text-center mx-[auto] text-[#6A737C]">
+                  You have not asked any questions
+                </p>
+              ) : (
+                userInfo &&
+                userInfo.questions.map((el) => (
+                  <div
+                    key={el.questionId}
+                    className="first:rounded-t-md last:rounded-b-md w-full h-[40px] flex justify-between items-center bg-[#ffff] border-[1px] border-[#D6D9DC]"
+                  >
+                    <div className="flex justify-evenly w-[500px]">
+                      <div className="text-center text-[13px] mx-[2px] w-[40px] border-[1px] border-[#D6D9DC]">
+                        {el.answerCounting}
+                      </div>
+                      <Link
+                        to={`/detail/${el.questionId}`}
+                        className="line-clamp-1 text-[13px] w-[400px] mx-[2px]"
+                      >
+                        {el.title}
+                      </Link>
+                    </div>
+                    <div className="text-[13px] mx-[10px]">
+                      {new Date(el.createAt).toDateString()}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
           <div>
