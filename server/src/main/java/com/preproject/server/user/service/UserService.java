@@ -56,9 +56,8 @@ public class UserService {
 
     /* 사용자 단건 조회 */
     public User findUser(Long userId) {
-        User user = userRepository.findCustomById(userId);
 
-        return user;
+        return verifiedUserById(userId);
     }
 
     /* 사용자 전체 조회 페이징 */

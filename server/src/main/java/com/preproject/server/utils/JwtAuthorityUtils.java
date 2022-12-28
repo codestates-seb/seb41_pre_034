@@ -20,6 +20,9 @@ public class JwtAuthorityUtils {
     private final List<String> ADMIN_ROLES_STRING = List.of("ADMIN", "USER");
     private final List<String> USER_ROLES_STRING = List.of("USER");
 
+    public static final List<String> ADMIN_ROLES_STRING_CALL = List.of("ADMIN", "USER");
+    public static final List<String> USER_ROLES_STRING_CALL = List.of("USER");
+
 
     /* 권한 부여 메소드 */
     public List<GrantedAuthority> createAuthorities(List<String> roles) {

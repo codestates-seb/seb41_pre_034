@@ -63,20 +63,20 @@ public class Answer {
 
     @ToString.Exclude
     @OrderBy("answerCommentId")
-    @OneToMany(mappedBy = "answer", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "answer", cascade = CascadeType.ALL)
     private Set<AnswerComment> answerComments = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("answerVoteId")
-    @OneToMany(mappedBy = "answer", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "answer", cascade = CascadeType.ALL)
     private Set<AnswerVote> answerVotes = new LinkedHashSet<>();
 
     @Setter
-    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @ManyToOne(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     private Question question;
 
     @Setter
-    @ManyToOne(optional = true, fetch = FetchType.EAGER)
+    @ManyToOne(optional = true, fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     private User user;
 
     public void addAnswerComment(AnswerComment answerComment) {
