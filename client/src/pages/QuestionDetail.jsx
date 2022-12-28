@@ -192,28 +192,32 @@ function QuestionDetail() {
                           <div className="flex text-[#6a737c] text-[13px]">
                             <div
                               id="question-share-button"
-                              className="mr-[8px] hover:text-[#949ca4]"
+                              className="mr-[8px]"
                             >
-                              Share
+                              <span className="hover:text-[#949ca4]">
+                                Share
+                              </span>
                             </div>
-                            <div
-                              id="question-edit-button"
-                              className="mr-[8px] hover:text-[#949ca4]"
-                            >
+                            <div id="question-edit-button" className="mr-[8px]">
                               <Link
                                 to={`${ROUTE_PATH.EDIT_QUESTION}/${questionId}`}
+                                className="hover:text-[#949ca4]"
                               >
                                 Edit
                               </Link>
                             </div>
-                            <div className="mr-[8px] hover:text-[#949ca4] cursor-help">
-                              Follow
+                            <div className="mr-[8px]">
+                              <span className="hover:text-[#949ca4] cursor-help">
+                                Follow
+                              </span>
                             </div>
-                            <div
-                              className="mr-[8px] hover:text-[#949ca4] cursor-pointer"
-                              onClick={deleteQuestion}
-                            >
-                              Delete
+                            <div className="mr-[8px]">
+                              <span
+                                className="hover:text-[#949ca4] cursor-pointer"
+                                onClick={deleteQuestion}
+                              >
+                                Delete
+                              </span>
                             </div>
                           </div>
                           <div
