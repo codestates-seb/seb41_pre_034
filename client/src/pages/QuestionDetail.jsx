@@ -11,6 +11,7 @@ import MdArea from '../components/MdArea';
 import Tips from '../components/Tips';
 import useFetch from '../util/useFetch';
 import { timeForToday } from '../util/timeForToday';
+import MDEditor from '@uiw/react-md-editor';
 
 function AddComment() {
   const [isOpenCommentInput, setIsOpenCommentInput] = useState(false);
@@ -156,7 +157,11 @@ function QuestionDetail() {
                   >
                     <div className="align-top pr-[16px] flex flex-col w-auto min-w-[0px]">
                       <div id="question-post-body" className="w-full">
-                        {!$fetchData.isPending && $fetchData.data.data.body}
+                        {!$fetchData.isPending && (
+                          <MDEditor.Markdown
+                            source={$fetchData.data.data.body}
+                          />
+                        )}
                       </div>
                       <div className="mt-[24px] mb-[42px]">
                         <ul className="flex">
