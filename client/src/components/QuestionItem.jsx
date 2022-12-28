@@ -1,5 +1,5 @@
 import React from 'react';
-import profile from '../assets/profile.jpeg';
+import basicProfile from '../assets/basicProfile.png';
 import ROUTE_PATH from '../constants/routePath';
 import { timeForToday } from '../util/timeForToday';
 import { Link } from 'react-router-dom';
@@ -52,7 +52,7 @@ function QuestionItem(props) {
               <div>
                 <a>
                   <div>
-                    <img className="w-[16px] h-[16px]" src={profile}></img>
+                    <img className="w-[16px] h-[16px]" src={basicProfile}></img>
                   </div>
                 </a>
               </div>
@@ -66,9 +66,11 @@ function QuestionItem(props) {
                   </li>
                 </ul>
               </div>
-              <time className="flex ml-[2px]">{`${
-                props.createAt === props.updateAt ? `asked` : `modified`
-              } ${timeForToday(props.createAt)}`}</time>
+              <time className="flex ml-[2px]">
+                {props.createAt === String(props.updateAt).slice(0, 19)
+                  ? `asked ${timeForToday(props.createAt)}`
+                  : `modified ${timeForToday(props.updateAt)}`}
+              </time>
             </div>
           </div>
         </div>

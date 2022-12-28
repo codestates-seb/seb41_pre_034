@@ -71,7 +71,10 @@ function Home() {
                 </div>
               </div>
               <div className="mb-[12px] flex justify-between">
-                <span>23,339,958 question</span>
+                <span>{`${
+                  $questions.data &&
+                  $questions.data.data.length.toLocaleString()
+                } questions`}</span>
                 <Tabs
                   menuArr={[
                     { name: 'Newest' },

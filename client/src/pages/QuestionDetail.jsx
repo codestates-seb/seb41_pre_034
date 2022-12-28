@@ -14,6 +14,7 @@ import { timeForToday } from '../util/timeForToday';
 import MDEditor from '@uiw/react-md-editor';
 import { fetchDelete } from '../util/api';
 import { useSelector } from 'react-redux';
+import basicProfile from '../assets/basicProfile.png';
 
 function AddComment() {
   const [isOpenCommentInput, setIsOpenCommentInput] = useState(false);
@@ -73,6 +74,26 @@ function QuestionDetail() {
     }).catch((error) => console.log(error));
   }
 
+  function deleteAnswer({ target }) {
+    if (confirm('답변을 삭제하시겠습니까?')) {
+      fetch(`/answers/${target.dataset.answerid}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: localStorage.getItem('Authorization'),
+          Refresh: localStorage.getItem('Refresh'),
+        },
+        body: JSON.stringify({
+          userId,
+          questionId,
+          body: answer,
+        }),
+      })
+        .then(() => (window.location.href = ''))
+        .catch((error) => console.log(error));
+    }
+  }
+
   return (
     <>
       <div
@@ -97,7 +118,7 @@ function QuestionDetail() {
               </div>
             </Link>
           </div>
-          <div className="flex pb-[8px] mb-[16px] text-[13px] pb-[8px] mb-[16px] border-b-[1px] border-[#e4e6e8]">
+          <div className="flex text-[13px] pb-[8px] mb-[16px] border-b-[1px] border-[#e4e6e8]">
             <div className="mr-[16px] mb-[8px]">
               <span className="mr-[6px] text-[#6a737c]">Asked</span>
               <time>
@@ -259,7 +280,7 @@ function QuestionDetail() {
                               >
                                 <Link to={ROUTE_PATH.MY_PAGE}>
                                   <img
-                                    src={profile}
+                                    src={basicProfile}
                                     className="w-[32px] h-[32px] object-cover"
                                   ></img>
                                 </Link>
@@ -456,6 +477,15 @@ function QuestionDetail() {
                                     Follow
                                   </span>
                                 </div>
+                                <div className="mr-[8px]">
+                                  <span
+                                    className="hover:text-[#949ca4] cursor-pointer"
+                                    onClick={deleteAnswer}
+                                    data-answerid={answer.answerId}
+                                  >
+                                    Delete
+                                  </span>
+                                </div>
                               </div>
                               <div
                                 id="post-signature"
@@ -468,7 +498,7 @@ function QuestionDetail() {
                                   >
                                     {!$fetchData.isPending &&
                                       `answered ${timeForToday(
-                                        $fetchData.data.data.createAt
+                                        answer.createAt
                                       )}`}
                                   </div>
                                   <div
@@ -477,7 +507,7 @@ function QuestionDetail() {
                                   >
                                     <Link to={ROUTE_PATH.MY_PAGE}>
                                       <img
-                                        src={profile}
+                                        src={basicProfile}
                                         className="w-[32px] h-[32px] object-cover"
                                       ></img>
                                     </Link>
