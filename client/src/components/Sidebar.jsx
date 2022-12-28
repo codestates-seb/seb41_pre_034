@@ -2,18 +2,12 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ROUTE_PATH from '../constants/routePath';
 
-function Sidebar() {
-  const [currentMenu, setCurrentMenu] = useState(0);
-  // 클릭 이벤트가 발생하면 해당 li 요소로 focus가 이동한다
+function Sidebar({ currentMenu = 'Home' }) {
   const menuArr = [
     { name: 'Home', link: ROUTE_PATH.HOME },
     { name: 'Tags', link: ROUTE_PATH.TAGS },
     { name: 'Users', link: ROUTE_PATH.USERS },
   ];
-
-  const selectMenuHandler = (index) => {
-    setCurrentMenu(index);
-  };
 
   const basicLiClassName =
     'h-[30px] py-[4px] pl-[8px] pr-[4px] text-[#525960] text-[13px] cursor-pointer w-[164px]';
@@ -28,12 +22,11 @@ function Sidebar() {
                 <Link to={el.link} key={idx}>
                   <li
                     className={
-                      idx === currentMenu
+                      el.name === currentMenu
                         ? basicLiClassName +
                           ` border-r-focused bg-focused font-focused`
                         : basicLiClassName
                     }
-                    onClick={() => selectMenuHandler(idx)}
                   >
                     {el.name}
                   </li>

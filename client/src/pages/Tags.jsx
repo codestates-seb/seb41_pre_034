@@ -9,7 +9,7 @@ function Tags(props) {
   return (
     <div className="pt-[50px]">
       <div className="container mt-0 max-w-[1264px] w-full flex justify-between mx-auto my-0 relative z-[1000] flex-[1_0_auto] text-left min-h-[calc(100vh-50px-322px)]">
-        <Sidebar></Sidebar>
+        <Sidebar currentMenu="Tags"></Sidebar>
         <div className="content max-w-[1100px] w-[calc(100%-164px)] p-[24px] border-l-[1px] border-[#e1e2e5]">
           <h1 className="mb-[16px] text-[27px]">Tags</h1>
           <p className="text-[15px] mb-[16px] w-[632px] h-[39.219px]">
