@@ -1,5 +1,6 @@
 export const timeForToday = (value) => {
-  const today = new Date();
+  const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+  const today = new Date(new Date().getTime() - KR_TIME_DIFF);
   const timeValue = new Date(value);
 
   const betweenTime = Math.floor(
