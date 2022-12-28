@@ -73,6 +73,26 @@ function QuestionDetail() {
     }).catch((error) => console.log(error));
   }
 
+  function deleteAnswer({ target }) {
+    if (confirm('답변을 삭제하시겠습니까?')) {
+      fetch(`/answers/${target.dataset.answerid}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: localStorage.getItem('Authorization'),
+          Refresh: localStorage.getItem('Refresh'),
+        },
+        body: JSON.stringify({
+          userId,
+          questionId,
+          body: answer,
+        }),
+      })
+        .then(() => (window.location.href = ''))
+        .catch((error) => console.log(error));
+    }
+  }
+
   return (
     <>
       <div
@@ -456,6 +476,15 @@ function QuestionDetail() {
                                     Follow
                                   </span>
                                 </div>
+                                <div className="mr-[8px]">
+                                  <span
+                                    className="hover:text-[#949ca4] cursor-pointer"
+                                    onClick={deleteAnswer}
+                                    data-answerid={answer.answerId}
+                                  >
+                                    Delete
+                                  </span>
+                                </div>
                               </div>
                               <div
                                 id="post-signature"
@@ -468,7 +497,7 @@ function QuestionDetail() {
                                   >
                                     {!$fetchData.isPending &&
                                       `answered ${timeForToday(
-                                        $fetchData.data.data.createAt
+                                        answer.createAt
                                       )}`}
                                   </div>
                                   <div
