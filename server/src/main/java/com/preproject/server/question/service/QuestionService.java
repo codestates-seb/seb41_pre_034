@@ -41,14 +41,14 @@ public class QuestionService {
 
     public Question save(Question question, String tags, Long userId) {
         User user = userService.findUser(userId);
-        question.addUser(user);
-
         List<Tag> tagByString = tagService.createTagByString(tags);
+        tagByString
+                .forEach(tag -> new QuestionTag(question, tag));
         question.setQuestionStatus(QuestionStatus.OPENED);
         question.setViewCounting(0);
-        tagByString.forEach(tag -> new QuestionTag(question, tag));
         question.setTagString(buildTagString(question.getQuestionTags()));
         question.setUpdateAt(LocalDateTime.now());
+        question.addUser(user);
         return questionRepository.save(question);
     }
 
@@ -126,7 +126,7 @@ public class QuestionService {
 
     /* util  메소드 */
 
-    private String buildTagString(Set<QuestionTag> questionTags ) {
+    public String buildTagString(Set<QuestionTag> questionTags ) {
         if (questionTags == null) return "";
         List<Tag> tags = questionTags.stream()
                 .map(QuestionTag::getTag)
