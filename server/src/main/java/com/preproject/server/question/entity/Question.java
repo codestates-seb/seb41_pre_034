@@ -6,7 +6,6 @@ import com.preproject.server.constant.QuestionStatus;
 import com.preproject.server.user.entity.User;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -63,9 +62,8 @@ public class Question {
     @CreatedDate
     private LocalDateTime createAt;
 
-    @Column(nullable = false, insertable = false, updatable = false,
-            columnDefinition = "datetime default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP")
-    @LastModifiedDate
+    @Column(nullable = true)
+    @Setter
     private LocalDateTime updateAt;
 
     @Column(nullable = false)
@@ -84,7 +82,7 @@ public class Question {
     /* 연관 관계 */
 
     @Setter
-    @ManyToOne(optional = true, fetch = FetchType.EAGER)
+    @ManyToOne(optional = true, fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     private User user;
 
     @ToString.Exclude
