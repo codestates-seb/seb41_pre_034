@@ -100,32 +100,32 @@ public class User {
 
     @ToString.Exclude
     @OrderBy("questionId")
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Question> questions = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("answerId")
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Answer> answers = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("answerVoteId")
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<AnswerVote> answerVotes = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("answerCommentId")
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<AnswerComment> answerComments = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("questionCommentId")
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<QuestionComment> questionComments = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("questionVoteId")
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<QuestionVote> questionVotes = new LinkedHashSet<>();
 
     public void addQuestion(Question question) {
