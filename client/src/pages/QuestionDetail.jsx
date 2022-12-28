@@ -13,6 +13,7 @@ import useFetch from '../util/useFetch';
 import { timeForToday } from '../util/timeForToday';
 import MDEditor from '@uiw/react-md-editor';
 import { fetchDelete } from '../util/api';
+import { useSelector } from 'react-redux';
 
 function AddComment() {
   const [isOpenCommentInput, setIsOpenCommentInput] = useState(false);
@@ -43,6 +44,8 @@ function QuestionDetail() {
   const { questionId } = useParams();
   const $fetchData = useFetch(`/questions/${questionId}`);
   const voteIconColor = '#babfc5';
+  const [answer, setAnswer] = useState('');
+  const userId = useSelector((state) => state.userIdReducer);
 
   function deleteQuestion() {
     if (confirm('삭제하시겠습니까?')) {
@@ -52,6 +55,22 @@ function QuestionDetail() {
         Refresh: localStorage.getItem('Refresh'),
       });
     }
+  }
+
+  function addAnswer() {
+    fetch('/answers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: localStorage.getItem('Authorization'),
+        Refresh: localStorage.getItem('Refresh'),
+      },
+      body: JSON.stringify({
+        userId,
+        questionId,
+        body: answer,
+      }),
+    }).catch((error) => console.log(error));
   }
 
   return (
@@ -412,7 +431,9 @@ function QuestionDetail() {
                           </div>
                         </div>
                         <div className="align-top pr-[16px] flex flex-col w-full min-w-[0px]">
-                          <div className="w-full mb-[40px]">{answer.body}</div>
+                          <div className="w-full mb-[40px]">
+                            <MDEditor.Markdown source={answer.body} />
+                          </div>
                           <div className="flex w-full">
                             <div className="flex flex-auto justify-between">
                               <div className="flex text-[#6a737c] text-[13px]">
@@ -527,12 +548,12 @@ function QuestionDetail() {
                     );
                   })}
               </div>
-              <form>
+              <form onSubmit={addAnswer}>
                 <h2 className="font-[400] pt-[20px] text-[19px] leading-[1.3]">
                   Your Answer
                 </h2>
                 <div className="w-full mt-[10px]">
-                  <MdArea></MdArea>
+                  <MdArea body={answer} setBody={setAnswer}></MdArea>
                 </div>
                 <div className="w-[130px] mt-[30px]">
                   <BlueButton text="Post Your Answer"></BlueButton>
