@@ -3,13 +3,9 @@ package com.preproject.server.answer;
 import com.preproject.server.answer.entity.Answer;
 import com.preproject.server.answer.repository.AnswerRepository;
 import com.preproject.server.answer.service.AnswerService;
+import com.preproject.server.constant.ErrorCode;
 import com.preproject.server.exception.ServiceLogicException;
-import com.preproject.server.question.entity.Question;
-import com.preproject.server.question.repository.QuestionRepository;
-import com.preproject.server.question.service.QuestionService;
-import com.preproject.server.user.entity.User;
-import com.preproject.server.user.repository.UserRepository;
-import com.preproject.server.user.service.UserService;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,67 +15,56 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 public class AnswerServiceTest {
-
     @Mock
     private AnswerRepository answerRepository;
-    @Mock
-    private UserRepository userRepository;
-    @Mock
-    private QuestionRepository questionRepository;
 
     @InjectMocks
     private AnswerService answerService;
-    @InjectMocks
-    private UserService userService;
-    @InjectMocks
-    private QuestionService questionService;
 
     @Test
-    @DisplayName("AnswerService Test")
-    void verifyLogic() {
-        // Given
-        Answer testAnswer = createTestAnswer(1L);
-        User testUser = createTestUser(1L);
-        Question testQuestion = createTestQuestion(1L);
+    @DisplayName("답변 수정 테스트")
+    void updateTest() {
+        // given
+        given(answerRepository.findById(anyLong())).willReturn(Optional.empty());
 
-        given(answerRepository.findById(anyLong())).willReturn(Optional.of(testAnswer));
-        given(userRepository.findById(anyLong())).willReturn(Optional.of(testUser));
-        given(questionRepository.findById(anyLong())).willReturn(Optional.of(testQuestion));
+        // when
+        Throwable throwable = Assertions.catchThrowable(
+                () -> answerService.updateAnswer(createTestAnswer(1L)));
 
-        // When
-        assertThrows(ServiceLogicException.class,
-                () -> answerService.createAnswer(testAnswer, 1L, 1L));
+        // then
+        Assertions.assertThat(throwable)
+                .isInstanceOf(ServiceLogicException.class)
+                .hasMessageContaining(ErrorCode.ANSWER_NOT_FOUND.getMessage());
     }
 
+    @Test
+    @DisplayName("답변 조회 테스트")
+    void findTest() {
+        // given
+        given(answerRepository.findById(anyLong())).willReturn(Optional.empty());
+
+        // when
+        Throwable throwable = Assertions.catchThrowable(
+                () -> answerService.findAnswer(1L));
+
+        // then
+        Assertions.assertThat(throwable)
+                .isInstanceOf(ServiceLogicException.class)
+                .hasMessageContaining(ErrorCode.ANSWER_NOT_FOUND.getMessage());
+    }
+
+    // 테스트 답변 생성
     private Answer createTestAnswer(Long answerId) {
-        Answer testAnswer = new Answer("Write Answer");
+        Answer testAnswer = new Answer();
+        testAnswer.setBody("Write Answer");
         testAnswer.setAnswerId(answerId);
+        // testAnswer.setCheck(true);
 
         return testAnswer;
-    }
-
-    private User createTestUser(Long userId) {
-        User testUser = new User(
-                "test@test.com",
-                "1111!",
-                "testName",
-                false);
-        testUser.setUserId(userId);
-
-        return testUser;
-    }
-
-    private Question createTestQuestion(Long questionId) {
-        Question testQuestion = new Question();
-        testQuestion.setTitle("Question");
-        testQuestion.setBody("Write Question");
-
-        return testQuestion;
     }
 }
