@@ -126,7 +126,7 @@ public class QuestionService {
 
     /* util  메소드 */
 
-    private String buildTagString(Set<QuestionTag> questionTags ) {
+    public String buildTagString(Set<QuestionTag> questionTags ) {
         if (questionTags == null) return "";
         List<Tag> tags = questionTags.stream()
                 .map(QuestionTag::getTag)
