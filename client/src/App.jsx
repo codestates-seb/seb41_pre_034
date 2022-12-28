@@ -10,6 +10,7 @@ import Users from './pages/Users';
 import QuestionDetail from './pages/QuestionDetail';
 import Navbar from './components/Navbar';
 import ROUTE_PATH from './constants/routePath';
+import NotFound from './pages/NotFound';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           path={ROUTE_PATH.DETAIL + '/:questionId'}
           element={<QuestionDetail />}
         />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );
