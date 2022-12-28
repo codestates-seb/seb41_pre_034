@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -47,6 +48,7 @@ public class QuestionService {
         question.setViewCounting(0);
         tagByString.forEach(tag -> new QuestionTag(question, tag));
         question.setTagString(buildTagString(question.getQuestionTags()));
+        question.setUpdateAt(LocalDateTime.now());
         return questionRepository.save(question);
     }
 
@@ -63,17 +65,20 @@ public class QuestionService {
 
     public Question patch(Long questionId, Question question, String tags, Long userId) {
         Question findQuestion = findVerifiedQuestion(questionId);
+
         if (!Objects.equals(findQuestion.getUser().getUserId(), userId)) {
             throw new ServiceLogicException(ErrorCode.ACCESS_DENIED);
         }
+        List<QuestionTag> questionTags = findQuestion.getQuestionTags()
+                .stream().collect(Collectors.toList());
+        findQuestion.setUpdateAt(LocalDateTime.now());
 
         Optional.ofNullable(question.getBody())
                 .ifPresent(body -> findQuestion.setBody(body));
 
         Optional.ofNullable(question.getTitle())
                 .ifPresent(title -> findQuestion.setTitle(title));
-        List<QuestionTag> questionTags = findQuestion.getQuestionTags()
-                .stream().collect(Collectors.toList());
+
         if (!tags.isEmpty()) {
             List<Tag> tagByString = tagService.createTagByString(tags);
             Set<QuestionTag> addTags = tagByString.stream()
@@ -140,6 +145,7 @@ public class QuestionService {
     }
 
 
+    // Todo 삭제
     private int countingVote(Set<QuestionVote> questionVotes) {
         if (questionVotes != null) {
             int up = (int) questionVotes.stream()
