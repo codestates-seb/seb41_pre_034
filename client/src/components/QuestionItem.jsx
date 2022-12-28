@@ -63,9 +63,9 @@ function QuestionItem(props) {
                   </li>
                 </ul>
               </div>
-              <time className="flex ml-[2px]">{`modified ${timeForToday(
-                props.createAt
-              )}`}</time>
+              <time className="flex ml-[2px]">{`${
+                props.createAt === props.updateAt ? `asked` : `modified`
+              } ${timeForToday(props.createAt)}`}</time>
             </div>
           </div>
         </div>
