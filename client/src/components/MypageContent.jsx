@@ -1,6 +1,6 @@
 //componet로 구현해 두는 것이 유지보수나 상태관리등에 더 적합하고 편할 것 같아요!
-import React from 'react';
-import profile from '../assets/profile.jpeg';
+import React, { useEffect, useState } from 'react';
+import basicProfile from '../assets/basicProfile.png';
 import posts from '../assets/posts.png';
 import { MdCake } from 'react-icons/md';
 import { FiClock } from 'react-icons/fi';
@@ -8,15 +8,34 @@ import { BiCalendar } from 'react-icons/bi';
 import { RiPencilFill } from 'react-icons/ri';
 import { BsFillChatSquareTextFill } from 'react-icons/bs';
 import OrangeButton from './buttons/OrangeButton';
+import { timeForToday } from '../util/timeForToday';
+import { useSelector } from 'react-redux';
 
 function MypageContent() {
+  const [userInfo, setUserInfo] = useState(null);
+  const userId = useSelector((state) => state.userIdReducer);
+
+  useEffect(() => {
+    fetch('/users/' + userId, {
+      method: 'GET',
+      headers: {
+        Authorization: localStorage.getItem('Authorization'),
+        Refresh: localStorage.getItem('Refresh'),
+      },
+    })
+      .then((response) => response.json())
+      .then(({ data }) => {
+        setUserInfo(data);
+      });
+  }, []);
+
   return (
     <div>
       <div className="relativ w-[1051px] h-[144px] mb-[16px]">
         <div className="box-content flex flex-wrap items-center w-[1067px] h-[144px] m-[-8px]">
           <a className=" m-[8px]">
             <img
-              src={profile}
+              src={basicProfile}
               className="w-[128px] h-[128px]  rounded-md"
             ></img>
           </a>
@@ -24,15 +43,17 @@ function MypageContent() {
           <div className=" w-[495.445px] h-[68px] m-[8px]">
             <div className="flex items-center text-[34px] w-[421.328px] h-[50pxpx] mb-[-4px]">
               <div className="w-[104.430px] h-[44px] m-[4px] mb-[14px]">
-                jinwon
+                {userInfo && userInfo.displayName}
               </div>
             </div>
-            <ul className="flex text-[13px] text-[#6A737C] w-[499.445px] h-[26px] ml-[-4px]">
+            <ul className="flex text-[13px] text-[#6A737C] w-[600px] h-[26px] ml-[-4px]">
               <li className="flex items-center m-[4px]">
                 <div className="mx-[2px]">
                   <MdCake className="w-[18px] h-[18px] " />
                 </div>
-                <div>Member for 5 days</div>
+                <div>
+                  {'Member for ' + timeForToday(userInfo && userInfo.createAt)}
+                </div>
               </li>
               <li className="flex items-center m-[4px]">
                 <div className="mx-[2px]">
@@ -85,10 +106,16 @@ function MypageContent() {
                   <div className="text-[17px] text-[#000000]">0</div>reached
                 </div>
                 <div className="w-[101.375px] h-[39.227px] m-[8px]">
-                  <div className="text-[17px] text-[#000000]">0</div>answers
+                  <div className="text-[17px] text-[#000000]">
+                    {userInfo && userInfo.answers.length}
+                  </div>
+                  answers
                 </div>
                 <div className="w-[101.375px] h-[39.227px] m-[8px]">
-                  <div className="text-[17px] text-[#000000]">0</div>questions
+                  <div className="text-[17px] text-[#000000]">
+                    {userInfo && userInfo.questions.length}
+                  </div>
+                  questions
                 </div>
               </div>
             </div>
@@ -123,13 +150,11 @@ function MypageContent() {
         <div className="w-[782.240px] h-[735.383px] m-[12px] flex flex-col gap-4">
           <div>
             <div className="w-[782.250px] h-[27.453px] mb-[8px] text-[21px]">
-              {/* list 형식으로 */}
               Answers
             </div>
             <div className="box-content p-[32px] w-[716.250px] border-[1px] border-[#D6D9DC] rounded-md bg-[#F8F9F9]">
               <p className="text-[13px] w-[316px] h-[auto] text-center mx-[auto] text-[#6A737C]">
-                Your about me section is currently blank. Would you like to add
-                one? <a className="text-[#0074cc]">Edit profile</a>
+                You have not answered any questions
               </p>
             </div>
           </div>
@@ -139,8 +164,7 @@ function MypageContent() {
             </div>
             <div className="box-content p-[32px] w-[716.250px] border-[1px] border-[#D6D9DC] rounded-md bg-[#F8F9F9]">
               <p className="text-[13px] w-[316px] h-[auto] text-center mx-[auto] text-[#6A737C]">
-                You have not earned anyc
-                <a className="text-[#0074cc]">badges.</a>
+                You have not asked any questions
               </p>
             </div>
           </div>

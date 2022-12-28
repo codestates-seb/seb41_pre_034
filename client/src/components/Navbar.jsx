@@ -1,7 +1,7 @@
 import React from 'react';
 import SkyButton from './buttons/SkyButton';
 import BlueButton from './buttons/BlueButton';
-import profile from '../assets/profile.jpeg';
+import basicProfile from '../assets/basicProfile.png';
 import Inputbox from './Inputbox';
 import { Link } from 'react-router-dom';
 import ROUTE_PATH from '../constants/routePath';
@@ -80,17 +80,17 @@ function Navbar(props) {
               {props.isLogin ? (
                 <>
                   <li className="inline-flex h-full">
-                    <a
-                      href="/"
+                    <Link
+                      to={ROUTE_PATH.MY_PAGE}
                       className="inline-flex items-center py-0 px-[12px] relative hover:bg-[#e3e6e8]"
                     >
                       <img
-                        src={profile}
+                        src={basicProfile}
                         className="aspect-square rounded"
                         width="24"
                         height="24"
                       ></img>
-                    </a>
+                    </Link>
                   </li>
                   {dummyButtonImageSources.map((src, index) => (
                     <li key={index} className="inline-flex h-full">

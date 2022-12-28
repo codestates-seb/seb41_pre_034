@@ -1,5 +1,5 @@
 import React from 'react';
-import profile from '../assets/profile.jpeg';
+import basicProfile from '../assets/basicProfile.png';
 import ROUTE_PATH from '../constants/routePath';
 import { timeForToday } from '../util/timeForToday';
 import { Link } from 'react-router-dom';
@@ -52,7 +52,7 @@ function QuestionItem(props) {
               <div>
                 <a>
                   <div>
-                    <img className="w-[16px] h-[16px]" src={profile}></img>
+                    <img className="w-[16px] h-[16px]" src={basicProfile}></img>
                   </div>
                 </a>
               </div>

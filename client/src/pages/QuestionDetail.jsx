@@ -14,6 +14,7 @@ import { timeForToday } from '../util/timeForToday';
 import MDEditor from '@uiw/react-md-editor';
 import { fetchDelete } from '../util/api';
 import { useSelector } from 'react-redux';
+import basicProfile from '../assets/basicProfile.png';
 
 function AddComment() {
   const [isOpenCommentInput, setIsOpenCommentInput] = useState(false);
@@ -117,7 +118,7 @@ function QuestionDetail() {
               </div>
             </Link>
           </div>
-          <div className="flex pb-[8px] mb-[16px] text-[13px] pb-[8px] mb-[16px] border-b-[1px] border-[#e4e6e8]">
+          <div className="flex text-[13px] pb-[8px] mb-[16px] border-b-[1px] border-[#e4e6e8]">
             <div className="mr-[16px] mb-[8px]">
               <span className="mr-[6px] text-[#6a737c]">Asked</span>
               <time>
@@ -279,7 +280,7 @@ function QuestionDetail() {
                               >
                                 <Link to={ROUTE_PATH.MY_PAGE}>
                                   <img
-                                    src={profile}
+                                    src={basicProfile}
                                     className="w-[32px] h-[32px] object-cover"
                                   ></img>
                                 </Link>
@@ -506,7 +507,7 @@ function QuestionDetail() {
                                   >
                                     <Link to={ROUTE_PATH.MY_PAGE}>
                                       <img
-                                        src={profile}
+                                        src={basicProfile}
                                         className="w-[32px] h-[32px] object-cover"
                                       ></img>
                                     </Link>
