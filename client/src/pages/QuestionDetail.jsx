@@ -5,7 +5,6 @@ import { Link, useParams } from 'react-router-dom';
 import ROUTE_PATH from '../constants/routePath';
 import BlueButton from '../components/buttons/BlueButton';
 import Tag from '../components/Tag';
-import profile from '../assets/profile.jpeg';
 import { useState } from 'react';
 import MdArea from '../components/MdArea';
 import Tips from '../components/Tips';
@@ -46,7 +45,7 @@ function QuestionDetail() {
   const $fetchData = useFetch(`/questions/${questionId}`);
   const voteIconColor = '#babfc5';
   const [answer, setAnswer] = useState('');
-  const userId = useSelector((state) => state.userIdReducer);
+  const userId = Number(useSelector((state) => state.userIdReducer));
 
   function deleteQuestion() {
     if (confirm('삭제하시겠습니까?')) {
@@ -238,27 +237,36 @@ function QuestionDetail() {
                                 Share
                               </span>
                             </div>
-                            <div id="question-edit-button" className="mr-[8px]">
-                              <Link
-                                to={`${ROUTE_PATH.EDIT_QUESTION}/${questionId}`}
-                                className="hover:text-[#949ca4]"
+                            {userId ===
+                            ($fetchData.data && $fetchData.data.data.userId) ? (
+                              <div
+                                id="question-edit-button"
+                                className="mr-[8px]"
                               >
-                                Edit
-                              </Link>
-                            </div>
+                                <Link
+                                  to={`${ROUTE_PATH.EDIT_QUESTION}/${questionId}`}
+                                  className="hover:text-[#949ca4]"
+                                >
+                                  Edit
+                                </Link>
+                              </div>
+                            ) : null}
                             <div className="mr-[8px]">
                               <span className="hover:text-[#949ca4] cursor-help">
                                 Follow
                               </span>
                             </div>
-                            <div className="mr-[8px]">
-                              <span
-                                className="hover:text-[#949ca4] cursor-pointer"
-                                onClick={deleteQuestion}
-                              >
-                                Delete
-                              </span>
-                            </div>
+                            {userId ===
+                            ($fetchData.data && $fetchData.data.data.userId) ? (
+                              <div className="mr-[8px]">
+                                <span
+                                  className="hover:text-[#949ca4] cursor-pointer"
+                                  onClick={deleteQuestion}
+                                >
+                                  Delete
+                                </span>
+                              </div>
+                            ) : null}
                           </div>
                           <div
                             id="question-post-signature"
@@ -463,29 +471,37 @@ function QuestionDetail() {
                                     Share
                                   </span>
                                 </div>
-                                <div>
-                                  <Link
-                                    to={'' /* 해당 답변 수정 페이지 이동 */}
-                                  >
-                                    <span className="mr-[8px] hover:text-[#949ca4]">
-                                      Edit
-                                    </span>
-                                  </Link>
-                                </div>
+                                {userId ===
+                                ($fetchData.data &&
+                                  $fetchData.data.data.userId) ? (
+                                  <div>
+                                    <Link
+                                      to={'' /* 해당 답변 수정 페이지 이동 */}
+                                    >
+                                      <span className="mr-[8px] hover:text-[#949ca4]">
+                                        Edit
+                                      </span>
+                                    </Link>
+                                  </div>
+                                ) : null}
                                 <div>
                                   <span className="mr-[8px] hover:text-[#949ca4] cursor-help">
                                     Follow
                                   </span>
                                 </div>
-                                <div className="mr-[8px]">
-                                  <span
-                                    className="hover:text-[#949ca4] cursor-pointer"
-                                    onClick={deleteAnswer}
-                                    data-answerid={answer.answerId}
-                                  >
-                                    Delete
-                                  </span>
-                                </div>
+                                {userId ===
+                                ($fetchData.data &&
+                                  $fetchData.data.data.userId) ? (
+                                  <div className="mr-[8px]">
+                                    <span
+                                      className="hover:text-[#949ca4] cursor-pointer"
+                                      onClick={deleteAnswer}
+                                      data-answerid={answer.answerId}
+                                    >
+                                      Delete
+                                    </span>
+                                  </div>
+                                ) : null}
                               </div>
                               <div
                                 id="post-signature"
