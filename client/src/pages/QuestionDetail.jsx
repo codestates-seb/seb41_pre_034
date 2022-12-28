@@ -12,6 +12,7 @@ import Tips from '../components/Tips';
 import useFetch from '../util/useFetch';
 import { timeForToday } from '../util/timeForToday';
 import MDEditor from '@uiw/react-md-editor';
+import { fetchDelete } from '../util/api';
 
 function AddComment() {
   const [isOpenCommentInput, setIsOpenCommentInput] = useState(false);
@@ -42,6 +43,16 @@ function QuestionDetail() {
   const { questionId } = useParams();
   const $fetchData = useFetch(`/questions/${questionId}`);
   const voteIconColor = '#babfc5';
+
+  function deleteQuestion() {
+    if (confirm('삭제하시겠습니까?')) {
+      fetchDelete('/questions/', questionId, {
+        'Content-Type': 'Application/json',
+        Authorization: localStorage.getItem('Authorization'),
+        Refresh: localStorage.getItem('Refresh'),
+      });
+    }
+  }
 
   return (
     <>
@@ -197,6 +208,12 @@ function QuestionDetail() {
                             </div>
                             <div className="mr-[8px] hover:text-[#949ca4] cursor-help">
                               Follow
+                            </div>
+                            <div
+                              className="mr-[8px] hover:text-[#949ca4] cursor-pointer"
+                              onClick={deleteQuestion}
+                            >
+                              Delete
                             </div>
                           </div>
                           <div

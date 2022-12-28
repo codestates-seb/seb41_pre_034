@@ -1,5 +1,5 @@
 const BASE_URL =
-  'http://ec2-54-180-142-199.ap-northeast-2.compute.amazonaws.com:8080';
+  'http://ec2-13-124-206-193.ap-northeast-2.compute.amazonaws.com:8080';
 // const TODO_URL = 'http://localhost:3000/todo/';
 
 export const fetchCreate = (url, data, redirectURL = '/') => {
@@ -16,12 +16,13 @@ export const fetchCreate = (url, data, redirectURL = '/') => {
     });
 };
 
-export const fetchDelete = (url, id) => {
+export const fetchDelete = (url, id, headers, redirectURL = '/') => {
   fetch(`${url}${id}`, {
     method: 'DELETE',
+    headers,
   })
     .then(() => {
-      window.location.href = BASE_URL;
+      window.location.href = redirectURL;
     })
     .catch((error) => {
       console.error('Error', error);
