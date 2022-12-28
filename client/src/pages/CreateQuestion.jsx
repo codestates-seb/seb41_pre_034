@@ -15,6 +15,18 @@ function CreateQuestion(props) {
   async function handleSubmit(event) {
     event.preventDefault();
 
+    if (title.trim().length === 0) {
+      alert('제목을 입력해주세요.');
+
+      return;
+    }
+
+    if (body.trim().length === 0) {
+      alert('본문을 입력해주세요.');
+
+      return;
+    }
+
     const response = await fetch('questions', {
       method: 'POST',
       headers: {

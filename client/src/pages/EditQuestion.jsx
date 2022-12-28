@@ -62,6 +62,18 @@ function EditQuestion(props) {
       }),
     });
 
+    if (title.trim().length === 0) {
+      alert('제목을 입력해주세요.');
+
+      return;
+    }
+
+    if (body.trim().length === 0) {
+      alert('본문을 입력해주세요.');
+
+      return;
+    }
+
     if (response.ok) {
       window.location.href = `${ROUTE_PATH.DETAIL}/${questionId}`;
 
