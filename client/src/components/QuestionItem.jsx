@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 function QuestionItem(props) {
   //props.tags가 string이기 때문에 map이안됨
-  console.log(props.tags);
+
   return (
     <div className="relative flex justify-center w-[719px] items-center p-[16px] border-b-[1px] border-[#e8eaec] my-5">
       <div className="flex flex-col gap-2 justify-start w-[108px] h-[99.859px] mr-[16px] mb-[4px] text-[13px]">
