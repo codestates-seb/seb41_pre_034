@@ -471,9 +471,7 @@ function QuestionDetail() {
                                     Share
                                   </span>
                                 </div>
-                                {userId ===
-                                ($fetchData.data &&
-                                  $fetchData.data.data.userId) ? (
+                                {userId === answer.userId ? (
                                   <div>
                                     <Link
                                       to={'' /* 해당 답변 수정 페이지 이동 */}
@@ -489,9 +487,7 @@ function QuestionDetail() {
                                     Follow
                                   </span>
                                 </div>
-                                {userId ===
-                                ($fetchData.data &&
-                                  $fetchData.data.data.userId) ? (
+                                {userId === answer.userId ? (
                                   <div className="mr-[8px]">
                                     <span
                                       className="hover:text-[#949ca4] cursor-pointer"
