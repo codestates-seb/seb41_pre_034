@@ -72,12 +72,15 @@ function CreateQuestion(props) {
   }
 
   function addTags(event) {
-    const inputValue = event.target.value;
+    event.preventDefault();
+
+    const inputValue = event.target.value.trim();
+    event.target.value = inputValue;
 
     if (
       inputValue.length !== 0 &&
       !tags.includes(inputValue) &&
-      event.key === 'Enter'
+      event.key === ' '
     ) {
       setTags([...tags, inputValue]);
       event.target.value = '';
@@ -169,9 +172,7 @@ function CreateQuestion(props) {
               </ul>
               <input
                 id="tags"
-                onKeyUp={(e) => {
-                  addTags(e);
-                }}
+                onKeyUp={addTags}
                 placeholder="e.g.(ajax wpf sql)"
                 className="my-[2px] py-[7.8px] h-[20px] w-[100%] px-[9.1px] text-[13px] rounded-[3px] focus:ring-0 focus:outline-none"
               ></input>
