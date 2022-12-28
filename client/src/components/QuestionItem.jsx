@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 
 function QuestionItem(props) {
   //props.tags가 string이기 때문에 map이안됨
+  console.log(props.tags);
   return (
     <div className="relative flex justify-center w-[719px] items-center p-[16px] border-b-[1px] border-[#e8eaec] my-5">
       <div className="flex flex-col gap-2 justify-start w-[108px] h-[99.859px] mr-[16px] mb-[4px] text-[13px]">
@@ -35,13 +36,15 @@ function QuestionItem(props) {
         <div className="flex h-[38.594px]">
           <div className="flex">
             <ul className="flex list-none ml-0 mt-[4px]">
-              {props.tags.map((el, idx) => (
-                <li key={idx} className="mr-[4px]">
-                  <a className="border-solid border-[#e1ecf4] bg-[#e1ecf4] text-[#39739d] hover:bg-[#B3D3EA] rounded text-xs py-[4.8px] px-[6px] border-[1px] mr-[2px] mb-[2px]">
-                    {el}
-                  </a>
-                </li>
-              ))}
+              {props.tags.map((el, idx) => {
+                return el === '' ? null : (
+                  <li key={idx} className="mr-[4px]">
+                    <a className="border-solid border-[#e1ecf4] bg-[#e1ecf4] text-[#39739d] hover:bg-[#B3D3EA] rounded text-xs py-[4.8px] px-[6px] border-[1px] mr-[2px] mb-[2px]">
+                      {el}
+                    </a>
+                  </li>
+                );
+              })}
             </ul>
           </div>
           <div className="flex ml-[auto] items-center">
