@@ -5,6 +5,7 @@ import BlueButton from '../components/buttons/BlueButton';
 import Tag from '../components/Tag';
 import { useSelector } from 'react-redux';
 import ROUTE_PATH from '../constants/routePath';
+import BASE_URL from '../constants/baseUrl';
 
 function CreateQuestion(props) {
   const [tags, setTags] = useState([]);
@@ -27,7 +28,7 @@ function CreateQuestion(props) {
       return;
     }
 
-    const response = await fetch('questions', {
+    const response = await fetch(BASE_URL + '/questions', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
@@ -49,7 +50,7 @@ function CreateQuestion(props) {
     }
 
     if (response.status === 403) {
-      const response = await fetch('/auth/reissuetoken');
+      const response = await fetch(BASE_URL + '/auth/reissuetoken');
 
       if (!response.ok) {
         window.location.href = ROUTE_PATH.LOGIN;

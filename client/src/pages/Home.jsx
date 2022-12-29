@@ -9,13 +9,14 @@ import Tabs from '../components/Tabs';
 import useFetch from '../util/useFetch';
 import PageButton from '../components/buttons/PageButton';
 import { useLocation } from 'react-router-dom';
+import BASE_URL from '../constants/baseUrl';
 
 function Home() {
   const { search } = useLocation();
-  const $questions = useFetch(`/questions${search}`);
+  const $questions = useFetch(`${BASE_URL}/questions${search}`);
 
   async function handleConfirmLogin() {
-    const response = await fetch('/auth/verify', {
+    const response = await fetch(BASE_URL + '/auth/verify', {
       method: 'GET',
       headers: {
         'content-type': 'application/json',
@@ -38,7 +39,7 @@ function Home() {
     }
 
     if (response.status === 403) {
-      const response = await fetch('/auth/reissuetoken');
+      const response = await fetch(BASE_URL + '/auth/reissuetoken');
 
       if (!response.ok) {
         window.location.href = ROUTE_PATH.LOGIN;

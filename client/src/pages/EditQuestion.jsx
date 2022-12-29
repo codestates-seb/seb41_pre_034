@@ -6,6 +6,7 @@ import Tag from '../components/Tag';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ROUTE_PATH from '../constants/routePath';
+import BASE_URL from '../constants/baseUrl';
 
 function EditQuestion(props) {
   const { questionId } = useParams();
@@ -15,7 +16,7 @@ function EditQuestion(props) {
   const userId = useSelector((state) => state.userIdReducer);
 
   useEffect(() => {
-    fetch('/questions/' + questionId)
+    fetch(BASE_URL + '/questions/' + questionId)
       .then((response) => response.json())
       .then(({ data }) => {
         setTitle(data.title);
@@ -47,7 +48,7 @@ function EditQuestion(props) {
   async function handleSubmit(event) {
     event.preventDefault();
 
-    const response = await fetch('/questions/' + questionId, {
+    const response = await fetch(BASE_URL + '/questions/' + questionId, {
       method: 'PATCH',
       headers: {
         'content-type': 'application/json',
@@ -81,7 +82,7 @@ function EditQuestion(props) {
     }
 
     if (response.status === 403) {
-      const response = await fetch('/auth/reissuetoken');
+      const response = await fetch(BASE_URL + '/auth/reissuetoken');
 
       if (!response.ok) {
         window.location.href = ROUTE_PATH.LOGIN;

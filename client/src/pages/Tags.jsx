@@ -5,9 +5,10 @@ import { AiOutlineSearch } from 'react-icons/ai';
 import Tabs from '../components/Tabs';
 import TagCard from '../components/TagCard';
 import useFetch from '../util/useFetch';
+import BASE_URL from '../constants/baseUrl';
 
 function Tags(props) {
-  const $Tags = useFetch('/tags');
+  const $Tags = useFetch(BASE_URL + '/tags');
   const TagArr = $Tags.data && $Tags.data.data;
 
   return (

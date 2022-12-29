@@ -14,6 +14,7 @@ import MDEditor from '@uiw/react-md-editor';
 import { fetchDelete } from '../util/api';
 import { useSelector } from 'react-redux';
 import basicProfile from '../assets/basicProfile.png';
+import BASE_URL from '../constants/baseUrl';
 
 function AddComment() {
   const [isOpenCommentInput, setIsOpenCommentInput] = useState(false);
@@ -42,14 +43,14 @@ function AddComment() {
 
 function QuestionDetail() {
   const { questionId } = useParams();
-  const $fetchData = useFetch(`/questions/${questionId}`);
+  const $fetchData = useFetch(`${BASE_URL}/questions/${questionId}`);
   const voteIconColor = '#babfc5';
   const [answer, setAnswer] = useState('');
   const userId = Number(useSelector((state) => state.userIdReducer));
 
   function deleteQuestion() {
     if (confirm('삭제하시겠습니까?')) {
-      fetchDelete('/questions/', questionId, {
+      fetchDelete(BASE_URL + '/questions/', questionId, {
         'Content-Type': 'Application/json',
         Authorization: localStorage.getItem('Authorization'),
         Refresh: localStorage.getItem('Refresh'),
@@ -58,7 +59,7 @@ function QuestionDetail() {
   }
 
   function addAnswer() {
-    fetch('/answers', {
+    fetch(BASE_URL + '/answers', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -75,7 +76,7 @@ function QuestionDetail() {
 
   function deleteAnswer({ target }) {
     if (confirm('답변을 삭제하시겠습니까?')) {
-      fetch(`/answers/${target.dataset.answerid}`, {
+      fetch(`${BASE_URL}/answers/${target.dataset.answerid}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

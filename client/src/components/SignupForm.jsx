@@ -4,6 +4,7 @@ import ImNotARobot from '../assets/ImNotARobot.png';
 import BlueButton from './buttons/BlueButton';
 import { RiQuestionFill } from 'react-icons/ri';
 import { fetchCreate } from '../util/api';
+import BASE_URL from '../constants/baseUrl';
 
 function SignupForm(props) {
   const [displayName, setDisplayName] = useState('');
@@ -30,7 +31,7 @@ function SignupForm(props) {
   function handleSubmit(e) {
     e.preventDefault();
 
-    fetchCreate('/users', {
+    fetchCreate(BASE_URL + '/users', {
       email: email,
       password: password,
       displayName: displayName,
