@@ -11,7 +11,6 @@ function Tags(props) {
   const TagArr = $Tags.data && $Tags.data.data;
   console.log(TagArr);
 
-  const h = 'w-[700px] ? hidden : none';
   return (
     <div className="pt-[50px]">
       <div
