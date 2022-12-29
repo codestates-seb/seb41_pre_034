@@ -1,9 +1,9 @@
 package com.preproject.server.question.controller;
 
+import com.preproject.server.constant.VoteStatus;
 import com.preproject.server.dto.ResponseDto;
 import com.preproject.server.question.dto.QuestionVotePatchDto;
 import com.preproject.server.question.dto.QuestionVotePostDto;
-import com.preproject.server.question.dto.QuestionVoteResponseDto;
 import com.preproject.server.question.entity.QuestionVote;
 import com.preproject.server.question.mapper.QuestionMapper;
 import com.preproject.server.question.service.QuestionVoteService;
@@ -27,8 +27,10 @@ public class QuestionVoteController {
             @PathVariable Long questionId,
             @RequestBody QuestionVotePostDto questionVotePostDto
     ) {
+        String voteStatus = questionVotePostDto.getVoteStatus().toUpperCase();
+        questionVotePostDto.setVoteStatus(voteStatus);
 
-        QuestionVote saved = questionVoteService.post(
+        QuestionVote saved = questionVoteService.createVote(
                 questionMapper.questionVotePostDtoToEntity(questionVotePostDto),
                 questionId,
                 questionVotePostDto.getUserId());
@@ -44,15 +46,22 @@ public class QuestionVoteController {
     public ResponseEntity patchQuestionvote(
             @PathVariable Long questionVoteId,
             @RequestBody QuestionVotePatchDto questionVotePatchDto) {
+        String voteStatus = questionVotePatchDto.getVoteStatus().toUpperCase();
+        questionVotePatchDto.setVoteStatus(voteStatus);
 
-        QuestionVote questionVote = questionMapper.questionVotePatchDtoToEntity(questionVotePatchDto);
+        QuestionVote questionVote =
+                questionMapper.questionVotePatchDtoToEntity(questionVotePatchDto);
 
-        QuestionVote newQuestionVote = questionVoteService.patch(questionVote,questionVoteId);
+        QuestionVote patchQuestionVote =
+                questionVoteService.updateVote(questionVote,questionVoteId);
 
-        QuestionVoteResponseDto response =
-                questionMapper.questionVoteToQuestionVoteResponseDto(newQuestionVote);
-        return new ResponseEntity<>(
-                ResponseDto.of(response),
-                HttpStatus.OK);
+        if (patchQuestionVote.getVoteStatus().equals(VoteStatus.NO_CONTENT)) {
+            return ResponseEntity.noContent().build();
+        }else {
+            return new ResponseEntity<>(
+                    ResponseDto.of(questionMapper.questionVoteToQuestionVoteResponseDto(patchQuestionVote)),
+                    HttpStatus.OK);
+        }
+
     }
 }
