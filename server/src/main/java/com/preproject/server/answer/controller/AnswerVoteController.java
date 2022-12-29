@@ -5,6 +5,7 @@ import com.preproject.server.answer.dto.AnswerVotePostDto;
 import com.preproject.server.answer.entity.AnswerVote;
 import com.preproject.server.answer.mapper.AnswerMapper;
 import com.preproject.server.answer.service.AnswerVoteService;
+import com.preproject.server.constant.VoteStatus;
 import com.preproject.server.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,9 @@ public class AnswerVoteController {
             @PathVariable("answerId") Long answerId,
             @RequestBody AnswerVotePostDto answerVotePostDto
     ) {
+        String voteStatus = answerVotePostDto.getVoteStatus().toUpperCase();
+        answerVotePostDto.setVoteStatus(voteStatus);
+
         AnswerVote save =
                 answerVoteService.createVote(
                         answerMapper.answerVotePostDtoToEntity(answerVotePostDto),
@@ -43,14 +47,21 @@ public class AnswerVoteController {
             @PathVariable("answerVoteId") Long answerVoteId,
             @RequestBody AnswerVotePatchDto answerVotePatchDto
     ) {
+        String voteStatus = answerVotePatchDto.getVoteStatus().toUpperCase();
+        answerVotePatchDto.setVoteStatus(voteStatus);
+
         AnswerVote answerVote =
                 answerMapper.answerVotePatchDtoToEntity(answerVotePatchDto);
 
-        AnswerVote update =
+        AnswerVote patchAnswerVote =
                 answerVoteService.updateVote(answerVote, answerVoteId);
 
-        return new ResponseEntity<>(
-                ResponseDto.of(answerMapper.answerVoteToAnswerVoteResponseDto(update)),
-                HttpStatus.OK);
+        if (patchAnswerVote.getVoteStatus().equals(VoteStatus.NO_CONTENT)) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return new ResponseEntity<>(
+                    ResponseDto.of(answerMapper.answerVoteToAnswerVoteResponseDto(patchAnswerVote)),
+                    HttpStatus.OK);
+        }
     }
 }
