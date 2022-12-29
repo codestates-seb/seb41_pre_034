@@ -105,7 +105,6 @@ public class SecurityConfig {
 
             JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils);
             builder.addFilter(jwtAuthenticationFilter)
-//                    .addFilterBefore(new CorsFilter(), JwtAuthenticationFilter.class)
                     .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class);
 
         }
@@ -115,7 +114,10 @@ public class SecurityConfig {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedOrigins(Arrays.asList("*"));
         corsConfiguration.setAllowedMethods(Arrays.asList("GET","POST", "PATCH", "DELETE", "OPTIONS"));
-        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.setMaxAge(900000L);
+        corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.addAllowedMethod("*");
+        corsConfiguration.addAllowedHeader("*");
         corsConfiguration.addExposedHeader("Authorization");
         corsConfiguration.addExposedHeader("Refresh");
 
