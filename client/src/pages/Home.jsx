@@ -115,7 +115,10 @@ function Home() {
                         return (
                           <PageButton
                             pageNumber={index + 1}
-                            selected={index == search.split('=')[1]}
+                            selected={
+                              index == search.split('=')[1] ||
+                              (search === '' && index === 0)
+                            }
                             key={index}
                           ></PageButton>
                         );
