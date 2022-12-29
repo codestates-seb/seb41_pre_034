@@ -1,7 +1,7 @@
 //componet로 구현해 두는 것이 유지보수나 상태관리등에 더 적합하고 편할 것 같아요!
 import React, { useEffect, useState } from 'react';
 import basicProfile from '../assets/basicProfile.png';
-import posts from '../assets/posts.png';
+import { BsCircleFill } from 'react-icons/bs';
 import { MdCake } from 'react-icons/md';
 import { FiClock } from 'react-icons/fi';
 import { BiCalendar } from 'react-icons/bi';
@@ -11,9 +11,11 @@ import OrangeButton from './buttons/OrangeButton';
 import { timeForToday } from '../util/timeForToday';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import Tag from '../components/Tag';
 
 function MypageContent() {
   const [userInfo, setUserInfo] = useState(null);
+  const [tags, setTags] = useState([]);
   const userId = useSelector((state) => state.userIdReducer);
 
   useEffect(() => {
@@ -27,6 +29,7 @@ function MypageContent() {
       .then((response) => response.json())
       .then(({ data }) => {
         setUserInfo(data);
+        setTags(data.questions.map((el) => el.tags).flat());
       });
   }, []);
 
@@ -152,9 +155,9 @@ function MypageContent() {
             <div className="w-[782.250px] h-[27.453px] mb-[8px] text-[21px]">
               Answers
             </div>
-            <div className="box-content w-[780.250px] border-[1px] border-[#D6D9DC] rounded-md bg-[#F8F9F9]">
+            <div className="box-content w-[780.250px] h-[150px] overflow-y-scroll border-[1px] border-[#D6D9DC] rounded-md bg-[#F8F9F9]">
               {userInfo && userInfo.answers.length === 0 ? (
-                <p className="text-[13px] w-[316px] h-[auto] text-center mx-[auto] text-[#6A737C]">
+                <p className="text-[13px] w-[316px] h-[40px] flex justify-center items-center mx-[auto] text-[#6A737C]">
                   You have not answered any questions
                 </p>
               ) : (
@@ -184,9 +187,9 @@ function MypageContent() {
             <div className="w-[782.250px] h-[27.453px] mb-[8px] text-[21px]">
               Questions
             </div>
-            <div className="box-content h-fit w-[780.250px] border-[1px] border-[#D6D9DC] rounded-md bg-[#F8F9F9]">
+            <div className="box-content h-[150px] overflow-y-scroll w-[780.250px] border-[1px] border-[#D6D9DC] rounded-md bg-[#F8F9F9]">
               {userInfo && userInfo.questions.length === 0 ? (
-                <p className="text-[13px] w-[316px] h-[auto] text-center mx-[auto] text-[#6A737C]">
+                <p className="text-[13px] w-[316px] h-[40px] flex justify-center items-center text-center mx-[auto] text-[#6A737C]">
                   You have not asked any questions
                 </p>
               ) : (
@@ -219,17 +222,29 @@ function MypageContent() {
             <div className="w-[782.250px] h-[27.453px] mb-[8px] text-[21px]">
               Tags
             </div>
-            <div className="box-content p-[48px] w-[684.250px] border-[1px] border-[#D6D9DC] rounded-md bg-[#F8F9F9]">
-              <img src={posts} className="mb-[24px] mx-[auto]"></img>
-              <p className="text-[13px] w-[316px] h-[auto] text-center mx-[auto] text-[#6A737C] mb-[12px]">
-                Just getting started? Try answering a question!
-              </p>
-              <p className="text-[13px] w-[316px] h-[auto] text-center mx-[auto] text-[#6A737C]">
-                Your most helpful questions, answers and tags will appear here.
-                Start by <a className="text-[#0074cc]">answering a question</a>{' '}
-                or <a className="text-[#0074cc]">selecting tags</a>
-                that match topics you’re interested in.
-              </p>
+            <div className="box-content w-[780.250px] h-[300px] overflow-y-scroll border-[1px] border-[#D6D9DC] rounded-md bg-[#F8F9F9]">
+              {tags && tags.length === 0 ? (
+                <p className="text-[13px] w-[316px] h-[auto] text-center mx-[auto] text-[#6A737C]">
+                  You have not participated in any tags
+                </p>
+              ) : (
+                tags &&
+                tags.map((el, index) => (
+                  <div
+                    key={index}
+                    className="first:rounded-t-md last:rounded-b-md w-full h-[40px] flex justify-between items-center bg-[#ffff] border-[1px] border-[#D6D9DC]"
+                  >
+                    <div className="ml-[30px] w-[100px] h-[30px] flex items-center justify-start">
+                      <Tag text={el.tag} />
+                      <BsCircleFill className="ml-[5px] text-[5px] text-[#fdc057fc]" />
+                    </div>
+                    <div className="flex justify-between">
+                      <div className="text-[13px] mx-[10px]">11,632 score</div>
+                      <div className="text-[13px] mx-[10px]">5,546 posts</div>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>
