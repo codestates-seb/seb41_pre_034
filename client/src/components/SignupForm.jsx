@@ -1,15 +1,49 @@
 import React from 'react';
-// import { useState } from 'react';
+import { useState } from 'react';
 import ImNotARobot from '../assets/ImNotARobot.png';
 import BlueButton from './buttons/BlueButton';
 import { RiQuestionFill } from 'react-icons/ri';
+import { fetchCreate } from '../util/api';
 
 function SignupForm(props) {
-  // const [isvalid, setvalid] = useState;
+  const [displayName, setDisplayName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isCheck, setCheck] = useState(false);
+
+  function handleDispalyName(e) {
+    setDisplayName(e.target.value);
+  }
+
+  function handleEmail(e) {
+    setEmail(e.target.value);
+  }
+
+  function handlePassword(e) {
+    setPassword(e.target.value);
+  }
+
+  function handleCheckboxClick() {
+    setCheck(!isCheck);
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    fetchCreate('/users', {
+      email: email,
+      password: password,
+      displayName: displayName,
+      emailNotice: isCheck,
+    });
+
+    alert('회원가입이 완료되었습니다.');
+  }
+
   return (
     <div>
       <div className="box-content rounded-[7px] shadow-lg bg-[#ffffff] w-[268px] h-[610.406px] p-[24px] mb-[24px]">
-        <form className="flex flex-col">
+        <form onSubmit={handleSubmit} className="flex flex-col">
           <div className="flex flex-col w-[268px] h-[60.203px] my-[6px]">
             <label htmlFor="name" className="px-[2px] my-[2px] font-[700] ">
               Display name
@@ -20,6 +54,8 @@ function SignupForm(props) {
                 type="name"
                 required
                 className="box-content border-[1px] border-[#babfc3] rounded-[3px] w-[247.8px] h-[16px] py-[7.8px] px-[9.1px]"
+                value={displayName}
+                onChange={handleDispalyName}
               ></input>
             </div>
           </div>
@@ -32,8 +68,8 @@ function SignupForm(props) {
                 id="email"
                 type="email"
                 required
-                // value={email}
-                // onChange={(e) => setEmail(e.target.value)}
+                value={email}
+                onChange={handleEmail}
                 className="box-content border-[1px] border-[#babfc3] rounded-[3px] w-[247.8px] h-[16px] py-[7.8px] px-[9.1px] peer/email"
                 placeholder=" "
               ></input>
@@ -53,6 +89,7 @@ function SignupForm(props) {
                 required
                 className="peer/password box-content border-[1px] border-[#babfc3] rounded-[3px] w-[247.8px] h-[16px] py-[7.8px] px-[9.1px]"
                 placeholder=" "
+                onChange={handlePassword}
               ></input>
               <p className="hidden peer-invalid/password:block peer-placeholder-shown/password:!invisible text-pink-600 text-sm p-[2px] my-[2px]">
                 Please provide a valid password
@@ -71,7 +108,11 @@ function SignupForm(props) {
           </div>
           <div className="flex items-start h-[64.750px]">
             <div className="relative">
-              <input type="checkbox" className="w-[13px] mr-[4px]"></input>
+              <input
+                type="checkbox"
+                className="w-[13px] mr-[4px]"
+                onChange={handleCheckboxClick}
+              ></input>
             </div>
             <div className="text-[12px] ">
               Opt-in to receive occasional product updates, user research

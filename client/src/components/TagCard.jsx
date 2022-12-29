@@ -3,11 +3,11 @@ import Tag from './Tag';
 
 function TagCard(props) {
   return (
-    <div className="flex flex-col border border-solid	rounded border-[#d6d9dc] p-[12px]">
+    <div className="flex flex-col border border-[1px]	rounded border-[#d6d9dc] p-[12px]">
       <div className="flex justify-between mb-3">
-        <Tag text={'javascript'} />
+        <Tag text={props.tag} />
       </div>
-      <div className="flex text-left mb-3 line-clamp-4">
+      <div className="flex mb-3 text-left line-clamp-4">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Est, minus
         facere iure maxime voluptatibus aspernatur non. Quaerat unde iste
         obcaecati. Expedita repellat architecto ea, tenetur ut quod doloribus
