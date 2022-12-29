@@ -7,17 +7,50 @@ import { Link } from 'react-router-dom';
 function QuestionItem(props) {
   return (
     <div className="relative flex flex-col lg:flex-row items-start p-[16px] border-b-[1px] border-[#e8eaec] my-5">
-      <div className="flex lg:flex-col gap-2 justify-start lg:w-[108px] lg:h-[99.859px] mr-[16px] mb-[4px] text-[13px]">
+      <div className="flex lg:flex-col gap-2 justify-start lg:w-[108px] lg:h-[99.859px] mr-[16px] mb-[4px] text-[13px] items-end">
         <div className="flex justify-end font-bold gap-x-1">
-          <span>{props.vote}</span>
+          <span className="font-[700]">{props.vote}</span>
           <span>vote</span>
         </div>
+
+        {props.questionStatus === 'CLOSED' ? (
+          <div
+            className={
+              'px-[5px] py-[1px] flex justify-end gap-x-1 items-center bg-[#2f6f44] border-[1px] border-[#2f6f44] text-[#ffffff] rounded px-[2px] font-[600]'
+            }
+          >
+            <svg
+              aria-hidden="true"
+              className="svg-icon iconCheckmarkSm"
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+            >
+              <path
+                d="M13 3.41 11.59 2 5 8.59 2.41 6 1 7.41l4 4 8-8Z"
+                fill="#ffffff"
+              ></path>
+            </svg>
+            <span className="font-[600]">{props.answers}</span>
+            <span>answers</span>
+          </div>
+        ) : props.answers > 0 ? (
+          <div
+            className={
+              'flex justify-end gap-x-1 border-[1px] border-[#2f6f44] text-[#2f6f44] rounded px-[5px]'
+            }
+          >
+            <span className="font-[600]">{props.answers}</span>
+            <span>answers</span>
+          </div>
+        ) : (
+          <div className={'flex justify-end gap-x-1'}>
+            <span className="font-[600]">{props.answers}</span>
+            <span>answers</span>
+          </div>
+        )}
         <div className="flex justify-end gap-x-1">
-          <span>{props.answers}</span>
-          <span>answers</span>
-        </div>
-        <div className="flex justify-end gap-x-1">
-          <span>{props.views}</span>
+          <span className="font-[600]">{props.views}</span>
           <span>views</span>
         </div>
       </div>
@@ -25,7 +58,7 @@ function QuestionItem(props) {
         <h3 className="mb-[5px]">
           <Link
             to={`${ROUTE_PATH.DETAIL}/${props.questionId}`}
-            className="text-[17px] text-[#0074cc] hover:text-[#0a95ff]"
+            className="text-[17px] font-[600] text-[#0074cc] hover:text-[#0a95ff]"
           >
             {props.title}
           </Link>
@@ -56,13 +89,10 @@ function QuestionItem(props) {
               </div>
               <div className="flex">
                 <div>
-                  <a className="m-[2px]">{props.author}</a>
+                  <a className="m-[2px] font-[500] text-[#0074cc] hover:text-[#0a95ff]">
+                    {props.author}
+                  </a>
                 </div>
-                <ul className="ml-0 list-none">
-                  <li>
-                    <span className="font-bold">80k</span>
-                  </li>
-                </ul>
               </div>
               <time className="flex ml-[2px]">
                 {props.createAt === String(props.updateAt).slice(0, 19)

@@ -108,6 +108,8 @@ function Home() {
                       createAt={el.createAt}
                       updateAt={el.updateAt}
                       questionId={el.questionId}
+                      questionStatus={el.questionStatus}
+                      userId={el.userId}
                     />
                   ))}
                 <div className="flex gap-[4px] h-[27px] my-[60px] ml-[20px]">
