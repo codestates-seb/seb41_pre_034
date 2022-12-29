@@ -62,7 +62,7 @@ public class AnswerService {
         if (findAnswer.getCheck()) {
             findAnswer.getQuestion().setQuestionStatus(QuestionStatus.CLOSED);
         }
-        return answerRepository.save(findAnswer);
+        return findAnswer;
     }
 
     public Answer verifiedAnswerById(Long answerId) {
