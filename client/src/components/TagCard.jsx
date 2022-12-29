@@ -8,13 +8,7 @@ function TagCard(props) {
         <Tag text={props.tag} />
       </div>
       <div className="flex mb-3 text-left line-clamp-4">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Est, minus
-        facere iure maxime voluptatibus aspernatur non. Quaerat unde iste
-        obcaecati. Expedita repellat architecto ea, tenetur ut quod doloribus
-        amet minus. Lorem ipsum dolor sit amet consectetur adipisicing elit.
-        Est, minus facere iure maxime voluptatibus aspernatur non. Quaerat unde
-        iste obcaecati. Expedita repellat architecto ea, tenetur ut quod
-        doloribus amet minus.
+        {props.description}
       </div>
       <div className="flex">
         <div className="flex-1 text-[#838c95] text-xs text-left">
