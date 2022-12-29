@@ -33,7 +33,7 @@ public class QuestionVote {
 
     @Setter
     @Enumerated(value = EnumType.STRING)
-    @Column
+    @Column(nullable = false)
     private VoteStatus voteStatus;
 
     @Column(nullable = false, insertable = false, updatable = false,
@@ -49,12 +49,12 @@ public class QuestionVote {
     /* 연관 관계 */
 
     @Setter
-    @ManyToOne(optional = true, fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @ManyToOne(optional = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private User user;
 
 
     @Setter
-    @ManyToOne(optional = true, fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @ManyToOne(optional = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Question question;
 
     public void addUser(User user) {
