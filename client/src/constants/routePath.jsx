@@ -8,6 +8,7 @@ const ROUTE_PATH = {
   TAGS: '/tags',
   USERS: '/users',
   DETAIL: '/detail',
+  SEARCH: '/search',
 };
 
 export default ROUTE_PATH;

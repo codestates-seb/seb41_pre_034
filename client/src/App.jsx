@@ -11,6 +11,7 @@ import QuestionDetail from './pages/QuestionDetail';
 import Navbar from './components/Navbar';
 import ROUTE_PATH from './constants/routePath';
 import NotFound from './pages/NotFound';
+import SearchResult from './pages/SearchResult';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
       <Navbar isLogin={localStorage.getItem('Authorization')} />
       <Routes>
         <Route path={ROUTE_PATH.HOME} element={<Home />} />
+        <Route path={ROUTE_PATH.SEARCH} element={<SearchResult />} />
         <Route path={ROUTE_PATH.HOME + 'questions'} element={<Home />} />
         <Route path={ROUTE_PATH.LOGIN} element={<Login />} />
         <Route path={ROUTE_PATH.SIGNUP} element={<SignUp />} />
