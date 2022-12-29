@@ -4,20 +4,32 @@ import Footer from '../components/Footer';
 import { AiOutlineSearch } from 'react-icons/ai';
 import Tabs from '../components/Tabs';
 import TagCard from '../components/TagCard';
+import useFetch from '../util/useFetch';
 
 function Tags(props) {
+  const $Tags = useFetch('/tags');
+  const TagArr = $Tags.data && $Tags.data.data;
+  console.log(TagArr);
+
+  const h = 'w-[700px] ? hidden : none';
   return (
     <div className="pt-[50px]">
-      <div className="container mt-0 max-w-[1264px] w-full flex justify-between mx-auto my-0 relative z-[1000] flex-[1_0_auto] text-left min-h-[calc(100vh-50px-322px)]">
-        <Sidebar currentMenu="Tags"></Sidebar>
-        <div className="content max-w-[1100px] w-[calc(100%-164px)] p-[24px] border-l-[1px] border-[#e1e2e5]">
+      <div
+        className={
+          'container mt-0 max-w-[1264px] w-full flex justify-between mx-auto my-0 relative z-[1000] flex-[1_0_auto] text-left min-h-[calc(100vh-50px-322px)]'
+        }
+      >
+        <div className={'hidden sm:block'}>
+          <Sidebar currentMenu="Tags"></Sidebar>
+        </div>
+        <div className="flex flex-col content max-w-[1100px] sm:w-[calc(100%-164px)] p-[24px] border-l-[1px] border-[#e1e2e5]">
           <h1 className="mb-[16px] text-[27px]">Tags</h1>
-          <p className="text-[15px] mb-[16px] w-[632px] h-[39.219px]">
+          <p className="text-[15px] mb-[16px] md:w-[632px] md:h-[39.219px]">
             A tag is a keyword or label that categorizes your question with
             other, similar questions. Using the right tags makes it easier for
             others to find and answer your question.
           </p>
-          <div className="flex flex-wrap items-center m-[-2px] mb-[24px] ">
+          <div className="flex flex-wrap items-center m-[-2px] mb-[24px]">
             <a
               className="text-[13px] text-[#0976CC] hover:text-[#4393f7]"
               href=""
@@ -46,21 +58,16 @@ function Tags(props) {
               />
             </div>
           </div>
-          <div className="grid grid-cols-4 gap-4 ">
-            <TagCard tag="javascript" />
-            <TagCard tag="ajax" />
-            <TagCard tag="css" />
-            <TagCard tag="HTML" />
-            <TagCard tag="Redux" />
-            <TagCard tag="React" />
-            <TagCard tag="tailwind" />
-            <TagCard tag="python" />
-            <TagCard tag="C" />
-            <TagCard tag="git" />
-            <TagCard tag="project" />
-            <TagCard tag="code-seb" />
-            <TagCard tag="FE41" />
-            <TagCard tag="frontend" />
+          <div className="grid gap-4 xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2">
+            {TagArr &&
+              TagArr.map((el, idx) => (
+                <TagCard
+                  key={idx}
+                  tag={el.tag}
+                  description={el.description}
+                  createdAt={el.createdAt}
+                ></TagCard>
+              ))}
           </div>
         </div>
       </div>
