@@ -1,8 +1,8 @@
 package com.preproject.server.answer.service;
 
+import com.preproject.server.answer.entity.Answer;
 import com.preproject.server.answer.entity.AnswerVote;
 import com.preproject.server.answer.repository.AnswerVoteRepository;
-import com.preproject.server.answer.service.AnswerVoteService;
 import com.preproject.server.constant.ErrorCode;
 import com.preproject.server.constant.VoteStatus;
 import com.preproject.server.exception.ServiceLogicException;
@@ -50,20 +50,22 @@ public class AnswerVoteServiceTest {
         // given
         AnswerVote testVote = createTestAnswerVote(1L);
         testVote.setVoteStatus(VoteStatus.UP);
-        given(answerVoteRepository.findById(anyLong())).willReturn(Optional.of(testVote));
+        given(answerVoteRepository.findById(anyLong())).willReturn(Optional.empty());
 
         // when
-        AnswerVote vote = answerVoteService.updateVote(testVote, 1L);
-
+        Throwable throwable = Assertions.catchThrowable(() -> answerVoteService.updateVote(testVote, 1L));
         // then
-        assertThat(vote.getVoteStatus()).isEqualTo(testVote.getVoteStatus());
+        Assertions.assertThat(throwable).isInstanceOf(ServiceLogicException.class);
+        Assertions.assertThat(throwable).hasMessageContaining(ErrorCode.ANSWER_NOT_FOUND.getMessage());
+
     }
 
     // 테스트 답변 추천 생성
     private AnswerVote createTestAnswerVote(Long answerVoteId) {
         AnswerVote testVote = new AnswerVote();
         testVote.setVoteStatus(VoteStatus.NONE);
-
+        Answer answer = new Answer();
+        testVote.setAnswer(answer);
         return testVote;
     }
 }
