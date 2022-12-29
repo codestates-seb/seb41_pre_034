@@ -57,8 +57,10 @@ function Home() {
 
   return (
     <div className="mt-[50px] max-w-[100%] flex flex-col justify-center items-center">
-      <div className="container mt-0 max-w-[1264px] w-full flex justify-between mx-auto my-0 relative z-[1000] flex-[1_0_auto] text-left min-h-[calc(100vh-50px-322px)]">
-        <Sidebar></Sidebar>
+      <div className="container mt-0 max-w-[1264px] flex justify-between mx-auto my-0 relative z-[1000] flex-[1_0_auto] text-left min-h-[calc(100vh-50px-322px)]">
+        <div className="hidden sm:block">
+          <Sidebar></Sidebar>
+        </div>
 
         <div className="content max-w-[1100px] w-[calc(100%-164px)] p-[24px] border-l-[1px] border-[#e1e2e5]">
           <div className="flex">
@@ -127,7 +129,7 @@ function Home() {
                 </div>
               </div>
             </div>
-            <div className="ml-[24px] mb-[15px]">
+            <div className="hidden lg:block ml-[24px] mb-[15px]">
               <Tips />
             </div>
           </div>
