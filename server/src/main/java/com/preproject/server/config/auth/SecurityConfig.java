@@ -6,13 +6,13 @@ import com.preproject.server.auth.handler.UserAccessDeniedHandler;
 import com.preproject.server.auth.handler.UserAuthenticationEntryPoint;
 import com.preproject.server.auth.handler.UserAuthenticationFailureHandler;
 import com.preproject.server.auth.handler.UserAuthenticationSuccessHandler;
-import com.preproject.server.filter.CorsFilter;
 import com.preproject.server.utils.JwtAuthorityUtils;
 import com.preproject.server.utils.JwtTokenizer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -38,7 +38,7 @@ public class SecurityConfig {
         http.headers().frameOptions().sameOrigin()
                 .and()
                 .csrf().disable()
-                .cors().disable()
+                .cors(Customizer.withDefaults())
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .formLogin().disable()
@@ -86,7 +86,6 @@ public class SecurityConfig {
                         .mvcMatchers(HttpMethod.PATCH,"/question-vote/vote/**").hasAnyRole("USER","ADMIN")
                         .mvcMatchers(HttpMethod.POST,"/answer-vote/**").hasAnyRole("USER","ADMIN")
                         .mvcMatchers(HttpMethod.PATCH,"/answer-vote/vote/**").hasAnyRole("USER","ADMIN")
-
                         .anyRequest().permitAll()
                 );
         return http.build();
@@ -105,7 +104,6 @@ public class SecurityConfig {
 
             JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils);
             builder.addFilter(jwtAuthenticationFilter)
-                    .addFilterBefore(new CorsFilter(), JwtAuthenticationFilter.class)
                     .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class);
 
         }
@@ -115,7 +113,7 @@ public class SecurityConfig {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000","http://localhost:8080"));
         corsConfiguration.setAllowedMethods(Arrays.asList("GET","POST", "PATCH", "DELETE", "OPTIONS"));
-        corsConfiguration.setMaxAge(900000L);
+        corsConfiguration.setMaxAge(493772L);
         corsConfiguration.addAllowedOrigin("*");
         corsConfiguration.addAllowedMethod("*");
         corsConfiguration.addAllowedHeader("*");
