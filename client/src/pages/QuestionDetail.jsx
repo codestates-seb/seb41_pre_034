@@ -47,6 +47,10 @@ function QuestionDetail() {
   const voteIconColor = '#babfc5';
   const [answer, setAnswer] = useState('');
   const userId = Number(useSelector((state) => state.userIdReducer));
+  const isCheckedQuestion =
+    $fetchData.data &&
+    $fetchData.data.data.answers.some(({ check }) => check === true);
+  console.log($fetchData);
 
   function deleteQuestion() {
     if (confirm('삭제하시겠습니까?')) {
@@ -87,6 +91,26 @@ function QuestionDetail() {
           userId,
           questionId,
           body: answer,
+        }),
+      })
+        .then(() => (window.location.href = ''))
+        .catch((error) => console.log(error));
+    }
+  }
+
+  function selectAnswer({ target }) {
+    if (confirm('답변을 채택하시겠습니까?')) {
+      fetch(`${BASE_URL}/answers/${target.dataset.answerid}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: localStorage.getItem('Authorization'),
+          Refresh: localStorage.getItem('Refresh'),
+        },
+        body: JSON.stringify({
+          userId,
+          questionId,
+          check: true,
         }),
       })
         .then(() => (window.location.href = ''))
@@ -496,6 +520,18 @@ function QuestionDetail() {
                                       data-answerid={answer.answerId}
                                     >
                                       Delete
+                                    </span>
+                                  </div>
+                                ) : null}
+                                {userId === $fetchData.data.data.userId &&
+                                !isCheckedQuestion ? (
+                                  <div className="mr-[8px]">
+                                    <span
+                                      className="hover:text-[#949ca4] cursor-pointer"
+                                      onClick={selectAnswer}
+                                      data-answerid={answer.answerId}
+                                    >
+                                      Select!
                                     </span>
                                   </div>
                                 ) : null}
