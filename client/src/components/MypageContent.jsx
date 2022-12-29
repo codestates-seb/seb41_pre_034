@@ -157,7 +157,7 @@ function MypageContent() {
             </div>
             <div className="box-content w-[780.250px] h-[150px] overflow-y-scroll border-[1px] border-[#D6D9DC] rounded-md bg-[#F8F9F9]">
               {userInfo && userInfo.answers.length === 0 ? (
-                <p className="text-[13px] w-[316px] h-[40px] flex justify-center items-center mx-[auto] text-[#6A737C]">
+                <p className="text-[13px] w-[316px] h-full flex justify-center items-center mx-[auto] text-[#6A737C]">
                   You have not answered any questions
                 </p>
               ) : (
@@ -189,7 +189,7 @@ function MypageContent() {
             </div>
             <div className="box-content h-[150px] overflow-y-scroll w-[780.250px] border-[1px] border-[#D6D9DC] rounded-md bg-[#F8F9F9]">
               {userInfo && userInfo.questions.length === 0 ? (
-                <p className="text-[13px] w-[316px] h-[40px] flex justify-center items-center text-center mx-[auto] text-[#6A737C]">
+                <p className="text-[13px] w-[316px] h-full flex justify-center items-center text-center mx-[auto] text-[#6A737C]">
                   You have not asked any questions
                 </p>
               ) : (
@@ -224,7 +224,7 @@ function MypageContent() {
             </div>
             <div className="box-content w-[780.250px] h-[300px] overflow-y-scroll border-[1px] border-[#D6D9DC] rounded-md bg-[#F8F9F9]">
               {tags && tags.length === 0 ? (
-                <p className="text-[13px] w-[316px] h-[auto] text-center mx-[auto] text-[#6A737C]">
+                <p className="text-[13px] w-[316px] h-full flex justify-center items-center text-center mx-[auto] text-[#6A737C]">
                   You have not participated in any tags
                 </p>
               ) : (
