@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.preproject.server.config.auth.SecurityConfig;
 import com.preproject.server.constant.LoginType;
 import com.preproject.server.constant.UserStatus;
+import com.preproject.server.user.dto.UserPatchDto;
 import com.preproject.server.user.dto.UserPostDto;
 import com.preproject.server.user.dto.UserResponseDto;
 import com.preproject.server.user.dto.UserSimpleResponseDto;
@@ -25,6 +26,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -35,9 +37,8 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -80,7 +81,7 @@ class UserControllerTest {
         given(userService.createUser(any(User.class))).willReturn(user);
         given(userMapper.userEntityToSimpleResponseDto(any(User.class))).willReturn(simpleResponseDto);
         String content = gson.toJson(postDto);
-        RequestBuilder result = post("/users")
+        RequestBuilder result = RestDocumentationRequestBuilders.post("/users")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -105,7 +106,7 @@ class UserControllerTest {
         given(userService.verifiedUserById(anyLong())).willReturn(testUser);
         given(customUserMapper.userEntityToResponseDto(any(User.class)))
                 .willReturn(userResponseDto);
-        RequestBuilder result = get("/users/" + testUser.getUserId())
+        RequestBuilder result = RestDocumentationRequestBuilders.get("/users/" + testUser.getUserId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8.displayName())
@@ -118,7 +119,7 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("사용자 전체 조회")
+    @DisplayName("사용자 전체 조회 TEST")
     void getUsers() throws Exception {
         // Given
         User testUser = createTestUser();
@@ -129,7 +130,7 @@ class UserControllerTest {
         );
         given(userMapper.UserListToResponseDtoList(anyList()))
                 .willReturn(List.of(simpleResponseDto,simpleResponseDto));
-        RequestBuilder result = get("/users")
+        RequestBuilder result = RestDocumentationRequestBuilders.get("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8.displayName())
@@ -142,6 +143,53 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.pageInfo.totalElements").value(2));
     }
 
+    @Test
+    @DisplayName("사용자 정보 수정 TEST")
+    @WithMockUser
+    void patchUser() throws Exception {
+        // Given
+        UserPatchDto patchDto = createPatchDto();
+        User testUser = createTestUser();
+        testUser.setDisplayName(patchDto.getDisplayName());
+        UserSimpleResponseDto simpleResponseDto = createSimpleResponseDto(testUser);
+        // When
+        given(userMapper.UserPatchDtoToEntity(any(UserPatchDto.class))).willReturn(testUser);
+        given(userService.updateUser(any(User.class))).willReturn(testUser);
+        given(userMapper.userEntityToSimpleResponseDto(any(User.class))).willReturn(simpleResponseDto);
+        String content = gson.toJson(patchDto);
+        RequestBuilder result = RestDocumentationRequestBuilders.patch("/users/"+testUser.getUserId())
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding(StandardCharsets.UTF_8.displayName())
+                .with(csrf());
+        // Then
+        mockMvc.perform(result)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.email").value(simpleResponseDto.getEmail()))
+                .andExpect(jsonPath("$.data.displayName").value(simpleResponseDto.getDisplayName()))
+                .andExpect(jsonPath("$.data.userId").value(simpleResponseDto.getUserId()));
+    }
+
+    @Test
+    @DisplayName("사용자 삭제 TEST")
+    @WithMockUser
+    void deleteUser() throws Exception {
+        // Given
+        Long userId = 1L;
+        // When
+        doNothing().when(userService).deleteUser(userId);
+        RequestBuilder result = RestDocumentationRequestBuilders.delete("/users/"+userId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding(StandardCharsets.UTF_8.displayName())
+                .with(csrf());
+        // Then
+        mockMvc.perform(result)
+                .andExpect(status().isNoContent());
+
+    }
+
     private UserPostDto createPostDto() {
         return new UserPostDto(
                 "testaa@test.com",
@@ -149,6 +197,13 @@ class UserControllerTest {
                 "testUser",
                 true);
     }
+
+    private UserPatchDto createPatchDto() {
+        UserPatchDto userPatchDto = new UserPatchDto();
+        userPatchDto.setDisplayName("patchUser");
+        return userPatchDto;
+    }
+
 
     private User createTestUser() {
         UserPostDto postDto = createPostDto();
