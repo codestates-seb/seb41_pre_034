@@ -5,11 +5,9 @@ import { timeForToday } from '../util/timeForToday';
 import { Link } from 'react-router-dom';
 
 function QuestionItem(props) {
-  //props.tags가 string이기 때문에 map이안됨
-
   return (
-    <div className="relative flex justify-center w-[719px] items-center p-[16px] border-b-[1px] border-[#e8eaec] my-5">
-      <div className="flex flex-col gap-2 justify-start w-[108px] h-[99.859px] mr-[16px] mb-[4px] text-[13px]">
+    <div className="relative flex flex-col lg:flex-row items-start p-[16px] border-b-[1px] border-[#e8eaec] my-5">
+      <div className="flex lg:flex-col gap-2 justify-start lg:w-[108px] lg:h-[99.859px] mr-[16px] mb-[4px] text-[13px]">
         <div className="flex justify-end font-bold gap-x-1">
           <span>{props.vote}</span>
           <span>vote</span>
@@ -23,7 +21,7 @@ function QuestionItem(props) {
           <span>views</span>
         </div>
       </div>
-      <div className="flex flex-col w-[595px] h-[99.859pxpx] text-[12px] mb-[5px]">
+      <div className="flex flex-col max-sm:w-[460px] w-full h-[99.859px] text-[12px] mb-[5px]">
         <h3 className="mb-[5px]">
           <Link
             to={`${ROUTE_PATH.DETAIL}/${props.questionId}`}
@@ -33,7 +31,7 @@ function QuestionItem(props) {
           </Link>
         </h3>
         <div className="line-clamp-2 mb-[8px]">{props.body}</div>
-        <div className="flex h-[38.594px]">
+        <div className="flex h-[38.594px] justify-between">
           <div className="flex">
             <ul className="flex list-none ml-0 mt-[4px]">
               {props.tags.map((el, idx) => {
