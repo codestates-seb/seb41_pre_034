@@ -1,8 +1,8 @@
-package com.preproject.server.answer;
+package com.preproject.server.answer.service;
 
-import com.preproject.server.answer.entity.Answer;
-import com.preproject.server.answer.repository.AnswerRepository;
-import com.preproject.server.answer.service.AnswerService;
+import com.preproject.server.answer.entity.AnswerComment;
+import com.preproject.server.answer.repository.AnswerCommentRepository;
+import com.preproject.server.answer.service.AnswerCommentService;
 import com.preproject.server.constant.ErrorCode;
 import com.preproject.server.exception.ServiceLogicException;
 import org.assertj.core.api.Assertions;
@@ -19,22 +19,23 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-public class AnswerServiceTest {
+public class AnswerCommentServiceTest {
     @Mock
-    private AnswerRepository answerRepository;
+    private AnswerCommentRepository answerCommentRepository;
 
     @InjectMocks
-    private AnswerService answerService;
+    private AnswerCommentService answerCommentService;
 
     @Test
-    @DisplayName("답변 수정 테스트")
+    @DisplayName("답변 코멘트 수정 테스트")
     void updateTest() {
         // given
-        given(answerRepository.findById(anyLong())).willReturn(Optional.empty());
+        given(answerCommentRepository.findById(anyLong())).willReturn(Optional.empty());
 
         // when
         Throwable throwable = Assertions.catchThrowable(
-                () -> answerService.updateAnswer(createTestAnswer(1L)));
+                () -> answerCommentService.updateComment(
+                        createTestAnswerComment(1L), 1L));
 
         // then
         Assertions.assertThat(throwable)
@@ -43,28 +44,26 @@ public class AnswerServiceTest {
     }
 
     @Test
-    @DisplayName("답변 조회 테스트")
-    void findTest() {
+    @DisplayName("답변 코멘트 삭제 테스트")
+    void deleteTest() {
         // given
-        given(answerRepository.findById(anyLong())).willReturn(Optional.empty());
+        given(answerCommentRepository.findById(anyLong())).willReturn(Optional.empty());
 
         // when
         Throwable throwable = Assertions.catchThrowable(
-                () -> answerService.findAnswer(1L));
+                () -> answerCommentService.delete(1L));
 
-        // then
+        // Then
         Assertions.assertThat(throwable)
                 .isInstanceOf(ServiceLogicException.class)
                 .hasMessageContaining(ErrorCode.ANSWER_NOT_FOUND.getMessage());
     }
 
-    // 테스트 답변 생성
-    private Answer createTestAnswer(Long answerId) {
-        Answer testAnswer = new Answer();
-        testAnswer.setBody("Write Answer");
-        testAnswer.setAnswerId(answerId);
-        // testAnswer.setCheck(true);
+    // 테스트 답변 코멘트 생성
+    private AnswerComment createTestAnswerComment(Long answerCommentId) {
+        AnswerComment testComment = new AnswerComment();
+        testComment.setComment("Create Comment");
 
-        return testAnswer;
+        return testComment;
     }
 }

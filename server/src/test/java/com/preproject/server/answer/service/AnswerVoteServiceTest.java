@@ -1,4 +1,4 @@
-package com.preproject.server.answer;
+package com.preproject.server.answer.service;
 
 import com.preproject.server.answer.entity.AnswerVote;
 import com.preproject.server.answer.repository.AnswerVoteRepository;
@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
@@ -29,7 +30,7 @@ public class AnswerVoteServiceTest {
 
     @Test
     @DisplayName("답변 추천 수정 테스트")
-    void updateTest() {
+    void updateTest1() {
         // given
         given(answerVoteRepository.findById(anyLong())).willReturn(Optional.empty());
 
@@ -38,9 +39,24 @@ public class AnswerVoteServiceTest {
                 () -> answerVoteService.updateVote(createTestAnswerVote(1L), 1L));
 
         // then
-        Assertions.assertThat(throwable)
+        assertThat(throwable)
                 .isInstanceOf(ServiceLogicException.class)
                 .hasMessageContaining(ErrorCode.NOT_FOUND.getMessage());
+    }
+
+    @Test
+    @DisplayName("답변 추천 수정 테스트")
+    void updateTest2() {
+        // given
+        AnswerVote testVote = createTestAnswerVote(1L);
+        testVote.setVoteStatus(VoteStatus.UP);
+        given(answerVoteRepository.findById(anyLong())).willReturn(Optional.of(testVote));
+
+        // when
+        AnswerVote vote = answerVoteService.updateVote(testVote, 1L);
+
+        // then
+        assertThat(vote.getVoteStatus()).isEqualTo(testVote.getVoteStatus());
     }
 
     // 테스트 답변 추천 생성
