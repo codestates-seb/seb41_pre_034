@@ -9,7 +9,6 @@ import useFetch from '../util/useFetch';
 function Tags(props) {
   const $Tags = useFetch('/tags');
   const TagArr = $Tags.data && $Tags.data.data;
-  console.log(TagArr);
 
   return (
     <div className="pt-[50px]">
