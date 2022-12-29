@@ -20,21 +20,23 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.RequestBuilder;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -78,24 +80,23 @@ class UserControllerTest {
         given(userService.createUser(any(User.class))).willReturn(user);
         given(userMapper.userEntityToSimpleResponseDto(any(User.class))).willReturn(simpleResponseDto);
         String content = gson.toJson(postDto);
-        MockHttpServletRequestBuilder result = post("/users")
+        RequestBuilder result = post("/users")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8.displayName())
                 .with(csrf());
         // Then
-        MvcResult mvcResult = mockMvc.perform(result)
+        mockMvc.perform(result)
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.data.email").value(postDto.getEmail()))
-                .andReturn();
+                .andExpect(jsonPath("$.data.email").value(postDto.getEmail()));
 
     }
 
     @Test
     @DisplayName("사용자 단건 조회 TEST")
     @WithMockUser
-    void getUser() {
+    void getUser() throws Exception {
         // Given
         User testUser = createTestUser();
         UserResponseDto userResponseDto = createUserResponseDto(testUser);
@@ -104,12 +105,41 @@ class UserControllerTest {
         given(userService.verifiedUserById(anyLong())).willReturn(testUser);
         given(customUserMapper.userEntityToResponseDto(any(User.class)))
                 .willReturn(userResponseDto);
-        // Then
-        MockHttpServletRequestBuilder with = post("/users/" + testUser.getUserId())
+        RequestBuilder result = get("/users/" + testUser.getUserId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8.displayName())
                 .with(csrf());
+        // Then
+        mockMvc.perform(result)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.email").value(userResponseDto.getEmail()));
+
+    }
+
+    @Test
+    @DisplayName("사용자 전체 조회")
+    void getUsers() throws Exception {
+        // Given
+        User testUser = createTestUser();
+        UserSimpleResponseDto simpleResponseDto = createSimpleResponseDto(testUser);
+        // When
+        given(userService.findUsers(any(Pageable.class))).willReturn(
+                new PageImpl<>(List.of(testUser, testUser), PageRequest.of(0, 10), 2)
+        );
+        given(userMapper.UserListToResponseDtoList(anyList()))
+                .willReturn(List.of(simpleResponseDto,simpleResponseDto));
+        RequestBuilder result = get("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding(StandardCharsets.UTF_8.displayName())
+                .with(csrf());
+        // Then
+        mockMvc.perform(result)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[0].email").value(simpleResponseDto.getEmail()))
+                .andExpect(jsonPath("$.pageInfo.page").value(1))
+                .andExpect(jsonPath("$.pageInfo.totalElements").value(2));
     }
 
     private UserPostDto createPostDto() {
