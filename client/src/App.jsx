@@ -18,6 +18,7 @@ function App() {
       <Navbar isLogin={localStorage.getItem('Authorization')} />
       <Routes>
         <Route path={ROUTE_PATH.HOME} element={<Home />} />
+        <Route path={ROUTE_PATH.HOME + 'questions'} element={<Home />} />
         <Route path={ROUTE_PATH.LOGIN} element={<Login />} />
         <Route path={ROUTE_PATH.SIGNUP} element={<SignUp />} />
         <Route path={ROUTE_PATH.ADD_QUESTION} element={<CreateQuestion />} />

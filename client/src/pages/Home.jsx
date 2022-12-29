@@ -7,9 +7,12 @@ import Sidebar from '../components/Sidebar';
 import ROUTE_PATH from '../constants/routePath';
 import Tabs from '../components/Tabs';
 import useFetch from '../util/useFetch';
+import PageButton from '../components/buttons/PageButton';
+import { useLocation } from 'react-router-dom';
 
 function Home() {
-  const $questions = useFetch('/questions');
+  const { search } = useLocation();
+  const $questions = useFetch(`/questions${search}`);
 
   async function handleConfirmLogin() {
     const response = await fetch('/auth/verify', {
@@ -73,7 +76,7 @@ function Home() {
               <div className="mb-[12px] flex justify-between">
                 <span>{`${
                   $questions.data &&
-                  $questions.data.data.length.toLocaleString()
+                  $questions.data.pageInfo.totalElements.toLocaleString()
                 } questions`}</span>
                 <Tabs
                   menuArr={[
@@ -104,6 +107,20 @@ function Home() {
                       questionId={el.questionId}
                     />
                   ))}
+                <div className="flex gap-[4px] h-[27px] my-[60px] ml-[20px]">
+                  {$questions.data &&
+                    new Array($questions.data.pageInfo.totalPages)
+                      .fill(null)
+                      .map((_, index) => {
+                        return (
+                          <PageButton
+                            pageNumber={index + 1}
+                            selected={index == search.split('=')[1]}
+                            key={index}
+                          ></PageButton>
+                        );
+                      })}
+                </div>
               </div>
             </div>
             <div className="ml-[24px] mb-[15px]">
