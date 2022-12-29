@@ -3,6 +3,7 @@ package com.preproject.server.answer.dto;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 @AllArgsConstructor
@@ -12,7 +13,7 @@ import javax.validation.constraints.Positive;
 @Setter
 public class AnswerPostDto {
     @Positive
-    @NotBlank(message = "유저 ID는 필수입니다.")
+    @NotNull(message = "유저 ID는 필수입니다.")
     private Long userId;
 
     @Positive

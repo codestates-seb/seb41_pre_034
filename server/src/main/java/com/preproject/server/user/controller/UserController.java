@@ -18,13 +18,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
+@Validated
 public class UserController {
 
     private final UserService userService;
@@ -36,7 +39,7 @@ public class UserController {
     /* 사용자 단건 조회 */
     @GetMapping("/{userId}")
     public ResponseEntity getUser(
-            @PathVariable("userId") Long userId
+            @PathVariable("userId") @NotNull Long userId
     ) {
         User user = userService.verifiedUserById(userId);
         UserResponseDto userResponseDto =
