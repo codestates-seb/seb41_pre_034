@@ -58,6 +58,6 @@ public class UserRepositoryCustomImpl extends QuerydslRepositorySupport implemen
         if (userId != null) {
             query.where(user.userId.eq(userId));
         }
-        return query.fetchOne();
+        return query.fetchFirst();
     }
 }
