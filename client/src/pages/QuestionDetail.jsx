@@ -50,7 +50,6 @@ function QuestionDetail() {
   const isCheckedQuestion =
     $fetchData.data &&
     $fetchData.data.data.answers.some(({ check }) => check === true);
-  console.log($fetchData);
 
   function deleteQuestion() {
     if (confirm('삭제하시겠습니까?')) {
@@ -118,6 +117,101 @@ function QuestionDetail() {
     }
   }
 
+  async function handleVoteButtonClick({ target }) {
+    const voteStatus = target.dataset.votetype;
+    const answerId = Number(target.dataset.answerid);
+    const response = await postVote(voteStatus, answerId);
+
+    console.log(await postVote(voteStatus, answerId));
+    if (response.status === 409) {
+      const [response, data] = await patchVote(voteStatus, answerId);
+
+      if (response.status === 204) {
+        alert('한번만 추천하거나 비추천할 수 있습니다.');
+        window.location.reload();
+
+        return;
+      }
+
+      if (response.ok && data.data.voteStatus === 'NONE') {
+        alert('추천이 취소되었습니다.');
+        window.location.reload();
+
+        return;
+      }
+    }
+
+    if (voteStatus === 'UP') {
+      alert('해당 글을 추천 하였습니다. :)');
+      window.location.reload();
+
+      return;
+    }
+
+    if (voteStatus === 'DOWN') {
+      alert('해당 글을 비추천 하였습니다. :(');
+      window.location.reload();
+
+      return;
+    }
+  }
+
+  async function postVote(voteStatus, answerId) {
+    const url = answerId
+      ? `${BASE_URL}/answer-vote/${answerId}`
+      : `${BASE_URL}/question-vote/${questionId}`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: localStorage.getItem('Authorization'),
+        Refresh: localStorage.getItem('Refresh'),
+      },
+      body: JSON.stringify({
+        userId,
+        voteStatus,
+      }),
+    });
+
+    return response;
+  }
+
+  async function patchVote(voteStatus, answerId) {
+    const { questionVoteId } =
+      $fetchData.data.data.questionVotes.find(
+        (vote) => vote.userId === userId
+      ) ?? '';
+
+    const { answerVoteId } =
+      $fetchData.data.data.answers
+        .find((answer) => answer.answerId === answerId)
+        ?.answerVotes.find((answer) => answer.userId === userId) ?? '';
+
+    const url = answerId
+      ? `${BASE_URL}/answer-vote/vote/${answerVoteId}`
+      : `${BASE_URL}/question-vote/vote/${questionVoteId}`;
+
+    const response = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: localStorage.getItem('Authorization'),
+        Refresh: localStorage.getItem('Refresh'),
+      },
+      body: JSON.stringify({
+        userId,
+        voteStatus,
+      }),
+    });
+
+    let data;
+    if (response.status !== 204) {
+      data = await response.json();
+    }
+
+    return [response, data];
+  }
+
   return (
     <>
       <div
@@ -177,30 +271,46 @@ function QuestionDetail() {
                       id="question-voting-container"
                       className="flex items-stretch justify-center flex-col"
                     >
-                      <button id="question-up-button" className="m-[2px]">
+                      <button
+                        id="question-up-button"
+                        className="m-[2px]"
+                        onClick={handleVoteButtonClick}
+                      >
                         <svg
                           width="36"
                           height="36"
                           viewBox="0 0 36 36"
                           fill={voteIconColor}
+                          data-votetype="UP"
                         >
-                          <path d="M2 25h32L18 9 2 25Z"></path>
+                          <path
+                            d="M2 25h32L18 9 2 25Z"
+                            data-votetype="UP"
+                          ></path>
                         </svg>
                       </button>
                       <div
                         id="question-vote-count"
                         className="flex text-[21px] justify-center text-[#6a737c]"
                       >
-                        0
+                        {$fetchData.data && $fetchData.data.data.countingVote}
                       </div>
-                      <button id="question-down-button" className="m-[2px]">
+                      <button
+                        id="question-down-button"
+                        className="m-[2px]"
+                        onClick={handleVoteButtonClick}
+                      >
                         <svg
                           width="36"
                           height="36"
                           viewBox="0 0 36 36"
                           fill={voteIconColor}
+                          data-votetype="DOWN"
                         >
-                          <path d="M2 11h32L18 27 2 11Z"></path>
+                          <path
+                            d="M2 11h32L18 27 2 11Z"
+                            data-votetype="DOWN"
+                          ></path>
                         </svg>
                       </button>
                       <div className="flex justify-center py-[4px] mb-[4px]">
@@ -426,27 +536,45 @@ function QuestionDetail() {
                       >
                         <div className="w-auto pr-[16px] align-top">
                           <div className="flex items-stretch justify-center flex-col">
-                            <button className="m-[2px]">
+                            <button
+                              className="m-[2px]"
+                              onClick={handleVoteButtonClick}
+                            >
                               <svg
                                 width="36"
                                 height="36"
                                 viewBox="0 0 36 36"
                                 fill={voteIconColor}
+                                data-votetype="UP"
+                                data-answerid={answer.answerId}
                               >
-                                <path d="M2 25h32L18 9 2 25Z"></path>
+                                <path
+                                  d="M2 25h32L18 9 2 25Z"
+                                  data-votetype="UP"
+                                  data-answerid={answer.answerId}
+                                ></path>
                               </svg>
                             </button>
                             <div className="flex text-[21px] justify-center text-[#6a737c]">
                               {answer.countingVote}
                             </div>
-                            <button className="m-[2px]">
+                            <button
+                              className="m-[2px]"
+                              onClick={handleVoteButtonClick}
+                            >
                               <svg
                                 width="36"
                                 height="36"
                                 viewBox="0 0 36 36"
                                 fill={voteIconColor}
+                                data-votetype="DOWN"
+                                data-answerid={answer.answerId}
                               >
-                                <path d="M2 11h32L18 27 2 11Z"></path>
+                                <path
+                                  d="M2 11h32L18 27 2 11Z"
+                                  data-votetype="DOWN"
+                                  data-answerid={answer.answerId}
+                                ></path>
                               </svg>
                             </button>
                             <div className="flex justify-center py-[4px] mb-[4px]">
