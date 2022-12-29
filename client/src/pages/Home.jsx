@@ -5,17 +5,62 @@ import Tips from '../components/Tips';
 import BlueButton from '../components/buttons/BlueButton';
 import Sidebar from '../components/Sidebar';
 import ROUTE_PATH from '../constants/routePath';
-import { Link } from 'react-router-dom';
 import Tabs from '../components/Tabs';
 import useFetch from '../util/useFetch';
+import PageButton from '../components/buttons/PageButton';
+import { useLocation } from 'react-router-dom';
+import BASE_URL from '../constants/baseUrl';
 
-function Home(props) {
-  const $questions = useFetch('/questions');
+function Home() {
+  const { search } = useLocation();
+  const $questions = useFetch(`${BASE_URL}/questions${search}`);
+
+  async function handleConfirmLogin() {
+    const response = await fetch(BASE_URL + '/auth/verify', {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+        Authorization: localStorage.getItem('Authorization'),
+        Refresh: localStorage.getItem('Refresh'),
+      },
+    });
+
+    if (response.ok) {
+      window.location.href = ROUTE_PATH.ADD_QUESTION;
+
+      return;
+    }
+
+    if (response.status === 401) {
+      alert('로그인 후 질문을 작성할 수 있습니다.');
+      window.location.href = ROUTE_PATH.LOGIN;
+
+      return;
+    }
+
+    if (response.status === 403) {
+      const response = await fetch(BASE_URL + '/auth/reissuetoken');
+
+      if (!response.ok) {
+        window.location.href = ROUTE_PATH.LOGIN;
+
+        return;
+      }
+
+      const authorization = response.headers.get('Authorization');
+      const refresh = response.headers.get('Refresh');
+
+      localStorage.setItem('Authorization', authorization);
+      localStorage.setItem('Refresh', refresh);
+    }
+  }
 
   return (
     <div className="mt-[50px] max-w-[100%] flex flex-col justify-center items-center">
-      <div className="container mt-0 max-w-[1264px] w-full flex justify-between mx-auto my-0 relative z-[1000] flex-[1_0_auto] text-left min-h-[calc(100vh-50px-322px)]">
-        <Sidebar></Sidebar>
+      <div className="container mt-0 max-w-[1264px] flex justify-between mx-auto my-0 relative z-[1000] flex-[1_0_auto] text-left min-h-[calc(100vh-50px-322px)]">
+        <div className="hidden sm:block">
+          <Sidebar></Sidebar>
+        </div>
 
         <div className="content max-w-[1100px] w-[calc(100%-164px)] p-[24px] border-l-[1px] border-[#e1e2e5]">
           <div className="flex">
@@ -24,14 +69,18 @@ function Home(props) {
                 <span className="text-[27px] font-[500] w-[280px] h-[28.594px]">
                   All Questions
                 </span>
-                <div className="w-[103.023px] h-[37.797px]">
-                  <Link to={ROUTE_PATH.ADD_QUESTION}>
-                    <BlueButton text="Ask Question" />
-                  </Link>
+                <div
+                  className="w-[103.023px] h-[37.797px]"
+                  onClick={handleConfirmLogin}
+                >
+                  <BlueButton text="Ask Question" />
                 </div>
               </div>
               <div className="mb-[12px] flex justify-between">
-                <span>23,339,958 question</span>
+                <span>{`${
+                  $questions.data &&
+                  $questions.data.pageInfo.totalElements.toLocaleString()
+                } questions`}</span>
                 <Tabs
                   menuArr={[
                     { name: 'Newest' },
@@ -57,11 +106,30 @@ function Home(props) {
                       //프로필 이미지 받아와야함
                       img={el.img}
                       createAt={el.createAt}
+                      updateAt={el.updateAt}
+                      questionId={el.questionId}
                     />
                   ))}
+                <div className="flex gap-[4px] h-[27px] my-[60px] ml-[20px]">
+                  {$questions.data &&
+                    new Array($questions.data.pageInfo.totalPages)
+                      .fill(null)
+                      .map((_, index) => {
+                        return (
+                          <PageButton
+                            pageNumber={index + 1}
+                            selected={
+                              index == search.split('=')[1] ||
+                              (search === '' && index === 0)
+                            }
+                            key={index}
+                          ></PageButton>
+                        );
+                      })}
+                </div>
               </div>
             </div>
-            <div className="ml-[24px] mb-[15px]">
+            <div className="hidden lg:block ml-[24px] mb-[15px]">
               <Tips />
             </div>
           </div>

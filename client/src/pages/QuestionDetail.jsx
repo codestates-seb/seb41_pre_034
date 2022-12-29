@@ -1,14 +1,20 @@
 import React from 'react';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import ROUTE_PATH from '../constants/routePath';
 import BlueButton from '../components/buttons/BlueButton';
 import Tag from '../components/Tag';
-import profile from '../assets/profile.jpeg';
 import { useState } from 'react';
 import MdArea from '../components/MdArea';
 import Tips from '../components/Tips';
+import useFetch from '../util/useFetch';
+import { timeForToday } from '../util/timeForToday';
+import MDEditor from '@uiw/react-md-editor';
+import { fetchDelete } from '../util/api';
+import { useSelector } from 'react-redux';
+import basicProfile from '../assets/basicProfile.png';
+import BASE_URL from '../constants/baseUrl';
 
 function AddComment() {
   const [isOpenCommentInput, setIsOpenCommentInput] = useState(false);
@@ -36,68 +42,81 @@ function AddComment() {
 }
 
 function QuestionDetail() {
+  const { questionId } = useParams();
+  const $fetchData = useFetch(`${BASE_URL}/questions/${questionId}`);
   const voteIconColor = '#babfc5';
-  const questionComments = [
-    {
-      comment: '질문의 1번 코멘트입니다',
-      displayName: '질문글 코멘트 쓴사람 1번',
-      createAt: '2022-12-25T22:37:14.1615316',
-    },
-    {
-      comment: '질문의 2번 코멘트입니다',
-      displayName: '질문글 코멘트 쓴사람 2번',
-      createAt: '2022-12-26T22:41:14.1615316',
-    },
-  ];
+  const [answer, setAnswer] = useState('');
+  const userId = Number(useSelector((state) => state.userIdReducer));
+  const isCheckedQuestion =
+    $fetchData.data &&
+    $fetchData.data.data.answers.some(({ check }) => check === true);
+  console.log($fetchData);
 
-  const answers = [
-    {
-      answerId: 2,
-      userId: 1,
-      displayName: 'test1',
-      body: 'Test Body123123',
-      check: false,
-      createAt: '2022-12-25T22:31:54.074202',
-      updateAt: '2022-12-25T22:31:54.074202',
-      answerComments: [
-        {
-          comment: '1번 답변의 1번째 코멘트입니다.',
-          displayName: 'jsh3418',
-          createAt: '2022-12-25T22:37:14.1615316',
+  function deleteQuestion() {
+    if (confirm('삭제하시겠습니까?')) {
+      fetchDelete(BASE_URL + '/questions/', questionId, {
+        'Content-Type': 'Application/json',
+        Authorization: localStorage.getItem('Authorization'),
+        Refresh: localStorage.getItem('Refresh'),
+      });
+    }
+  }
+
+  function addAnswer() {
+    fetch(BASE_URL + '/answers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: localStorage.getItem('Authorization'),
+        Refresh: localStorage.getItem('Refresh'),
+      },
+      body: JSON.stringify({
+        userId,
+        questionId,
+        body: answer,
+      }),
+    }).catch((error) => console.log(error));
+  }
+
+  function deleteAnswer({ target }) {
+    if (confirm('답변을 삭제하시겠습니까?')) {
+      fetch(`${BASE_URL}/answers/${target.dataset.answerid}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: localStorage.getItem('Authorization'),
+          Refresh: localStorage.getItem('Refresh'),
         },
-        {
-          comment: '1번 답변의 2번째 코멘트입니다',
-          displayName: 'jsh3419',
-          createAt: '2022-12-25T22:37:14.1615316',
+        body: JSON.stringify({
+          userId,
+          questionId,
+          body: answer,
+        }),
+      })
+        .then(() => (window.location.href = ''))
+        .catch((error) => console.log(error));
+    }
+  }
+
+  function selectAnswer({ target }) {
+    if (confirm('답변을 채택하시겠습니까?')) {
+      fetch(`${BASE_URL}/answers/${target.dataset.answerid}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: localStorage.getItem('Authorization'),
+          Refresh: localStorage.getItem('Refresh'),
         },
-      ],
-      answerVotes: [],
-      countingVote: 0,
-    },
-    {
-      answerId: 3,
-      userId: 12,
-      displayName: 'test2',
-      body: 'Test Body1231231234',
-      check: true,
-      createAt: '2022-12-26T22:31:54.074202',
-      updateAt: '2022-12-26T22:31:54.074202',
-      answerComments: [
-        {
-          comment: '2번 답변의 1번째 코멘트입니다.',
-          displayName: 'jsh3418',
-          createAt: '2022-12-25T22:37:14.1615316',
-        },
-        {
-          comment: '2번 답변의 2번째 코멘트입니다',
-          displayName: 'jsh3419',
-          createAt: '2022-12-25T22:37:14.1615316',
-        },
-      ],
-      answerVotes: [],
-      countingVote: 2,
-    },
-  ];
+        body: JSON.stringify({
+          userId,
+          questionId,
+          check: true,
+        }),
+      })
+        .then(() => (window.location.href = ''))
+        .catch((error) => console.log(error));
+    }
+  }
 
   return (
     <>
@@ -110,26 +129,40 @@ function QuestionDetail() {
           id="content"
           className="max-w-[1100px] w-[calc(100%-164px)] p-[24px] border-l-[1px] border-[#e1e2e5]"
         >
+          {$fetchData.isPending ? (
+            <img src="https://github.githubassets.com/images/mona-loading-dark.gif"></img>
+          ) : null}
           <div id="question-header" className="flex text-[27px] items-center">
-            <h1 className="w-full">{'Question Header'}</h1>
+            <h1 className="w-full">
+              {!$fetchData.isPending && $fetchData.data.data.title}
+            </h1>
             <Link to={ROUTE_PATH.ADD_QUESTION}>
               <div className="ml-[12px] min-w-[103px]">
                 <BlueButton text={'Ask Question'}></BlueButton>
               </div>
             </Link>
           </div>
-          <div className="flex pb-[8px] mb-[16px] text-[13px] pb-[8px] mb-[16px] border-b-[1px] border-[#e4e6e8]">
+          <div className="flex text-[13px] pb-[8px] mb-[16px] border-b-[1px] border-[#e4e6e8]">
             <div className="mr-[16px] mb-[8px]">
               <span className="mr-[6px] text-[#6a737c]">Asked</span>
-              <time>today</time>
+              <time>
+                {!$fetchData.isPending &&
+                  timeForToday($fetchData.data.data.createAt)}
+              </time>
             </div>
             <div className="mr-[16px] mb-[8px]">
               <span className="mr-[6px] text-[#6a737c]">Modified</span>
-              <time>today</time>
+              <time>
+                {!$fetchData.isPending &&
+                  timeForToday($fetchData.data.data.updateAt)}
+              </time>
             </div>
             <div className="mr-[16px] mb-[8px]">
               <span className="mr-[6px] text-[#6a737c]">Viewed</span>
-              <time>{'1000'} times</time>
+              <time>
+                {!$fetchData.isPending &&
+                  $fetchData.data.data.viewCounting + ' times'}
+              </time>
             </div>
           </div>
           <div className="flex">
@@ -199,20 +232,22 @@ function QuestionDetail() {
                   >
                     <div className="align-top pr-[16px] flex flex-col w-auto min-w-[0px]">
                       <div id="question-post-body" className="w-full">
-                        질문 본문
+                        {!$fetchData.isPending && (
+                          <MDEditor.Markdown
+                            source={$fetchData.data.data.body}
+                          />
+                        )}
                       </div>
                       <div className="mt-[24px] mb-[42px]">
                         <ul className="flex">
-                          {/* 태그 리스트 */}
-                          {['java', 'javaScript', 'python'].map(
-                            (element, index) => {
+                          {!$fetchData.isPending &&
+                            $fetchData.data.data.tags.map((element, index) => {
                               return (
                                 <li className="mr-[6px]" key={index}>
-                                  <Tag text={element}></Tag>
+                                  <Tag text={element.tag}></Tag>
                                 </li>
                               );
-                            }
-                          )}
+                            })}
                         </ul>
                       </div>
 
@@ -221,19 +256,42 @@ function QuestionDetail() {
                           <div className="flex text-[#6a737c] text-[13px]">
                             <div
                               id="question-share-button"
-                              className="mr-[8px] hover:text-[#949ca4]"
+                              className="mr-[8px]"
                             >
-                              Share
+                              <span className="hover:text-[#949ca4]">
+                                Share
+                              </span>
                             </div>
-                            <div
-                              id="question-edit-button"
-                              className="mr-[8px] hover:text-[#949ca4]"
-                            >
-                              <Link to={ROUTE_PATH.EDIT_QUESTION}>Edit</Link>
+                            {userId ===
+                            ($fetchData.data && $fetchData.data.data.userId) ? (
+                              <div
+                                id="question-edit-button"
+                                className="mr-[8px]"
+                              >
+                                <Link
+                                  to={`${ROUTE_PATH.EDIT_QUESTION}/${questionId}`}
+                                  className="hover:text-[#949ca4]"
+                                >
+                                  Edit
+                                </Link>
+                              </div>
+                            ) : null}
+                            <div className="mr-[8px]">
+                              <span className="hover:text-[#949ca4] cursor-help">
+                                Follow
+                              </span>
                             </div>
-                            <div className="mr-[8px] hover:text-[#949ca4] cursor-help">
-                              Follow
-                            </div>
+                            {userId ===
+                            ($fetchData.data && $fetchData.data.data.userId) ? (
+                              <div className="mr-[8px]">
+                                <span
+                                  className="hover:text-[#949ca4] cursor-pointer"
+                                  onClick={deleteQuestion}
+                                >
+                                  Delete
+                                </span>
+                              </div>
+                            ) : null}
                           </div>
                           <div
                             id="question-post-signature"
@@ -244,7 +302,10 @@ function QuestionDetail() {
                                 id="question-user-action-time"
                                 className="mt-[1px] mb-[4px] text-[12px] text-[#6a737c]"
                               >
-                                {'asked 5 mins ago'}
+                                {!$fetchData.isPending &&
+                                  `asked ${timeForToday(
+                                    $fetchData.data.data.createAt
+                                  )}`}
                               </div>
                               <div
                                 id="question-user-profile-image"
@@ -252,7 +313,7 @@ function QuestionDetail() {
                               >
                                 <Link to={ROUTE_PATH.MY_PAGE}>
                                   <img
-                                    src={profile}
+                                    src={basicProfile}
                                     className="w-[32px] h-[32px] object-cover"
                                   ></img>
                                 </Link>
@@ -265,7 +326,8 @@ function QuestionDetail() {
                                   to={ROUTE_PATH.MY_PAGE}
                                   className="text-[#157bce] hover:text-[#0e96ff]"
                                 >
-                                  E2I4
+                                  {!$fetchData.isPending &&
+                                    $fetchData.data.data.displayName}
                                 </Link>
                                 <div>
                                   <span className="font-[700]">100</span>
@@ -291,28 +353,29 @@ function QuestionDetail() {
                     >
                       <div className="w-full mt-[12px] pb-[10px]">
                         <ul className="text-[13px] border-b-[1px] border-[#e4e6e8]">
-                          {questionComments.map(
-                            ({ comment, displayName, createAt }, index) => {
-                              return (
-                                <li
-                                  key={index}
-                                  className="border border-t-[1px] border-[#e4e6e8] py-[10px] flex"
-                                >
-                                  <div>
-                                    <span>{`${comment} –`}</span>
-                                    <span className="mx-[5px] text-[#0375cc]">
-                                      {displayName}
-                                    </span>
-                                    <span className="text-[#9299a1]">
-                                      {new Date(createAt).toLocaleString(
-                                        'en-US'
-                                      )}
-                                    </span>
-                                  </div>
-                                </li>
-                              );
-                            }
-                          )}
+                          {!$fetchData.isPending &&
+                            $fetchData.data.data.questionComments.map(
+                              ({ comment, displayName, createAt }, index) => {
+                                return (
+                                  <li
+                                    key={index}
+                                    className="border border-t-[1px] border-[#e4e6e8] py-[10px] flex"
+                                  >
+                                    <div>
+                                      <span>{`${comment} –`}</span>
+                                      <span className="mx-[5px] text-[#0375cc]">
+                                        {displayName}
+                                      </span>
+                                      <span className="text-[#9299a1]">
+                                        {new Date(createAt).toLocaleString(
+                                          'en-US'
+                                        )}
+                                      </span>
+                                    </div>
+                                  </li>
+                                );
+                              }
+                            )}
                         </ul>
                       </div>
                       <AddComment></AddComment>
@@ -322,12 +385,15 @@ function QuestionDetail() {
               </div>
 
               <div id="answer" className="w-auto float-none pt-[10px]">
-                {answers ? (
+                {!$fetchData.isPending && $fetchData.data.data.answers ? (
                   <div
                     id="answers-header"
                     className="w-full mt-[10px] mb-[8px] flex items-center"
                   >
-                    <div className="flex-auto">{`${answers.length} Answers`}</div>
+                    <div className="flex-auto">
+                      {!$fetchData.isPending &&
+                        `${$fetchData.data.data.answers.length} Answers`}
+                    </div>
                     <div className="flex text-[12px]">
                       <div className="min-w-[60px] flex items-center mr-[5px]">
                         Sorted by:
@@ -351,189 +417,222 @@ function QuestionDetail() {
                     </div>
                   </div>
                 ) : null}
-                {answers.map((answer, index) => {
-                  return (
-                    <div
-                      key={index}
-                      className="flex w-full pb-[20px] border-b-[1px] border-[#e4e6e8] mb-[20px]"
-                    >
-                      <div className="w-auto pr-[16px] align-top">
-                        <div className="flex items-stretch justify-center flex-col">
-                          <button className="m-[2px]">
-                            <svg
-                              width="36"
-                              height="36"
-                              viewBox="0 0 36 36"
-                              fill={voteIconColor}
-                            >
-                              <path d="M2 25h32L18 9 2 25Z"></path>
-                            </svg>
-                          </button>
-                          <div className="flex text-[21px] justify-center text-[#6a737c]">
-                            {answer.countingVote}
-                          </div>
-                          <button className="m-[2px]">
-                            <svg
-                              width="36"
-                              height="36"
-                              viewBox="0 0 36 36"
-                              fill={voteIconColor}
-                            >
-                              <path d="M2 11h32L18 27 2 11Z"></path>
-                            </svg>
-                          </button>
-                          <div className="flex justify-center py-[4px] mb-[4px]">
-                            <svg
-                              width="18"
-                              height="18"
-                              viewBox="0 0 18 18"
-                              fill="#babfc5"
-                            >
-                              <path d="m9 10.6 4 2.66V3H5v10.26l4-2.66ZM3 17V3c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2v14l-6-4-6 4Z"></path>
-                            </svg>
-                          </div>
-                          {answer.check ? (
-                            <div className="flex justify-center">
+                {!$fetchData.isPending &&
+                  $fetchData.data.data.answers.map((answer, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="flex w-full pb-[20px] border-b-[1px] border-[#e4e6e8] mb-[20px]"
+                      >
+                        <div className="w-auto pr-[16px] align-top">
+                          <div className="flex items-stretch justify-center flex-col">
+                            <button className="m-[2px]">
                               <svg
                                 width="36"
                                 height="36"
                                 viewBox="0 0 36 36"
-                                fill="#2f6f44"
+                                fill={voteIconColor}
                               >
-                                <path d="m6 14 8 8L30 6v8L14 30l-8-8v-8Z"></path>
+                                <path d="M2 25h32L18 9 2 25Z"></path>
+                              </svg>
+                            </button>
+                            <div className="flex text-[21px] justify-center text-[#6a737c]">
+                              {answer.countingVote}
+                            </div>
+                            <button className="m-[2px]">
+                              <svg
+                                width="36"
+                                height="36"
+                                viewBox="0 0 36 36"
+                                fill={voteIconColor}
+                              >
+                                <path d="M2 11h32L18 27 2 11Z"></path>
+                              </svg>
+                            </button>
+                            <div className="flex justify-center py-[4px] mb-[4px]">
+                              <svg
+                                width="18"
+                                height="18"
+                                viewBox="0 0 18 18"
+                                fill="#babfc5"
+                              >
+                                <path d="m9 10.6 4 2.66V3H5v10.26l4-2.66ZM3 17V3c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2v14l-6-4-6 4Z"></path>
                               </svg>
                             </div>
-                          ) : null}
-                          <div className="flex justify-center py-[4px]">
-                            <svg
-                              className="hover:fill-[#0a95ff]"
-                              width="19"
-                              height="18"
-                              viewBox="0 0 19 18"
-                              fill="#babfc5"
-                            >
-                              <path d="M3 9a8 8 0 1 1 3.73 6.77L8.2 14.3A6 6 0 1 0 5 9l3.01-.01-4 4-4-4h3L3 9Zm7-4h1.01L11 9.36l3.22 2.1-.6.93L10 10V5Z"></path>
-                            </svg>
+                            {answer.check ? (
+                              <div className="flex justify-center">
+                                <svg
+                                  width="36"
+                                  height="36"
+                                  viewBox="0 0 36 36"
+                                  fill="#2f6f44"
+                                >
+                                  <path d="m6 14 8 8L30 6v8L14 30l-8-8v-8Z"></path>
+                                </svg>
+                              </div>
+                            ) : null}
+                            <div className="flex justify-center py-[4px]">
+                              <svg
+                                className="hover:fill-[#0a95ff]"
+                                width="19"
+                                height="18"
+                                viewBox="0 0 19 18"
+                                fill="#babfc5"
+                              >
+                                <path d="M3 9a8 8 0 1 1 3.73 6.77L8.2 14.3A6 6 0 1 0 5 9l3.01-.01-4 4-4-4h3L3 9Zm7-4h1.01L11 9.36l3.22 2.1-.6.93L10 10V5Z"></path>
+                              </svg>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="align-top pr-[16px] flex flex-col w-full min-w-[0px]">
-                        <div className="w-full mb-[40px]">{answer.body}</div>
-                        <div className="flex w-full">
-                          <div className="flex flex-auto justify-between">
-                            <div className="flex text-[#6a737c] text-[13px]">
-                              <div>
-                                <span className="mr-[8px] hover:text-[#949ca4]">
-                                  Share
-                                </span>
-                              </div>
-                              <div>
-                                <Link to={'' /* 해당 답변 수정 페이지 이동 */}>
+                        <div className="align-top pr-[16px] flex flex-col w-full min-w-[0px]">
+                          <div className="w-full mb-[40px]">
+                            <MDEditor.Markdown source={answer.body} />
+                          </div>
+                          <div className="flex w-full">
+                            <div className="flex flex-auto justify-between">
+                              <div className="flex text-[#6a737c] text-[13px]">
+                                <div>
                                   <span className="mr-[8px] hover:text-[#949ca4]">
-                                    Edit
+                                    Share
                                   </span>
-                                </Link>
-                              </div>
-                              <div>
-                                <span className="mr-[8px] hover:text-[#949ca4] cursor-help">
-                                  Follow
-                                </span>
-                              </div>
-                            </div>
-                            <div
-                              id="post-signature"
-                              className="rounded-sm w-[200px]"
-                            >
-                              <div id="user-info" className="p-[5px]">
-                                <div
-                                  id="user-action-time"
-                                  className="mt-[1px] mb-[4px] text-[12px] text-[#6a737c]"
-                                >
-                                  {'answered 5 mins ago'}
                                 </div>
-                                <div
-                                  id="user-profile-image"
-                                  className="float-left rounded-[1px]"
-                                >
-                                  <Link to={ROUTE_PATH.MY_PAGE}>
-                                    <img
-                                      src={profile}
-                                      className="w-[32px] h-[32px] object-cover"
-                                    ></img>
-                                  </Link>
+                                {userId === answer.userId ? (
+                                  <div>
+                                    <Link
+                                      to={'' /* 해당 답변 수정 페이지 이동 */}
+                                    >
+                                      <span className="mr-[8px] hover:text-[#949ca4]">
+                                        Edit
+                                      </span>
+                                    </Link>
+                                  </div>
+                                ) : null}
+                                <div>
+                                  <span className="mr-[8px] hover:text-[#949ca4] cursor-help">
+                                    Follow
+                                  </span>
                                 </div>
-                                <div
-                                  id="user-details"
-                                  className="ml-[40px] w-[calc(100%-40px)] text-[13px]"
-                                >
-                                  <Link
-                                    to={ROUTE_PATH.MY_PAGE}
-                                    className="text-[#157bce] hover:text-[#0e96ff]"
+                                {userId === answer.userId ? (
+                                  <div className="mr-[8px]">
+                                    <span
+                                      className="hover:text-[#949ca4] cursor-pointer"
+                                      onClick={deleteAnswer}
+                                      data-answerid={answer.answerId}
+                                    >
+                                      Delete
+                                    </span>
+                                  </div>
+                                ) : null}
+                                {userId === $fetchData.data.data.userId &&
+                                !isCheckedQuestion ? (
+                                  <div className="mr-[8px]">
+                                    <span
+                                      className="hover:text-[#949ca4] cursor-pointer"
+                                      onClick={selectAnswer}
+                                      data-answerid={answer.answerId}
+                                    >
+                                      Select!
+                                    </span>
+                                  </div>
+                                ) : null}
+                              </div>
+                              <div
+                                id="post-signature"
+                                className="rounded-sm w-[200px]"
+                              >
+                                <div id="user-info" className="p-[5px]">
+                                  <div
+                                    id="user-action-time"
+                                    className="mt-[1px] mb-[4px] text-[12px] text-[#6a737c]"
                                   >
-                                    {answer.displayName}
-                                  </Link>
-                                  <div id="scores">
-                                    <span
-                                      id="reputation score"
-                                      className="font-[700]"
+                                    {!$fetchData.isPending &&
+                                      `answered ${timeForToday(
+                                        answer.createAt
+                                      )}`}
+                                  </div>
+                                  <div
+                                    id="user-profile-image"
+                                    className="float-left rounded-[1px]"
+                                  >
+                                    <Link to={ROUTE_PATH.MY_PAGE}>
+                                      <img
+                                        src={basicProfile}
+                                        className="w-[32px] h-[32px] object-cover"
+                                      ></img>
+                                    </Link>
+                                  </div>
+                                  <div
+                                    id="user-details"
+                                    className="ml-[40px] w-[calc(100%-40px)] text-[13px]"
+                                  >
+                                    <Link
+                                      to={ROUTE_PATH.MY_PAGE}
+                                      className="text-[#157bce] hover:text-[#0e96ff]"
                                     >
-                                      100
-                                    </span>
-                                    <span
-                                      title="3 silver badges"
-                                      className="ml-[2px] mr-[3px]"
-                                    >
-                                      <span className="badgecount">3</span>
-                                    </span>
-                                    <span title="11 bronze badges">
-                                      <span className="badgecount">11</span>
-                                    </span>
+                                      {answer.displayName}
+                                    </Link>
+                                    <div id="scores">
+                                      <span
+                                        id="reputation score"
+                                        className="font-[700]"
+                                      >
+                                        100
+                                      </span>
+                                      <span
+                                        title="3 silver badges"
+                                        className="ml-[2px] mr-[3px]"
+                                      >
+                                        <span className="badgecount">3</span>
+                                      </span>
+                                      <span title="11 bronze badges">
+                                        <span className="badgecount">11</span>
+                                      </span>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="pr-[16px] w-auto min-w-[0px]">
-                          <div className="w-full mt-[12px] pb-[10px]">
-                            <ul className="text-[13px] border-b-[1px] border-[#e4e6e8]">
-                              {answer.answerComments.map(
-                                ({ comment, displayName, createAt }) => {
-                                  return (
-                                    <li
-                                      key={Math.random()}
-                                      className="border border-t-[1px] border-[#e4e6e8] py-[10px] flex"
-                                    >
-                                      <div>
-                                        <span>{`${comment} –`}</span>
-                                        <span className="mx-[5px] text-[#0375cc]">
-                                          {displayName}
-                                        </span>
-                                        <span className="text-[#9299a1]">
-                                          {new Date(createAt).toLocaleString(
-                                            'en-US'
-                                          )}
-                                        </span>
-                                      </div>
-                                    </li>
-                                  );
-                                }
-                              )}
-                            </ul>
+                          <div className="pr-[16px] w-auto min-w-[0px]">
+                            <div className="w-full mt-[12px] pb-[10px]">
+                              <ul className="text-[13px] border-b-[1px] border-[#e4e6e8]">
+                                {answer.answerComments.map(
+                                  ({ comment, displayName, createAt }) => {
+                                    return (
+                                      <li
+                                        key={Math.random()}
+                                        className="border border-t-[1px] border-[#e4e6e8] py-[10px] flex"
+                                      >
+                                        <div>
+                                          <span>{`${comment} –`}</span>
+                                          <span className="mx-[5px] text-[#0375cc]">
+                                            {displayName}
+                                          </span>
+                                          <span className="text-[#9299a1]">
+                                            {new Date(createAt).toLocaleString(
+                                              'en-US'
+                                            )}
+                                          </span>
+                                        </div>
+                                      </li>
+                                    );
+                                  }
+                                )}
+                              </ul>
+                            </div>
+                            <AddComment></AddComment>
                           </div>
-                          <AddComment></AddComment>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
               </div>
-              <form>
+              <form onSubmit={addAnswer}>
                 <h2 className="font-[400] pt-[20px] text-[19px] leading-[1.3]">
                   Your Answer
                 </h2>
                 <div className="w-full mt-[10px]">
-                  <MdArea></MdArea>
+                  <MdArea body={answer} setBody={setAnswer}></MdArea>
                 </div>
                 <div className="w-[130px] mt-[30px]">
                   <BlueButton text="Post Your Answer"></BlueButton>

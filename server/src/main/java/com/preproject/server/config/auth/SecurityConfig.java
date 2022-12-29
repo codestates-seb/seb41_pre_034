@@ -6,24 +6,19 @@ import com.preproject.server.auth.handler.UserAccessDeniedHandler;
 import com.preproject.server.auth.handler.UserAuthenticationEntryPoint;
 import com.preproject.server.auth.handler.UserAuthenticationFailureHandler;
 import com.preproject.server.auth.handler.UserAuthenticationSuccessHandler;
+import com.preproject.server.filter.CorsFilter;
 import com.preproject.server.utils.JwtAuthorityUtils;
 import com.preproject.server.utils.JwtTokenizer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -38,7 +33,7 @@ public class SecurityConfig {
         http.headers().frameOptions().sameOrigin()
                 .and()
                 .csrf().disable()
-                .cors(Customizer.withDefaults())
+                .cors().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .formLogin().disable()
@@ -105,6 +100,7 @@ public class SecurityConfig {
 
             JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils);
             builder.addFilter(jwtAuthenticationFilter)
+                    .addFilterBefore(new CorsFilter(), JwtAuthenticationFilter.class)
                     .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class);
 
         }

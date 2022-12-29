@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import BlueButton from './buttons/BlueButton';
+import { useDispatch } from 'react-redux';
+import { setUserId } from '../redux/actions/index';
+import BASE_URL from '../constants/baseUrl';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
 
   function handleEmail(e) {
     setEmail(e.target.value);
@@ -15,7 +19,7 @@ function LoginForm() {
   async function handleLogin(event) {
     event.preventDefault();
 
-    const response = await fetch('/auth/login', {
+    const response = await fetch(BASE_URL + '/auth/login', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
@@ -26,12 +30,6 @@ function LoginForm() {
       }),
     });
 
-    const authorization = response.headers.get('Authorization');
-    const refresh = response.headers.get('Refresh');
-
-    localStorage.setItem('Authorization', authorization);
-    localStorage.setItem('Refresh', refresh);
-
     if (response.status === 401) {
       alert('아이디, 비밀번호를 확인해주세요.');
 
@@ -39,6 +37,16 @@ function LoginForm() {
     }
 
     if (response.status === 200) {
+      const authorization = response.headers.get('Authorization');
+      const refresh = response.headers.get('Refresh');
+      const userId = response.headers.get('userId');
+
+      localStorage.setItem('Authorization', authorization);
+      localStorage.setItem('Refresh', refresh);
+      console.log(response.headers.get('userId'));
+      console.log(userId);
+      dispatch(setUserId(userId));
+
       window.location.href = '/';
     }
   }
