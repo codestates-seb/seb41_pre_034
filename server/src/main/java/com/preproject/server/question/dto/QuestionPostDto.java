@@ -4,6 +4,7 @@ package com.preproject.server.question.dto;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 @AllArgsConstructor
@@ -20,7 +21,7 @@ public class QuestionPostDto {
     private String body;
 
     @Positive
-    @NotBlank(message = "사용자의 ID를 입력해야합니다.")
+    @NotNull(message = "사용자의 ID를 입력해야합니다.")
     private Long userId;
 
     @NotBlank

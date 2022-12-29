@@ -33,7 +33,7 @@ public class QuestionVote {
 
     @Setter
     @Enumerated(value = EnumType.STRING)
-    @Column
+    @Column(nullable = false)
     private VoteStatus voteStatus;
 
     @Column(nullable = false, insertable = false, updatable = false,

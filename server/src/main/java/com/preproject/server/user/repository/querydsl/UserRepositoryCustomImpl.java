@@ -3,6 +3,8 @@ package com.preproject.server.user.repository.querydsl;
 import com.preproject.server.answer.entity.QAnswer;
 import com.preproject.server.answer.entity.QAnswerComment;
 import com.preproject.server.answer.entity.QAnswerVote;
+import com.preproject.server.constant.ErrorCode;
+import com.preproject.server.exception.ServiceLogicException;
 import com.preproject.server.question.entity.*;
 import com.preproject.server.tag.entity.QTag;
 import com.preproject.server.user.entity.QUser;
@@ -57,7 +59,9 @@ public class UserRepositoryCustomImpl extends QuerydslRepositorySupport implemen
 
         if (userId != null) {
             query.where(user.userId.eq(userId));
+            return query.fetchOne();
+        } else {
+            throw new ServiceLogicException(ErrorCode.USERID_NOT_NULL);
         }
-        return query.fetchOne();
     }
 }

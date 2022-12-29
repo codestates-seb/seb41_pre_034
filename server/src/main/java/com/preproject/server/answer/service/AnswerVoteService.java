@@ -43,7 +43,9 @@ public class AnswerVoteService {
         if (answerVote.getVoteStatus() != null) {
             if (answerVote.getVoteStatus().equals(VoteStatus.UP)) {
                 if (comp.equals(VoteStatus.UP)) {
-                    return vote;
+                    AnswerVote noContentVote = new AnswerVote();
+                    noContentVote.setVoteStatus(VoteStatus.NO_CONTENT);
+                    return noContentVote;
                 } else {
                     if (comp.equals(VoteStatus.NONE)) {
                         Optional.ofNullable(answerVote.getVoteStatus())
@@ -54,7 +56,9 @@ public class AnswerVoteService {
                 }
             } else {
                 if (comp.equals(VoteStatus.DOWN)) {
-                    return vote;
+                    AnswerVote noContentVote = new AnswerVote();
+                    noContentVote.setVoteStatus(VoteStatus.NO_CONTENT);
+                    return noContentVote;
                 } else {
                     if (comp.equals(VoteStatus.UP)) {
                         vote.setVoteStatus(VoteStatus.NONE);

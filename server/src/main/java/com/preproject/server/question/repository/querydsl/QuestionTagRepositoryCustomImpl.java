@@ -30,7 +30,7 @@ public class QuestionTagRepositoryCustomImpl
     public Page<QuestionSimpleDto> findQuestionPageBySearchParams(
             String keyWord,
             String displayName,
-            String tags,
+            String tag,
             Pageable pageable
     ) {
         QQuestion question = QQuestion.question;
@@ -55,15 +55,16 @@ public class QuestionTagRepositoryCustomImpl
 
 
         if (keyWord != null && !keyWord.isBlank()) {
-            query
-                    .where(question.title.containsIgnoreCase(keyWord))
-                    .where(question.body.containsIgnoreCase(keyWord));
+            query.where(
+                    question.title.containsIgnoreCase(keyWord)
+                    .or(question.body.containsIgnoreCase(keyWord)
+                    ));
         }
         if (displayName != null && !displayName.isBlank()) {
             query.where(question.user.displayName.containsIgnoreCase(displayName));
         }
-        if (tags != null && !tags.isBlank()) {
-            query.where(question.tagString.containsIgnoreCase(tags));
+        if (tag != null && !tag.isBlank()) {
+            query.where(question.tagString.containsIgnoreCase(tag));
         }
         List<QuestionSimpleDto> questionList = Optional.ofNullable(getQuerydsl())
                 .orElseThrow(() -> new ServiceLogicException(

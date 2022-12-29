@@ -29,7 +29,7 @@ public class QuestionVoteService {
 
     private final QuestionService questionService;
 
-    public QuestionVote post(
+    public QuestionVote createVote(
             QuestionVote questionVote,
             Long questionId,
             Long userId) {
@@ -44,13 +44,15 @@ public class QuestionVoteService {
         return questionVoteRepository.save(questionVote);
     }
 
-    public QuestionVote patch(QuestionVote questionVote, Long questionVoteId) {
+    public QuestionVote updateVote(QuestionVote questionVote, Long questionVoteId) {
         QuestionVote vote = findVerifiedQuestionVote(questionVoteId);
         VoteStatus comp = vote.getVoteStatus();
         if (questionVote.getVoteStatus() != null) {
             if (questionVote.getVoteStatus().equals(VoteStatus.UP)) {
                 if (comp.equals(VoteStatus.UP)) {
-                    return vote;
+                    QuestionVote noContentVote = new QuestionVote();
+                    noContentVote.setVoteStatus(VoteStatus.NO_CONTENT);
+                    return noContentVote;
                 } else {
                     if (comp.equals(VoteStatus.NONE)) {
                         Optional.ofNullable(questionVote.getVoteStatus())
@@ -61,7 +63,9 @@ public class QuestionVoteService {
                 }
             } else {
                 if (comp.equals(VoteStatus.DOWN)) {
-                    return vote;
+                    QuestionVote noContentVote = new QuestionVote();
+                    noContentVote.setVoteStatus(VoteStatus.NO_CONTENT);
+                    return noContentVote;
                 } else {
                     if (comp.equals(VoteStatus.UP)) {
                         vote.setVoteStatus(VoteStatus.NONE);
@@ -74,7 +78,7 @@ public class QuestionVoteService {
         }
         int countingVote = countingVote(vote.getQuestion());
         vote.getQuestion().setCountingVote(countingVote);
-        return questionVoteRepository.save(vote);
+        return vote;
     }
 
     public QuestionVote findVerifiedQuestionVote(long questionVoteId) {
