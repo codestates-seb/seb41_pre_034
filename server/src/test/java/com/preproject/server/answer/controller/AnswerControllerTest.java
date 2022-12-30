@@ -1,17 +1,17 @@
 package com.preproject.server.answer.controller;
 
 import com.google.gson.Gson;
-import com.preproject.server.answer.dto.*;
+import com.preproject.server.answer.dto.AnswerPatchDto;
+import com.preproject.server.answer.dto.AnswerPostDto;
+import com.preproject.server.answer.dto.AnswerResponseDto;
 import com.preproject.server.answer.entity.Answer;
 import com.preproject.server.answer.mapper.AnswerMapper;
 import com.preproject.server.answer.service.AnswerService;
 import com.preproject.server.config.auth.SecurityConfig;
-import com.preproject.server.constant.QuestionStatus;
-import com.preproject.server.question.entity.Question;
-import com.preproject.server.user.entity.User;
 import com.preproject.server.util.ApiDocumentUtils;
 import com.preproject.server.utils.JwtAuthorityUtils;
 import com.preproject.server.utils.JwtTokenizer;
+import com.preproject.server.utils.TestStub;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -69,9 +68,9 @@ class AnswerControllerTest {
     @WithMockUser
     void postAnswer() throws Exception {
         // Given
-        AnswerPostDto postDto = createPostDto();
-        Answer testAnswer = createTestAnswer();
-        AnswerResponseDto responseDto = createNewResponseDto(testAnswer);
+        AnswerPostDto postDto = TestStub.createPostDto();
+        Answer testAnswer = TestStub.createTestAnswer();
+        AnswerResponseDto responseDto = TestStub.createNewAnswerResponseDto(testAnswer);
         // When
         given(answerService.createAnswer(any(Answer.class), anyLong(), anyLong()))
                 .willReturn(testAnswer);
@@ -80,8 +79,8 @@ class AnswerControllerTest {
         given(answerMapper.entityToResponseDto(any(Answer.class))).willReturn(responseDto);
         String content = gson.toJson(postDto);
         RequestBuilder result = RestDocumentationRequestBuilders.post("/answers")
-                .header("Authorization","AccessToken")
-                .header("Refresh","RefreshToken")
+                .header("Authorization", "AccessToken")
+                .header("Refresh", "RefreshToken")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -130,9 +129,9 @@ class AnswerControllerTest {
     void patchAnswer() throws Exception {
         // Given
         Long answerId = 1L;
-        AnswerPatchDto patchDto = createPatchDto();
-        Answer testAnswer = createTestAnswer();
-        AnswerResponseDto responseDto = createResponseDto(testAnswer);
+        AnswerPatchDto patchDto = TestStub.createPatchDto();
+        Answer testAnswer = TestStub.createTestAnswer();
+        AnswerResponseDto responseDto = TestStub.createAnswerResponseDto();
         // When
         given(answerMapper.answerPatchDtoToEntity(any(AnswerPatchDto.class)))
                 .willReturn(testAnswer);
@@ -141,8 +140,8 @@ class AnswerControllerTest {
         String content = gson.toJson(patchDto);
         RequestBuilder result = RestDocumentationRequestBuilders
                 .patch("/answers/{answerId}", answerId)
-                .header("Authorization","AccessToken")
-                .header("Refresh","RefreshToken")
+                .header("Authorization", "AccessToken")
+                .header("Refresh", "RefreshToken")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -209,8 +208,8 @@ class AnswerControllerTest {
         // Then
         RequestBuilder result = RestDocumentationRequestBuilders
                 .delete("/answers/{answerId}", answerId)
-                .header("Authorization","AccessToken")
-                .header("Refresh","RefreshToken")
+                .header("Authorization", "AccessToken")
+                .header("Refresh", "RefreshToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8.displayName());
@@ -229,98 +228,4 @@ class AnswerControllerTest {
                                         parameterWithName("answerId").description("답변 식별자")
                                 )));
     }
-
-    private AnswerPostDto createPostDto() {
-        AnswerPostDto dto = new AnswerPostDto();
-        dto.setUserId(1L);
-        dto.setQuestionId(1L);
-        dto.setBody("Test Answer");
-        return dto;
-    }
-
-    private AnswerPatchDto createPatchDto() {
-        AnswerPatchDto dto = new AnswerPatchDto();
-        dto.setUserId(1L);
-        dto.setQuestionId(1L);
-        dto.setCheck(true);
-        dto.setBody("Test Answer");
-        return dto;
-    }
-    private AnswerResponseDto createResponseDto(Answer answer) {
-        AnswerResponseDto dto = new AnswerResponseDto();
-        dto.setAnswerId(1L);
-        dto.setUserId(answer.getUser().getUserId());
-        dto.setDisplayName(answer.getUser().getDisplayName());
-        dto.setCheck(answer.getCheck());
-        dto.setBody(answer.getBody());
-        dto.setCreateAt(LocalDateTime.now());
-        dto.setUpdateAt(LocalDateTime.now());
-        dto.setCountingVote(0);
-        dto.setAnswerVotes(List.of(
-                createAnswerVoteResponseDto(), createAnswerVoteResponseDto()
-        ));
-        dto.setAnswerComments(List.of(
-                createAnswerCommentResponseDto(), createAnswerCommentResponseDto()
-        ));
-        return dto;
-    }
-    private AnswerResponseDto createNewResponseDto(Answer answer) {
-        AnswerResponseDto dto = new AnswerResponseDto();
-        dto.setAnswerId(1L);
-        dto.setUserId(answer.getUser().getUserId());
-        dto.setDisplayName(answer.getUser().getDisplayName());
-        dto.setCheck(answer.getCheck());
-        dto.setBody(answer.getBody());
-        dto.setCreateAt(LocalDateTime.now());
-        dto.setUpdateAt(LocalDateTime.now());
-        dto.setCountingVote(0);
-        dto.setAnswerVotes(List.of());
-        dto.setAnswerComments(List.of());
-        return dto;
-    }
-
-    private Answer createTestAnswer() {
-        Answer answer = new Answer();
-        User user = new User();
-        user.setUserId(1L);
-        user.setDisplayName("testUser");
-        answer.setUser(user);
-        answer.setBody("Test Answer");
-        answer.setCheck(false);
-        answer.setQuestion(createTestQuestion());
-        return answer;
-    }
-
-    private Question createTestQuestion() {
-        Question question = new Question();
-        User user = new User();
-        user.setUserId(1L);
-        user.setDisplayName("testUser");
-        question.setUser(user);
-        question.setBody("testBody");
-        question.setTitle("testTitle");
-        question.setQuestionStatus(QuestionStatus.OPENED);
-        return question;
-    }
-
-    private AnswerVoteResponseDto createAnswerVoteResponseDto() {
-        AnswerVoteResponseDto dto = new AnswerVoteResponseDto();
-        dto.setUserId(1L);
-        dto.setVoteStatus("UP");
-        dto.setAnswerVoteId(1L);
-        return dto;
-    }
-
-    private AnswerCommentResponseDto createAnswerCommentResponseDto() {
-        AnswerCommentResponseDto dto = new AnswerCommentResponseDto();
-        dto.setAnswerCommentId(1L);
-        dto.setUserId(1L);
-        dto.setDisplayName("testUser");
-        dto.setComment("Test Comment");
-        dto.setCreateAt(LocalDateTime.now());
-        dto.setUpdateAt(LocalDateTime.now());
-        return dto;
-
-    }
-
 }

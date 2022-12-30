@@ -2,18 +2,16 @@ package com.preproject.server.question.controller;
 
 import com.google.gson.Gson;
 import com.preproject.server.config.auth.SecurityConfig;
-import com.preproject.server.constant.QuestionStatus;
 import com.preproject.server.question.dto.QuestionCommentPatchDto;
 import com.preproject.server.question.dto.QuestionCommentPostDto;
 import com.preproject.server.question.dto.QuestionCommentResponseDto;
-import com.preproject.server.question.entity.Question;
 import com.preproject.server.question.entity.QuestionComment;
 import com.preproject.server.question.mapper.QuestionMapper;
 import com.preproject.server.question.service.QuestionCommentService;
-import com.preproject.server.user.entity.User;
 import com.preproject.server.util.ApiDocumentUtils;
 import com.preproject.server.utils.JwtAuthorityUtils;
 import com.preproject.server.utils.JwtTokenizer;
+import com.preproject.server.utils.TestStub;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +32,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -72,9 +69,9 @@ class QuestionCommentControllerTest {
     void postQuestionComment() throws Exception {
         // Given
         Long questionId = 1L;
-        QuestionCommentPostDto postDto = createPostDto();
-        QuestionComment testQuestionComment = createTestQuestionComment();
-        QuestionCommentResponseDto responseDto = createResponseDto(testQuestionComment);
+        QuestionCommentPostDto postDto = TestStub.createQuestionCommentPostDto();
+        QuestionComment testQuestionComment = TestStub.createTestQuestionComment();
+        QuestionCommentResponseDto responseDto = TestStub.createQuestionCommentResponseDto();
         // When
         given(questionMapper.questionCommentDtoToEntity(any(QuestionCommentPostDto.class)))
                 .willReturn(testQuestionComment);
@@ -135,9 +132,9 @@ class QuestionCommentControllerTest {
     void patchQuestionComment() throws Exception {
         // Given
         Long questionCommentId = 1L;
-        QuestionCommentPatchDto patchDto = createPatchDto();
-        QuestionComment testQuestionComment = createTestQuestionComment();
-        QuestionCommentResponseDto responseDto = createResponseDto(testQuestionComment);
+        QuestionCommentPatchDto patchDto = TestStub.createQuestionCommentPatchDto();
+        QuestionComment testQuestionComment = TestStub.createTestQuestionComment();
+        QuestionCommentResponseDto responseDto = TestStub.createQuestionCommentResponseDto();
         // When
         given(questionCommentService.patch(any(QuestionComment.class), anyLong(), anyLong()))
                 .willReturn(testQuestionComment);
@@ -223,53 +220,4 @@ class QuestionCommentControllerTest {
                                 )));
 
     }
-
-    private QuestionComment createTestQuestionComment() {
-        QuestionComment entity = new QuestionComment();
-        User user = new User();
-        user.setUserId(1L);
-        user.setDisplayName("testUser");
-        entity.setComment("Test Comment");
-        entity.setQuestion(createTestQuestion());
-        entity.setUser(user);
-        return entity;
-    }
-
-    private Question createTestQuestion() {
-        Question question = new Question();
-        User user = new User();
-        user.setUserId(1L);
-        user.setDisplayName("testUser");
-        question.setUser(user);
-        question.setBody("testBody");
-        question.setTitle("testTitle");
-        question.setQuestionStatus(QuestionStatus.OPENED);
-        return question;
-    }
-
-    private QuestionCommentResponseDto createResponseDto(QuestionComment qc) {
-        QuestionCommentResponseDto dto = new QuestionCommentResponseDto();
-        dto.setQuestionCommentId(1L);
-        dto.setUserId(qc.getUser().getUserId());
-        dto.setDisplayName(qc.getUser().getDisplayName());
-        dto.setComment(qc.getComment());
-        dto.setCreateAt(LocalDateTime.now());
-        dto.setUpdateAt(LocalDateTime.now());
-        return dto;
-    }
-
-    private QuestionCommentPostDto createPostDto() {
-        QuestionCommentPostDto dto = new QuestionCommentPostDto();
-        dto.setComment("Test Comment");
-        dto.setUserId(1L);
-        return dto;
-    }
-
-    private QuestionCommentPatchDto createPatchDto() {
-        QuestionCommentPatchDto dto = new QuestionCommentPatchDto();
-        dto.setComment("Test Comment");
-        dto.setUserId(1L);
-        return dto;
-    }
-
 }

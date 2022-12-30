@@ -2,12 +2,11 @@ package com.preproject.server.auth.controller;
 
 import com.preproject.server.config.auth.SecurityConfig;
 import com.preproject.server.constant.ErrorCode;
-import com.preproject.server.constant.LoginType;
-import com.preproject.server.constant.UserStatus;
 import com.preproject.server.user.entity.User;
 import com.preproject.server.util.ApiDocumentUtils;
 import com.preproject.server.utils.JwtAuthorityUtils;
 import com.preproject.server.utils.JwtTokenizer;
+import com.preproject.server.utils.TestStub;
 import com.preproject.server.utils.Token;
 import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.DisplayName;
@@ -59,7 +58,7 @@ class AuthControllerTest {
     @WithMockUser
     void verifyUserOK() throws Exception {
         // Given
-        Token token = jwtTokenizer.delegateToken(createTestUser());
+        Token token = jwtTokenizer.delegateToken(TestStub.createTestUser());
         // When
         RequestBuilder result = RestDocumentationRequestBuilders
                 .get("/auth/verify")
@@ -125,7 +124,7 @@ class AuthControllerTest {
     @WithMockUser
     void reissuetokenThrowException() throws Exception {
         // Given
-        Token token = jwtTokenizer.delegateToken(createTestUser());
+        Token token = jwtTokenizer.delegateToken(TestStub.createTestUser());
         // When
         RequestBuilder result = RestDocumentationRequestBuilders
                 .get("/auth/reissuetoken")
@@ -190,7 +189,7 @@ class AuthControllerTest {
     @WithMockUser
     void logout() throws Exception {
         // Given
-        Token token = jwtTokenizer.delegateToken(createTestUser());
+        Token token = jwtTokenizer.delegateToken(TestStub.createTestUser());
         // When
         RequestBuilder result = RestDocumentationRequestBuilders
                 .get("/auth/logout")
@@ -212,23 +211,9 @@ class AuthControllerTest {
                                 )));
     }
 
-
-    private User createTestUser() {
-        User user = new User();
-        user.setUserId(1L);
-        user.setEmail("testaa@test.com");
-        user.setPassword("1111!");
-        user.setDisplayName("testUser");
-        user.setEmailNotice(true);
-        user.setLoginType(LoginType.BASIC);
-        user.setUserStatus(UserStatus.ACTIVITY);
-        user.setRoles(JwtAuthorityUtils.USER_ROLES_STRING_CALL);
-        return user;
-    }
-
     private Token createExpiredToken() {
         Map<String, Object> claims = new HashMap<>();
-        User testUser = createTestUser();
+        User testUser = TestStub.createTestUser();
         claims.put("username", testUser.getEmail());
         claims.put("roles", testUser.getRoles());
 

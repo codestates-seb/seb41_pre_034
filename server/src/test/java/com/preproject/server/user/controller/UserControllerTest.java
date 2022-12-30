@@ -15,6 +15,7 @@ import com.preproject.server.user.service.UserService;
 import com.preproject.server.util.ApiDocumentUtils;
 import com.preproject.server.utils.JwtAuthorityUtils;
 import com.preproject.server.utils.JwtTokenizer;
+import com.preproject.server.utils.TestStub;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -77,13 +77,13 @@ class UserControllerTest {
     @DisplayName("사용자 생성 Controller TEST")
     void createUser() throws Exception {
         // Given
-        UserPostDto postDto = createPostDto();
-        User user = createTestUser(postDto);
+        UserPostDto postDto = TestStub.createUserPostDto();
+        User user = TestStub.createTestUser();
         user.setUserId(1L);
         user.setLoginType(LoginType.BASIC);
         user.setUserStatus(UserStatus.ACTIVITY);
         user.setRoles(JwtAuthorityUtils.USER_ROLES_STRING_CALL);
-        UserSimpleResponseDto simpleResponseDto = createSimpleResponseDto(user);
+        UserSimpleResponseDto simpleResponseDto = TestStub.createSimpleResponseDto(user);
         // When
         given(userMapper.UserPostDtoToEntity(any(UserPostDto.class))).willReturn(user);
         given(userService.createUser(any(User.class))).willReturn(user);
@@ -133,8 +133,8 @@ class UserControllerTest {
     @WithMockUser
     void getUser() throws Exception {
         // Given
-        User testUser = createTestUser();
-        UserResponseDto userResponseDto = createUserResponseDto(testUser);
+        User testUser = TestStub.createTestUser();
+        UserResponseDto userResponseDto = TestStub.createUserResponseDto(testUser);
 
         // When
         given(userService.verifiedUserById(anyLong())).willReturn(testUser);
@@ -172,8 +172,78 @@ class UserControllerTest {
                                         fieldWithPath("data.createAt").type(JsonFieldType.STRING).description("생성 시각"),
                                         fieldWithPath("data.updateAt").type(JsonFieldType.STRING).description("최종 수정 시각"),
                                         fieldWithPath("data.questions").type(JsonFieldType.ARRAY).description("작성 질문 목록"),
+                                        fieldWithPath("data.questions[].questionId").type(JsonFieldType.NUMBER).description("질문 식별자"),
+                                        fieldWithPath("data.questions[].userId").type(JsonFieldType.NUMBER).description("회원 식별자"),
+                                        fieldWithPath("data.questions[].displayName").type(JsonFieldType.STRING).description("닉네임"),
+                                        fieldWithPath("data.questions[].title").type(JsonFieldType.STRING).description("질문의 Title"),
+                                        fieldWithPath("data.questions[].body").type(JsonFieldType.STRING).description("질문의 Body"),
+                                        fieldWithPath("data.questions[].viewCounting").type(JsonFieldType.NUMBER).description("조회 수"),
+                                        fieldWithPath("data.questions[].questionStatus").type(JsonFieldType.STRING).description("질문의 답변 채택 여부"),
+                                        fieldWithPath("data.questions[].createAt").type(JsonFieldType.STRING).description("생성 시각"),
+                                        fieldWithPath("data.questions[].updateAt").type(JsonFieldType.STRING).description("최종 수정 시각"),
+                                        fieldWithPath("data.questions[].countingVote").type(JsonFieldType.NUMBER).description("질문의 추천 수"),
+                                        fieldWithPath("data.questions[].answerCounting").type(JsonFieldType.NUMBER).description("질문의 답변 수"),
+                                        fieldWithPath("data.questions[].questionVotes").type(JsonFieldType.ARRAY).description("질문의 추천 목록"),
+                                        fieldWithPath("data.questions[].questionVotes[].questionVoteId").type(JsonFieldType.NUMBER).description("질문의 추천 식별자"),
+                                        fieldWithPath("data.questions[].questionVotes[].userId").type(JsonFieldType.NUMBER).description("질문의 추천 회원 식별자"),
+                                        fieldWithPath("data.questions[].questionVotes[].voteStatus").type(JsonFieldType.STRING).description("질문의 추천 상태"),
+                                        fieldWithPath("data.questions[].answers").type(JsonFieldType.ARRAY).description("질문의 답변 목록"),
+                                        fieldWithPath("data.questions[].answers[].answerId").type(JsonFieldType.NUMBER).description("질문의 답변 식별자"),
+                                        fieldWithPath("data.questions[].answers[].userId").type(JsonFieldType.NUMBER).description("질문의 답변 회원 식별자"),
+                                        fieldWithPath("data.questions[].answers[].displayName").type(JsonFieldType.STRING).description("질문의 답변 회원 닉네임"),
+                                        fieldWithPath("data.questions[].answers[].body").type(JsonFieldType.STRING).description("질문의 답변 내용"),
+                                        fieldWithPath("data.questions[].answers[].check").type(JsonFieldType.BOOLEAN).description("질문의 답변 채택 여부"),
+                                        fieldWithPath("data.questions[].answers[].createAt").type(JsonFieldType.STRING).description("생성 시각"),
+                                        fieldWithPath("data.questions[].answers[].updateAt").type(JsonFieldType.STRING).description("최종 수정 시각"),
+                                        fieldWithPath("data.questions[].answers[].answerComments").type(JsonFieldType.ARRAY).description("질문의 답변 코멘트 목록"),
+                                        fieldWithPath("data.questions[].answers[].answerComments[].answerCommentId").type(JsonFieldType.NUMBER).description("질문의 답변 코멘트 식별자"),
+                                        fieldWithPath("data.questions[].answers[].answerComments[].userId").type(JsonFieldType.NUMBER).description("질문의 답변 코멘트 회원 식별자"),
+                                        fieldWithPath("data.questions[].answers[].answerComments[].displayName").type(JsonFieldType.STRING).description("질문의 답변 코멘트 회원 닉네임"),
+                                        fieldWithPath("data.questions[].answers[].answerComments[].comment").type(JsonFieldType.STRING).description("질문의 답변 코멘트 내용"),
+                                        fieldWithPath("data.questions[].answers[].answerComments[].createAt").type(JsonFieldType.STRING).description("생성 시각"),
+                                        fieldWithPath("data.questions[].answers[].answerComments[].updateAt").type(JsonFieldType.STRING).description("최종 수정 시각"),
+                                        fieldWithPath("data.questions[].answers[].answerVotes").type(JsonFieldType.ARRAY).description("질문의 답변 추천 목록"),
+                                        fieldWithPath("data.questions[].answers[].answerVotes[].answerVoteId").type(JsonFieldType.NUMBER).description("질문의 답변 추천 식별자 "),
+                                        fieldWithPath("data.questions[].answers[].answerVotes[].userId").type(JsonFieldType.NUMBER).description("질문의 답변 추천 회원 식별자"),
+                                        fieldWithPath("data.questions[].answers[].answerVotes[].voteStatus").type(JsonFieldType.STRING).description("질문의 답변 상태"),
+                                        fieldWithPath("data.questions[].answers[].countingVote").type(JsonFieldType.NUMBER).description("질문의 답변 추천 수"),
+                                        fieldWithPath("data.questions[].questionComments").type(JsonFieldType.ARRAY).description("질문의 코멘트 목록"),
+                                        fieldWithPath("data.questions[].questionComments[].questionCommentId").type(JsonFieldType.NUMBER).description("질문의 코멘트 식별자"),
+                                        fieldWithPath("data.questions[].questionComments[].userId").type(JsonFieldType.NUMBER).description("질문의 코멘트 회원 식별자"),
+                                        fieldWithPath("data.questions[].questionComments[].displayName").type(JsonFieldType.STRING).description("질문의 코멘트 회원 닉네임"),
+                                        fieldWithPath("data.questions[].questionComments[].comment").type(JsonFieldType.STRING).description("질문의 코멘트 내용"),
+                                        fieldWithPath("data.questions[].questionComments[].createAt").type(JsonFieldType.STRING).description("생성 시각"),
+                                        fieldWithPath("data.questions[].questionComments[].updateAt").type(JsonFieldType.STRING).description("최종 수정 시각"),
+                                        fieldWithPath("data.questions[].tags").type(JsonFieldType.ARRAY).description("질문이 소유하고 있는 태그 리스트"),
+                                        fieldWithPath("data.questions[].tags[].tagId").type(JsonFieldType.NUMBER).description("태그 식별자"),
+                                        fieldWithPath("data.questions[].tags[].tag").type(JsonFieldType.STRING).description("태그"),
+                                        fieldWithPath("data.questions[].tags[].description").type(JsonFieldType.STRING).description("태그 설명"),
+                                        fieldWithPath("data.questions[].tags[].createAt").type(JsonFieldType.STRING).description("생성 시각"),
                                         fieldWithPath("data.answers").type(JsonFieldType.ARRAY).description("작성 답변 목록"),
-                                        fieldWithPath("data.tags").type(JsonFieldType.ARRAY).description("작성 질문에 포함된 태그 목록")
+                                        fieldWithPath("data.answers[].answerId").type(JsonFieldType.NUMBER).description("답변 식별자"),
+                                        fieldWithPath("data.answers[].userId").type(JsonFieldType.NUMBER).description("회원 식별자"),
+                                        fieldWithPath("data.answers[].displayName").type(JsonFieldType.STRING).description("회원 닉네임"),
+                                        fieldWithPath("data.answers[].body").type(JsonFieldType.STRING).description("답변 내용"),
+                                        fieldWithPath("data.answers[].check").type(JsonFieldType.BOOLEAN).description("채택 여부"),
+                                        fieldWithPath("data.answers[].createAt").type(JsonFieldType.STRING).description("생성 시각"),
+                                        fieldWithPath("data.answers[].updateAt").type(JsonFieldType.STRING).description("최종 수정 시각"),
+                                        fieldWithPath("data.answers[].answerComments").type(JsonFieldType.ARRAY).description("답변 코멘트 목록"),
+                                        fieldWithPath("data.answers[].answerComments[].answerCommentId").type(JsonFieldType.NUMBER).description("답변 코멘트 식별자"),
+                                        fieldWithPath("data.answers[].answerComments[].userId").type(JsonFieldType.NUMBER).description("답변 코멘트 회원 식별자"),
+                                        fieldWithPath("data.answers[].answerComments[].displayName").type(JsonFieldType.STRING).description("답변 코멘트 회원 닉네임"),
+                                        fieldWithPath("data.answers[].answerComments[].comment").type(JsonFieldType.STRING).description("답변 코멘트 내용"),
+                                        fieldWithPath("data.answers[].answerComments[].createAt").type(JsonFieldType.STRING).description("생성 시각"),
+                                        fieldWithPath("data.answers[].answerComments[].updateAt").type(JsonFieldType.STRING).description("최종 수정 시각"),
+                                        fieldWithPath("data.answers[].answerVotes").type(JsonFieldType.ARRAY).description("답변 추천 목록"),
+                                        fieldWithPath("data.answers[].answerVotes[].answerVoteId").type(JsonFieldType.NUMBER).description("답변 추천 식별자"),
+                                        fieldWithPath("data.answers[].answerVotes[].userId").type(JsonFieldType.NUMBER).description("답변 추천 회원 식별자"),
+                                        fieldWithPath("data.answers[].answerVotes[].voteStatus").type(JsonFieldType.STRING).description("답변 추천 상태"),
+                                        fieldWithPath("data.answers[].countingVote").type(JsonFieldType.NUMBER).description("답변 추천 수"),
+                                        fieldWithPath("data.tags").type(JsonFieldType.ARRAY).description("작성 질문에 포함된 태그 목록"),
+                                        fieldWithPath("data.tags[].tagId").type(JsonFieldType.NUMBER).description("태그 식별자"),
+                                        fieldWithPath("data.tags[].tag").type(JsonFieldType.STRING).description("태그"),
+                                        fieldWithPath("data.tags[].description").type(JsonFieldType.STRING).description("태그 상세 내용"),
+                                        fieldWithPath("data.tags[].createAt").type(JsonFieldType.STRING).description("생성 시각")
                                 ))));
 
     }
@@ -182,8 +252,8 @@ class UserControllerTest {
     @DisplayName("사용자 전체 조회 Controller TEST")
     void getUsers() throws Exception {
         // Given
-        User testUser = createTestUser();
-        UserSimpleResponseDto simpleResponseDto = createSimpleResponseDto(testUser);
+        User testUser = TestStub.createTestUser();
+        UserSimpleResponseDto simpleResponseDto = TestStub.createSimpleResponseDto(testUser);
         // When
         given(userService.findUsers(any(Pageable.class))).willReturn(
                 new PageImpl<>(List.of(testUser, testUser), PageRequest.of(0, 10), 2)
@@ -231,10 +301,10 @@ class UserControllerTest {
     @WithMockUser
     void patchUser() throws Exception {
         // Given
-        UserPatchDto patchDto = createPatchDto();
-        User testUser = createTestUser();
+        UserPatchDto patchDto = TestStub.createUserPatchDto();
+        User testUser = TestStub.createTestUser();
         testUser.setDisplayName(patchDto.getDisplayName());
-        UserSimpleResponseDto simpleResponseDto = createSimpleResponseDto(testUser);
+        UserSimpleResponseDto simpleResponseDto = TestStub.createSimpleResponseDto(testUser);
         // When
         given(userMapper.UserPatchDtoToEntity(any(UserPatchDto.class))).willReturn(testUser);
         given(userService.updateUser(any(User.class))).willReturn(testUser);
@@ -316,75 +386,4 @@ class UserControllerTest {
                                 )));
 
     }
-
-    private UserPostDto createPostDto() {
-        return new UserPostDto(
-                "testaa@test.com",
-                "1111!",
-                "testUser",
-                true);
-    }
-
-    private UserPatchDto createPatchDto() {
-        UserPatchDto userPatchDto = new UserPatchDto();
-        userPatchDto.setDisplayName("patchUser");
-        return userPatchDto;
-    }
-
-
-    private User createTestUser() {
-        UserPostDto postDto = createPostDto();
-        User user = createTestUser(postDto);
-        user.setUserId(1L);
-        user.setLoginType(LoginType.BASIC);
-        user.setUserStatus(UserStatus.ACTIVITY);
-        user.setRoles(JwtAuthorityUtils.USER_ROLES_STRING_CALL);
-        return user;
-    }
-
-    private User createTestUser(UserPostDto userPostDto) {
-        User user = new User();
-
-        user.setEmail( userPostDto.getEmail() );
-        user.setPassword( userPostDto.getPassword() );
-        user.setDisplayName( userPostDto.getDisplayName() );
-        user.setEmailNotice( userPostDto.getEmailNotice() );
-        return user;
-    }
-
-    private UserSimpleResponseDto createSimpleResponseDto(User user) {
-
-        UserSimpleResponseDto userSimpleResponseDto = new UserSimpleResponseDto();
-
-        userSimpleResponseDto.setUserId( user.getUserId() );
-        userSimpleResponseDto.setEmail( user.getEmail() );
-        userSimpleResponseDto.setDisplayName( user.getDisplayName() );
-        userSimpleResponseDto.setEmailNotice( user.getEmailNotice() );
-        if ( user.getUserStatus() != null ) {
-            userSimpleResponseDto.setUserStatus( user.getUserStatus().name() );
-        }
-        if ( user.getLoginType() != null ) {
-            userSimpleResponseDto.setLoginType( user.getLoginType().name() );
-        }
-        userSimpleResponseDto.setCreateAt(LocalDateTime.now());
-        userSimpleResponseDto.setUpdateAt(LocalDateTime.now());
-        return userSimpleResponseDto;
-    }
-
-    private UserResponseDto createUserResponseDto(User user) {
-        UserResponseDto dto = new UserResponseDto();
-        dto.setUserId(user.getUserId());
-        dto.setEmail(user.getEmail());
-        dto.setDisplayName(user.getDisplayName());
-        dto.setEmailNotice(user.getEmailNotice());
-        dto.setUserStatus(user.getUserStatus().name());
-        dto.setLoginType(user.getLoginType().name());
-        dto.setCreateAt(LocalDateTime.now());
-        dto.setUpdateAt(LocalDateTime.now());
-        dto.setQuestions(List.of());
-        dto.setAnswers(List.of());
-        dto.setTags(List.of());
-        return dto;
-    }
-
 }

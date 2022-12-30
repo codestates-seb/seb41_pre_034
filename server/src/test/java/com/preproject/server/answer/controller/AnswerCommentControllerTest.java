@@ -4,17 +4,14 @@ import com.google.gson.Gson;
 import com.preproject.server.answer.dto.AnswerCommentPatchDto;
 import com.preproject.server.answer.dto.AnswerCommentPostDto;
 import com.preproject.server.answer.dto.AnswerCommentResponseDto;
-import com.preproject.server.answer.entity.Answer;
 import com.preproject.server.answer.entity.AnswerComment;
 import com.preproject.server.answer.mapper.AnswerMapper;
 import com.preproject.server.answer.service.AnswerCommentService;
 import com.preproject.server.config.auth.SecurityConfig;
-import com.preproject.server.constant.QuestionStatus;
-import com.preproject.server.question.entity.Question;
-import com.preproject.server.user.entity.User;
 import com.preproject.server.util.ApiDocumentUtils;
 import com.preproject.server.utils.JwtAuthorityUtils;
 import com.preproject.server.utils.JwtTokenizer;
+import com.preproject.server.utils.TestStub;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +32,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -72,9 +68,9 @@ class AnswerCommentControllerTest {
     void postComment() throws Exception {
         // Given
         Long answerId = 1L;
-        AnswerCommentPostDto postDto = createPostDto();
-        AnswerComment testAnswerComment = createTestAnswerComment();
-        AnswerCommentResponseDto responseDto = createResponseDto(testAnswerComment);
+        AnswerCommentPostDto postDto = TestStub.createAnswerCommentPostDto();
+        AnswerComment testAnswerComment = TestStub.createTestAnswerComment();
+        AnswerCommentResponseDto responseDto = TestStub.createAnswerCommentResponseDto();
         // When
         given(answerCommentService.createComment(any(AnswerComment.class), anyLong(), anyLong()))
                 .willReturn(testAnswerComment);
@@ -85,8 +81,8 @@ class AnswerCommentControllerTest {
         String content = gson.toJson(postDto);
         RequestBuilder result = RestDocumentationRequestBuilders
                 .post("/answer-comment/{answerId}", answerId)
-                .header("Authorization","AccessToken")
-                .header("Refresh","RefreshToken")
+                .header("Authorization", "AccessToken")
+                .header("Refresh", "RefreshToken")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -135,9 +131,9 @@ class AnswerCommentControllerTest {
     void patchComment() throws Exception {
         // Given
         Long answerCommentId = 1L;
-        AnswerCommentPatchDto patchDto = createPatchDto();
-        AnswerComment testAnswerComment = createTestAnswerComment();
-        AnswerCommentResponseDto responseDto = createResponseDto(testAnswerComment);
+        AnswerCommentPatchDto patchDto = TestStub.createAnswerCommentPatchDto();
+        AnswerComment testAnswerComment = TestStub.createTestAnswerComment();
+        AnswerCommentResponseDto responseDto = TestStub.createAnswerCommentResponseDto();
         // When
         given(answerMapper.AnswerPatchDtoToEntity(any(AnswerCommentPatchDto.class)))
                 .willReturn(testAnswerComment);
@@ -148,8 +144,8 @@ class AnswerCommentControllerTest {
         String content = gson.toJson(patchDto);
         RequestBuilder result = RestDocumentationRequestBuilders
                 .patch("/answer-comment/comment/{answerCommentId}", answerCommentId)
-                .header("Authorization","AccessToken")
-                .header("Refresh","RefreshToken")
+                .header("Authorization", "AccessToken")
+                .header("Refresh", "RefreshToken")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -202,8 +198,8 @@ class AnswerCommentControllerTest {
         doNothing().when(answerCommentService).delete(anyLong());
         RequestBuilder result = RestDocumentationRequestBuilders
                 .delete("/answer-comment/comment/{answerCommentId}", answerCommentId)
-                .header("Authorization","AccessToken")
-                .header("Refresh","RefreshToken")
+                .header("Authorization", "AccessToken")
+                .header("Refresh", "RefreshToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8.displayName());
@@ -223,66 +219,5 @@ class AnswerCommentControllerTest {
                                 )));
     }
 
-
-    private AnswerCommentPostDto createPostDto() {
-        AnswerCommentPostDto dto = new AnswerCommentPostDto();
-        dto.setComment("Test Comment");
-        dto.setUserId(1L);
-        return dto;
-    }
-
-    private AnswerCommentPatchDto createPatchDto() {
-        AnswerCommentPatchDto dto = new AnswerCommentPatchDto();
-        dto.setComment("Test Comment");
-        dto.setUserId(1L);
-        return dto;
-    }
-
-    private AnswerCommentResponseDto createResponseDto(AnswerComment ac) {
-        AnswerCommentResponseDto dto = new AnswerCommentResponseDto();
-        dto.setAnswerCommentId(1L);
-        dto.setUserId(ac.getUser().getUserId());
-        dto.setDisplayName(ac.getUser().getDisplayName());
-        dto.setComment(ac.getComment());
-        dto.setCreateAt(LocalDateTime.now());
-        dto.setUpdateAt(LocalDateTime.now());
-        return dto;
-
-    }
-
-    private AnswerComment createTestAnswerComment() {
-        AnswerComment entity = new AnswerComment();
-        User user = new User();
-        user.setUserId(1L);
-        user.setDisplayName("testUser");
-        entity.setComment("Test Comment");
-        entity.setAnswer(createTestAnswer());
-        entity.setUser(user);
-        return entity;
-    }
-
-    private Answer createTestAnswer() {
-        Answer answer = new Answer();
-        User user = new User();
-        user.setUserId(1L);
-        user.setDisplayName("testUser");
-        answer.setUser(user);
-        answer.setBody("Test Answer");
-        answer.setCheck(false);
-        answer.setQuestion(createTestQuestion());
-        return answer;
-    }
-
-    private Question createTestQuestion() {
-        Question question = new Question();
-        User user = new User();
-        user.setUserId(1L);
-        user.setDisplayName("testUser");
-        question.setUser(user);
-        question.setBody("testBody");
-        question.setTitle("testTitle");
-        question.setQuestionStatus(QuestionStatus.OPENED);
-        return question;
-    }
 
 }

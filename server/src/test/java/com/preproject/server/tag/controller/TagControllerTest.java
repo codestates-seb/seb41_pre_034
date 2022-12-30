@@ -11,10 +11,10 @@ import com.preproject.server.tag.dto.TagResponseDto;
 import com.preproject.server.tag.entity.Tag;
 import com.preproject.server.tag.mapper.TagMapper;
 import com.preproject.server.tag.service.TagService;
-import com.preproject.server.user.entity.User;
 import com.preproject.server.util.ApiDocumentUtils;
 import com.preproject.server.utils.JwtAuthorityUtils;
 import com.preproject.server.utils.JwtTokenizer;
+import com.preproject.server.utils.TestStub;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -77,9 +76,9 @@ class TagControllerTest {
     void getQuestionsByTag() throws Exception {
         // Given
         Long tagId = 1L;
-        QuestionTag testQuestionTag = createTestQuestionTag();
+        QuestionTag testQuestionTag = TestStub.createTestQuestionTag();
         QuestionSimpleResponseDto dto =
-                createQuestionSimpleResponseDto(testQuestionTag.getQuestion());
+                TestStub.createQuestionSimpleResponseDto(testQuestionTag.getQuestion());
         Page<QuestionTag> questionTags =
                 new PageImpl<>(
                         List.of(testQuestionTag, testQuestionTag),
@@ -142,8 +141,8 @@ class TagControllerTest {
     @DisplayName("Tag 전체 조회 Controller TEST")
     void getTags() throws Exception {
         // Given
-        Tag testTag = createTestTag();
-        TagResponseDto dto = createTagResponseDto(testTag);
+        Tag testTag = TestStub.createTestTag();
+        TagResponseDto dto = TestStub.createTagResponseDto();
         Page<Tag> tags =
                 new PageImpl<>(
                         List.of(testTag, testTag),
@@ -185,54 +184,4 @@ class TagControllerTest {
                         )
                 ));
     }
-
-    private Tag createTestTag() {
-        Tag tag = new Tag();
-        tag.setTag("test");
-        tag.setDescription("test");
-        return tag;
-    }
-
-    private Question createTestQuestion() {
-        Question question = new Question();
-        User user = new User();
-        user.setUserId(1L);
-        question.setUser(user);
-        question.setBody("testBody");
-        question.setTitle("testTitle");
-        return question;
-    }
-
-    private QuestionTag createTestQuestionTag() {
-        QuestionTag questionTag = new QuestionTag();
-        Tag testTag = createTestTag();
-        Question testQuestion = createTestQuestion();
-        questionTag.setTag(testTag);
-        questionTag.setQuestion(testQuestion);
-        return questionTag;
-    }
-
-    private TagResponseDto createTagResponseDto(Tag tag) {
-        TagResponseDto dto = new TagResponseDto();
-        dto.setTagId(1L);
-        dto.setCreateAt(LocalDateTime.now());
-        dto.setTag(tag.getTag());
-        dto.setDescription(tag.getDescription());
-        return dto;
-    }
-
-    private QuestionSimpleResponseDto createQuestionSimpleResponseDto(Question question) {
-        QuestionSimpleResponseDto dto = new QuestionSimpleResponseDto();
-        dto.setQuestionId(1L);
-        dto.setQuestionStatus("OPENED");
-        dto.setDisplayName("testUesr");
-        dto.setCreateAt(LocalDateTime.now());
-        dto.setUpdateAt(LocalDateTime.now());
-        dto.setBody(question.getBody());
-        dto.setTitle(question.getTitle());
-        dto.setUserId(question.getUser().getUserId());
-        dto.setTags(List.of("java","test"));
-        return dto;
-    }
-
 }

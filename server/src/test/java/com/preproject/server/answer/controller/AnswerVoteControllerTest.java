@@ -4,18 +4,15 @@ import com.google.gson.Gson;
 import com.preproject.server.answer.dto.AnswerVotePatchDto;
 import com.preproject.server.answer.dto.AnswerVotePostDto;
 import com.preproject.server.answer.dto.AnswerVoteResponseDto;
-import com.preproject.server.answer.entity.Answer;
 import com.preproject.server.answer.entity.AnswerVote;
 import com.preproject.server.answer.mapper.AnswerMapper;
 import com.preproject.server.answer.service.AnswerVoteService;
 import com.preproject.server.config.auth.SecurityConfig;
-import com.preproject.server.constant.QuestionStatus;
 import com.preproject.server.constant.VoteStatus;
-import com.preproject.server.question.entity.Question;
-import com.preproject.server.user.entity.User;
 import com.preproject.server.util.ApiDocumentUtils;
 import com.preproject.server.utils.JwtAuthorityUtils;
 import com.preproject.server.utils.JwtTokenizer;
+import com.preproject.server.utils.TestStub;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,9 +68,9 @@ class AnswerVoteControllerTest {
     void postVote() throws Exception {
         // Given
         Long answerId = 1L;
-        AnswerVotePostDto postDto = createPostDto();
-        AnswerVote testAnswerVote = createTestAnswerVote();
-        AnswerVoteResponseDto responseDto = createResponseDto(testAnswerVote);
+        AnswerVotePostDto postDto = TestStub.createAnswerVotePostDto();
+        AnswerVote testAnswerVote = TestStub.createTestAnswerVote();
+        AnswerVoteResponseDto responseDto = TestStub.createAnswerVoteResponseDto();
         // When
         given(answerVoteService.createVote(any(AnswerVote.class), anyLong(), anyLong()))
                 .willReturn(testAnswerVote);
@@ -84,8 +81,8 @@ class AnswerVoteControllerTest {
         String content = gson.toJson(postDto);
         RequestBuilder result = RestDocumentationRequestBuilders
                 .post("/answer-vote/{answerId}", answerId)
-                .header("Authorization","AccessToken")
-                .header("Refresh","RefreshToken")
+                .header("Authorization", "AccessToken")
+                .header("Refresh", "RefreshToken")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -130,9 +127,9 @@ class AnswerVoteControllerTest {
     void patchVote_OK_case() throws Exception {
         // Given
         Long answerVoteId = 1L;
-        AnswerVotePatchDto patchDto = createPatchDto();
-        AnswerVote testAnswerVote = createTestAnswerVote();
-        AnswerVoteResponseDto responseDto = createResponseDto(testAnswerVote);
+        AnswerVotePatchDto patchDto = TestStub.createAnswerVotePatchDto();
+        AnswerVote testAnswerVote = TestStub.createTestAnswerVote();
+        AnswerVoteResponseDto responseDto = TestStub.createAnswerVoteResponseDto();
         // When
         given(answerMapper.answerVotePatchDtoToEntity(any(AnswerVotePatchDto.class)))
                 .willReturn(testAnswerVote);
@@ -143,8 +140,8 @@ class AnswerVoteControllerTest {
         String content = gson.toJson(patchDto);
         RequestBuilder result = RestDocumentationRequestBuilders
                 .patch("/answer-vote/vote/{answerVoteId}", answerVoteId)
-                .header("Authorization","AccessToken")
-                .header("Refresh","RefreshToken")
+                .header("Authorization", "AccessToken")
+                .header("Refresh", "RefreshToken")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -189,8 +186,8 @@ class AnswerVoteControllerTest {
     void patchVote_NOCONTENT_case() throws Exception {
         // Given
         Long answerVoteId = 1L;
-        AnswerVotePatchDto patchDto = createPatchDto();
-        AnswerVote testAnswerVote = createTestAnswerVote();
+        AnswerVotePatchDto patchDto = TestStub.createAnswerVotePatchDto();
+        AnswerVote testAnswerVote = TestStub.createTestAnswerVote();
         testAnswerVote.setVoteStatus(VoteStatus.NO_CONTENT);
         // When
         given(answerMapper.answerVotePatchDtoToEntity(any(AnswerVotePatchDto.class)))
@@ -200,8 +197,8 @@ class AnswerVoteControllerTest {
         String content = gson.toJson(patchDto);
         RequestBuilder result = RestDocumentationRequestBuilders
                 .patch("/answer-vote/vote/{answerVoteId}", answerVoteId)
-                .header("Authorization","AccessToken")
-                .header("Refresh","RefreshToken")
+                .header("Authorization", "AccessToken")
+                .header("Refresh", "RefreshToken")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -226,62 +223,5 @@ class AnswerVoteControllerTest {
                                 )
 
                         )));
-    }
-
-    private AnswerVotePostDto createPostDto() {
-        AnswerVotePostDto dto = new AnswerVotePostDto();
-        dto.setUserId(1L);
-        dto.setVoteStatus("up");
-        return dto;
-    }
-
-    private AnswerVotePatchDto createPatchDto() {
-        AnswerVotePatchDto dto = new AnswerVotePatchDto();
-        dto.setUserId(1L);
-        dto.setVoteStatus("up");
-        return dto;
-    }
-
-    private AnswerVoteResponseDto createResponseDto(AnswerVote answerVote) {
-        AnswerVoteResponseDto dto = new AnswerVoteResponseDto();
-        dto.setUserId(answerVote.getUser().getUserId());
-        dto.setVoteStatus(answerVote.getVoteStatus().name());
-        dto.setAnswerVoteId(1L);
-        return dto;
-    }
-
-    private AnswerVote createTestAnswerVote() {
-        AnswerVote vote = new AnswerVote();
-        User user = new User();
-        user.setUserId(1L);
-        user.setDisplayName("testUser");
-        vote.setVoteStatus(VoteStatus.UP);
-        vote.setAnswer(createTestAnswer());
-        vote.setUser(user);
-        return vote;
-    }
-
-    private Answer createTestAnswer() {
-        Answer answer = new Answer();
-        User user = new User();
-        user.setUserId(1L);
-        user.setDisplayName("testUser");
-        answer.setUser(user);
-        answer.setBody("Test Answer");
-        answer.setCheck(false);
-        answer.setQuestion(createTestQuestion());
-        return answer;
-    }
-
-    private Question createTestQuestion() {
-        Question question = new Question();
-        User user = new User();
-        user.setUserId(1L);
-        user.setDisplayName("testUser");
-        question.setUser(user);
-        question.setBody("testBody");
-        question.setTitle("testTitle");
-        question.setQuestionStatus(QuestionStatus.OPENED);
-        return question;
     }
 }

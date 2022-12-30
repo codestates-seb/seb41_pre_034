@@ -1,20 +1,18 @@
 package com.preproject.server.question.controller;
 
 import com.google.gson.Gson;
-import com.preproject.server.answer.dto.AnswerCommentResponseDto;
-import com.preproject.server.answer.dto.AnswerResponseDto;
-import com.preproject.server.answer.dto.AnswerVoteResponseDto;
 import com.preproject.server.config.auth.SecurityConfig;
-import com.preproject.server.constant.QuestionStatus;
-import com.preproject.server.question.dto.*;
+import com.preproject.server.question.dto.QuestionPatchDto;
+import com.preproject.server.question.dto.QuestionPostDto;
+import com.preproject.server.question.dto.QuestionResponseDto;
+import com.preproject.server.question.dto.QuestionSimpleResponseDto;
 import com.preproject.server.question.entity.Question;
 import com.preproject.server.question.mapper.QuestionMapper;
 import com.preproject.server.question.service.QuestionService;
-import com.preproject.server.tag.dto.TagResponseDto;
-import com.preproject.server.user.entity.User;
 import com.preproject.server.util.ApiDocumentUtils;
 import com.preproject.server.utils.JwtAuthorityUtils;
 import com.preproject.server.utils.JwtTokenizer;
+import com.preproject.server.utils.TestStub;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +37,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -74,8 +71,8 @@ class QuestionControllerTest {
     void getQuestion() throws Exception {
         // Given
         Long questionId = 1L;
-        Question testQuestion = createTestQuestion();
-        QuestionResponseDto dto = createQuestionResponseDto(testQuestion);
+        Question testQuestion = TestStub.createTestQuestion();
+        QuestionResponseDto dto = TestStub.createQuestionResponseDto(testQuestion);
         // When
         given(questionService.get(anyLong())).willReturn(testQuestion);
         given(questionMapper.QuestionEntityToResponseDto(any(Question.class)))
@@ -159,9 +156,9 @@ class QuestionControllerTest {
     @WithMockUser
     void postQuestion() throws Exception {
         // Given
-        QuestionPostDto postDto = createQuestionPostDto();
-        Question testQuestion = createTestQuestion();
-        QuestionResponseDto responseDto = createNewQuestionResponseDto(testQuestion);
+        QuestionPostDto postDto = TestStub.createQuestionPostDto();
+        Question testQuestion = TestStub.createTestQuestion();
+        QuestionResponseDto responseDto = TestStub.createNewQuestionResponseDto(testQuestion);
         // When
         given(questionMapper.questionPostDtoToEntity(any(QuestionPostDto.class)))
                 .willReturn(testQuestion);
@@ -230,9 +227,9 @@ class QuestionControllerTest {
     void patchQuestion() throws Exception {
         // Given
         Long questionId = 1L;
-        QuestionPatchDto patchDto = createQuestionPatchDto();
-        Question testQuestion = createTestQuestion();
-        QuestionResponseDto responseDto = createQuestionResponseDto(testQuestion);
+        QuestionPatchDto patchDto = TestStub.createQuestionPatchDto();
+        Question testQuestion = TestStub.createTestQuestion();
+        QuestionResponseDto responseDto = TestStub.createQuestionResponseDto(testQuestion);
         // When
         given(questionService.patch(anyLong(), any(Question.class), anyString(), anyLong()))
                 .willReturn(testQuestion);
@@ -334,9 +331,9 @@ class QuestionControllerTest {
     @DisplayName("질문 전체 조회 Controller TEST")
     void getQuestions() throws Exception {
         // Given
-        Question testQuestion = createTestQuestion();
+        Question testQuestion = TestStub.createTestQuestion();
         QuestionSimpleResponseDto dto =
-                createQuestionSimpleResponseDto(testQuestion);
+                TestStub.createQuestionSimpleResponseDto(testQuestion);
         Page<Question> findQuestions =
                 new PageImpl<>(List.of(testQuestion, testQuestion),
                         PageRequest.of(0, 10),
@@ -418,156 +415,4 @@ class QuestionControllerTest {
                                         parameterWithName("questionId").description("질문 식별자")
                                 )));
     }
-
-    private Question createTestQuestion() {
-        Question question = new Question();
-        User user = new User();
-        user.setUserId(1L);
-        user.setDisplayName("testUser");
-        question.setUser(user);
-        question.setBody("testBody");
-        question.setTitle("testTitle");
-        question.setQuestionStatus(QuestionStatus.OPENED);
-        return question;
-    }
-
-    private QuestionPostDto createQuestionPostDto() {
-        QuestionPostDto dto = new QuestionPostDto();
-        dto.setTitle("testTitle");
-        dto.setBody("testBody");
-        dto.setUserId(1L);
-        dto.setTags("test,java");
-        return dto;
-    }
-    private QuestionPatchDto createQuestionPatchDto() {
-        QuestionPatchDto dto = new QuestionPatchDto();
-        dto.setTitle("testTitle");
-        dto.setBody("testBody");
-        dto.setUserId(1L);
-        dto.setTags("test,java");
-        return dto;
-    }
-
-    private QuestionResponseDto createNewQuestionResponseDto(Question question) {
-        QuestionResponseDto dto = new QuestionResponseDto();
-        dto.setQuestionId(1L);
-        dto.setUserId(question.getUser().getUserId());
-        dto.setDisplayName(question.getUser().getDisplayName());
-        dto.setTitle(question.getTitle());
-        dto.setBody(question.getBody());
-        dto.setViewCounting(1);
-        dto.setQuestionStatus(question.getQuestionStatus().name());
-        dto.setCreateAt(LocalDateTime.now());
-        dto.setUpdateAt(LocalDateTime.now());
-        dto.setQuestionVotes(List.of());
-        dto.setAnswers(List.of());
-        dto.setQuestionComments(List.of());
-        dto.setTags(List.of());
-        return dto;
-    }
-
-    private QuestionResponseDto createQuestionResponseDto(Question question) {
-        QuestionResponseDto dto = new QuestionResponseDto();
-        dto.setQuestionId(1L);
-        dto.setUserId(question.getUser().getUserId());
-        dto.setDisplayName(question.getUser().getDisplayName());
-        dto.setTitle(question.getTitle());
-        dto.setBody(question.getBody());
-        dto.setViewCounting(1);
-        dto.setQuestionStatus(question.getQuestionStatus().name());
-        dto.setCreateAt(LocalDateTime.now());
-        dto.setUpdateAt(LocalDateTime.now());
-        dto.setQuestionVotes(List.of(
-                createQuestionVoteResponseDto(),createQuestionVoteResponseDto()
-        ));
-        dto.setAnswers(List.of(
-                createAnswerResponseDto(),createAnswerResponseDto())
-        );
-        dto.setQuestionComments(List.of(
-                createQuestionCommentResponseDto(),createQuestionCommentResponseDto()
-        ));
-        dto.setTags(List.of(
-                createTagResponseDto(),createTagResponseDto()
-        ));
-        return dto;
-    }
-    private QuestionSimpleResponseDto createQuestionSimpleResponseDto(Question question) {
-        QuestionSimpleResponseDto dto = new QuestionSimpleResponseDto();
-        dto.setQuestionId(1L);
-        dto.setQuestionStatus("OPENED");
-        dto.setDisplayName("testUesr");
-        dto.setCreateAt(LocalDateTime.now());
-        dto.setUpdateAt(LocalDateTime.now());
-        dto.setBody(question.getBody());
-        dto.setTitle(question.getTitle());
-        dto.setUserId(question.getUser().getUserId());
-        dto.setTags(List.of("java","test"));
-        return dto;
-    }
-    private AnswerResponseDto createAnswerResponseDto() {
-        AnswerResponseDto dto = new AnswerResponseDto();
-        dto.setAnswerId(1L);
-        dto.setUserId(1L);
-        dto.setDisplayName("testUser");
-        dto.setCheck(false);
-        dto.setBody("Test Body");
-        dto.setCreateAt(LocalDateTime.now());
-        dto.setUpdateAt(LocalDateTime.now());
-        dto.setCountingVote(1);
-        dto.setAnswerComments(
-                List.of(createAnswerCommentResponseDto(),createAnswerCommentResponseDto())
-        );
-        dto.setAnswerVotes(
-                List.of(createAnswerVoteResponseDto(),createAnswerVoteResponseDto())
-        );
-        return dto;
-    }
-
-    private AnswerCommentResponseDto createAnswerCommentResponseDto() {
-        AnswerCommentResponseDto dto = new AnswerCommentResponseDto();
-        dto.setAnswerCommentId(1L);
-        dto.setUserId(1L);
-        dto.setDisplayName("testUser");
-        dto.setComment("Test Comment");
-        dto.setCreateAt(LocalDateTime.now());
-        dto.setUpdateAt(LocalDateTime.now());
-        return dto;
-
-    }
-
-    private AnswerVoteResponseDto createAnswerVoteResponseDto() {
-        AnswerVoteResponseDto dto = new AnswerVoteResponseDto();
-        dto.setUserId(1L);
-        dto.setVoteStatus("NONE");
-        dto.setAnswerVoteId(1L);
-        return dto;
-    }
-
-    private TagResponseDto createTagResponseDto() {
-        TagResponseDto dto = new TagResponseDto();
-        dto.setTagId(1L);
-        dto.setCreateAt(LocalDateTime.now());
-        dto.setTag("java");
-        dto.setDescription("test");
-        return dto;
-    }
-    private QuestionCommentResponseDto createQuestionCommentResponseDto() {
-        QuestionCommentResponseDto dto = new QuestionCommentResponseDto();
-        dto.setQuestionCommentId(1L);
-        dto.setUserId(1L);
-        dto.setDisplayName("Test User");
-        dto.setComment("Test Comment");
-        dto.setCreateAt(LocalDateTime.now());
-        dto.setUpdateAt(LocalDateTime.now());
-        return dto;
-    }
-
-    private QuestionVoteResponseDto createQuestionVoteResponseDto() {
-        QuestionVoteResponseDto dto = new QuestionVoteResponseDto();
-        dto.setUserId(1L);
-        dto.setVoteStatus("NONE");
-        dto.setQuestionVoteId(1L);
-        return dto;
-    }
-
 }
