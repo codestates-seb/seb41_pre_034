@@ -3,10 +3,9 @@ import { useState } from 'react';
 import ImNotARobot from '../assets/ImNotARobot.png';
 import BlueButton from './buttons/BlueButton';
 import { RiQuestionFill } from 'react-icons/ri';
-import { fetchCreate } from '../util/api';
-import BASE_URL from '../constants/baseUrl';
+import { fetchSign as fetchSignup } from '../util/api';
 
-function SignupForm(props) {
+function SignupForm() {
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -31,14 +30,17 @@ function SignupForm(props) {
   function handleSubmit(e) {
     e.preventDefault();
 
-    fetchCreate(BASE_URL + '/users', {
+    const data = {
       email: email,
       password: password,
       displayName: displayName,
       emailNotice: isCheck,
-    });
+    };
 
+    fetchSignup('/users', data);
     alert('회원가입이 완료되었습니다.');
+
+    window.location.href = '/login';
   }
 
   return (

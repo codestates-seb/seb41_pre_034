@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import BlueButton from './buttons/BlueButton';
 import { useDispatch } from 'react-redux';
 import { setUserId } from '../redux/actions/index';
-import BASE_URL from '../constants/baseUrl';
+import { fetchSign as fetchLogin } from '../util/api';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -19,16 +19,11 @@ function LoginForm() {
   async function handleLogin(event) {
     event.preventDefault();
 
-    const response = await fetch(BASE_URL + '/auth/login', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: email,
-        password: password,
-      }),
-    });
+    const data = {
+      username: email,
+      password: password,
+    };
+    const response = await fetchLogin('/auth/login', data);
 
     if (response.status === 401) {
       alert('아이디, 비밀번호를 확인해주세요.');
@@ -43,8 +38,7 @@ function LoginForm() {
 
       localStorage.setItem('Authorization', authorization);
       localStorage.setItem('Refresh', refresh);
-      console.log(response.headers.get('userId'));
-      console.log(userId);
+
       dispatch(setUserId(userId));
 
       window.location.href = '/';

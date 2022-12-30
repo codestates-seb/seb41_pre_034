@@ -7,6 +7,8 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ROUTE_PATH from '../constants/routePath';
 import BASE_URL from '../constants/baseUrl';
+import { fetchPatch } from '../util/api';
+import handleAuthError from '../exception/handleAuthError';
 
 function EditQuestion() {
   const { questionId } = useParams();
@@ -48,20 +50,13 @@ function EditQuestion() {
   async function handleSubmit(event) {
     event.preventDefault();
 
-    const response = await fetch(BASE_URL + '/questions/' + questionId, {
-      method: 'PATCH',
-      headers: {
-        'content-type': 'application/json',
-        Authorization: localStorage.getItem('Authorization'),
-        Refresh: localStorage.getItem('Refresh'),
-      },
-      body: JSON.stringify({
-        title,
-        body,
-        userId,
-        tags: tags.join(','),
-      }),
-    });
+    const data = {
+      title,
+      body,
+      userId,
+      tags: tags.join(','),
+    };
+    const response = await fetchPatch('/questions/', questionId, data);
 
     if (title.trim().length === 0) {
       alert('제목을 입력해주세요.');
@@ -81,23 +76,7 @@ function EditQuestion() {
       return;
     }
 
-    if (response.status === 403) {
-      const response = await fetch(BASE_URL + '/auth/reissuetoken');
-
-      if (!response.ok) {
-        window.location.href = ROUTE_PATH.LOGIN;
-
-        return;
-      }
-
-      const authorization = response.headers.get('Authorization');
-      const refresh = response.headers.get('Refresh');
-
-      localStorage.setItem('Authorization', authorization);
-      localStorage.setItem('Refresh', refresh);
-
-      alert('엑세스 토큰이 재발급 되었습니다.');
-    }
+    handleAuthError(response.status, handleSubmit);
   }
 
   return (

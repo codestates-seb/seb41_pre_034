@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import BASE_URL from '../constants/baseUrl';
 
 const useFetch = (url) => {
   const [data, setData] = useState(null);
@@ -6,7 +7,13 @@ const useFetch = (url) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(url)
+    fetch(BASE_URL + url, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: localStorage.getItem('Authorization'),
+        Refresh: localStorage.getItem('Refresh'),
+      },
+    })
       .then((res) => {
         if (!res.ok) {
           throw Error('could not fetch the data for that resource');
@@ -23,6 +30,7 @@ const useFetch = (url) => {
         setError(err.message);
       });
   }, []);
+
   return { data, isPending, error };
 };
 

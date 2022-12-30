@@ -10,11 +10,11 @@ function Inputbox() {
 
   function handleChange(e) {
     setSearchValue(e.target.value);
-    console.log(searchValue);
   }
 
   function handleSubmit(e) {
     e.preventDefault();
+
     dispatch(search(searchValue));
     window.location.href = ROUTE_PATH.SEARCH;
   }
