@@ -1,19 +1,16 @@
 package com.preproject.server.search.controller;
 
 import com.preproject.server.config.auth.SecurityConfig;
-import com.preproject.server.constant.QuestionStatus;
 import com.preproject.server.question.dto.QuestionSimpleDto;
 import com.preproject.server.question.dto.QuestionSimpleResponseDto;
-import com.preproject.server.question.entity.Question;
 import com.preproject.server.question.mapper.QuestionMapper;
 import com.preproject.server.question.service.QuestionService;
 import com.preproject.server.tag.dto.TagResponseDto;
-import com.preproject.server.tag.entity.Tag;
 import com.preproject.server.tag.service.TagService;
-import com.preproject.server.user.entity.User;
 import com.preproject.server.util.ApiDocumentUtils;
 import com.preproject.server.utils.JwtAuthorityUtils;
 import com.preproject.server.utils.JwtTokenizer;
+import com.preproject.server.utils.TestStub;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +32,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -68,8 +64,8 @@ class SearchControllerTest {
     @DisplayName("질문 검색 Controller 동작 TEST")
     void search() throws Exception {
         // Given
-        QuestionSimpleDto dto = createQuestSimpleDto(createTestQuestion());
-        QuestionSimpleResponseDto responseDto = createQuestionSimpleResponseDto(createTestQuestion());
+        QuestionSimpleDto dto = TestStub.createQuestSimpleDto(TestStub.createTestQuestion());
+        QuestionSimpleResponseDto responseDto = TestStub.createQuestionSimpleResponseDto(TestStub.createTestQuestion());
         // When
         given(questionService.findAllByParam(anyMap(), any(Pageable.class)))
                 .willReturn(new PageImpl<>(List.of(dto, dto), PageRequest.of(0, 10), 2));
@@ -127,7 +123,7 @@ class SearchControllerTest {
     @DisplayName("Tag 검색 Controller 동작 TEST")
     void searchTag() throws Exception {
         // Given
-        TagResponseDto responseDto = createTagResponseDto(createTestTag());
+        TagResponseDto responseDto = TestStub.createTagResponseDto();
         // When
         given(tagService.findTags(any(Pageable.class), anyMap()))
                 .willReturn(new PageImpl<>(
@@ -169,56 +165,4 @@ class SearchControllerTest {
                         )
                 ));
     }
-
-    private Question createTestQuestion() {
-        Question question = new Question();
-        User user = new User();
-        user.setUserId(1L);
-        user.setDisplayName("testUser");
-        question.setUser(user);
-        question.setBody("testBody");
-        question.setTitle("testTitle");
-        question.setQuestionStatus(QuestionStatus.OPENED);
-        return question;
-    }
-
-    private QuestionSimpleResponseDto createQuestionSimpleResponseDto(Question question) {
-        QuestionSimpleResponseDto dto = new QuestionSimpleResponseDto();
-        dto.setQuestionId(1L);
-        dto.setQuestionStatus("OPENED");
-        dto.setDisplayName("testUser");
-        dto.setCreateAt(LocalDateTime.now());
-        dto.setUpdateAt(LocalDateTime.now());
-        dto.setBody(question.getBody());
-        dto.setTitle(question.getTitle());
-        dto.setUserId(question.getUser().getUserId());
-        dto.setTags(List.of("java", "test"));
-        return dto;
-    }
-
-    private QuestionSimpleDto createQuestSimpleDto(Question question) {
-        QuestionSimpleDto dto = new QuestionSimpleDto();
-        dto.setBody(question.getBody());
-        dto.setTitle(question.getTitle());
-        dto.setUserId(question.getUser().getUserId());
-        return dto;
-    }
-
-    private TagResponseDto createTagResponseDto(Tag tag) {
-        TagResponseDto dto = new TagResponseDto();
-        dto.setTagId(1L);
-        dto.setTag(tag.getTag());
-        dto.setDescription(tag.getDescription());
-        dto.setCreateAt(LocalDateTime.now());
-        return dto;
-    }
-
-    private Tag createTestTag() {
-        Tag tag = new Tag();
-        tag.setTag("test");
-        tag.setDescription("test");
-        return tag;
-    }
-
-
 }

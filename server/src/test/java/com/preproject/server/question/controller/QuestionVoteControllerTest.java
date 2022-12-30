@@ -2,19 +2,17 @@ package com.preproject.server.question.controller;
 
 import com.google.gson.Gson;
 import com.preproject.server.config.auth.SecurityConfig;
-import com.preproject.server.constant.QuestionStatus;
 import com.preproject.server.constant.VoteStatus;
 import com.preproject.server.question.dto.QuestionVotePatchDto;
 import com.preproject.server.question.dto.QuestionVotePostDto;
 import com.preproject.server.question.dto.QuestionVoteResponseDto;
-import com.preproject.server.question.entity.Question;
 import com.preproject.server.question.entity.QuestionVote;
 import com.preproject.server.question.mapper.QuestionMapper;
 import com.preproject.server.question.service.QuestionVoteService;
-import com.preproject.server.user.entity.User;
 import com.preproject.server.util.ApiDocumentUtils;
 import com.preproject.server.utils.JwtAuthorityUtils;
 import com.preproject.server.utils.JwtTokenizer;
+import com.preproject.server.utils.TestStub;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,9 +69,9 @@ class QuestionVoteControllerTest {
     void postQuestionVote() throws Exception {
         // Given
         Long questionId = 1L;
-        QuestionVotePostDto postDto = createPostDto();
-        QuestionVote testQuestionVote = createTestQuestionVote();
-        QuestionVoteResponseDto responseDto = createResponseDto(testQuestionVote);
+        QuestionVotePostDto postDto = TestStub.createQuestionVotePostDto();
+        QuestionVote testQuestionVote = TestStub.createTestQuestionVote();
+        QuestionVoteResponseDto responseDto = TestStub.createQuestionVoteResponseDto();
         // When
         given(questionMapper.questionVotePostDtoToEntity(any(QuestionVotePostDto.class)))
                 .willReturn(testQuestionVote);
@@ -130,9 +128,9 @@ class QuestionVoteControllerTest {
     void patchQuestionVote_OK_case() throws Exception {
         // Given
         Long questionVoteId = 1L;
-        QuestionVotePatchDto patchDto = createPatchDto();
-        QuestionVote testQuestionVote = createTestQuestionVote();
-        QuestionVoteResponseDto responseDto = createResponseDto(testQuestionVote);
+        QuestionVotePatchDto patchDto = TestStub.createQuestionVotePatchDto();
+        QuestionVote testQuestionVote = TestStub.createTestQuestionVote();
+        QuestionVoteResponseDto responseDto = TestStub.createQuestionVoteResponseDto();
         // When
         given(questionMapper.questionVotePatchDtoToEntity(any(QuestionVotePatchDto.class)))
                 .willReturn(testQuestionVote);
@@ -189,8 +187,8 @@ class QuestionVoteControllerTest {
     void patchQuestionVote_NOCONTENT_case() throws Exception {
         // Given
         Long questionVoteId = 1L;
-        QuestionVotePatchDto patchDto = createPatchDto();
-        QuestionVote testQuestionVote = createTestQuestionVote();
+        QuestionVotePatchDto patchDto = TestStub.createQuestionVotePatchDto();
+        QuestionVote testQuestionVote = TestStub.createTestQuestionVote();
         testQuestionVote.setVoteStatus(VoteStatus.NO_CONTENT);
         // When
         given(questionMapper.questionVotePatchDtoToEntity(any(QuestionVotePatchDto.class)))
@@ -227,50 +225,4 @@ class QuestionVoteControllerTest {
 
                         )));
     }
-
-    private QuestionVotePostDto createPostDto() {
-        QuestionVotePostDto dto = new QuestionVotePostDto();
-        dto.setUserId(1L);
-        dto.setVoteStatus("up");
-        return dto;
-    }
-    private QuestionVotePatchDto createPatchDto() {
-        QuestionVotePatchDto dto = new QuestionVotePatchDto();
-        dto.setUserId(1L);
-        dto.setVoteStatus("up");
-        return dto;
-    }
-
-    private QuestionVoteResponseDto createResponseDto(QuestionVote questionVote) {
-        QuestionVoteResponseDto dto = new QuestionVoteResponseDto();
-        dto.setUserId(questionVote.getUser().getUserId());
-        dto.setVoteStatus(questionVote.getVoteStatus().name());
-        dto.setQuestionVoteId(1L);
-        return dto;
-    }
-
-    private QuestionVote createTestQuestionVote() {
-        QuestionVote vote = new QuestionVote();
-        User user = new User();
-        user.setUserId(1L);
-        user.setDisplayName("testUser");
-        vote.setVoteStatus(VoteStatus.UP);
-        vote.setQuestion(createTestQuestion());
-        vote.setUser(user);
-        return vote;
-    }
-
-    private Question createTestQuestion() {
-        Question question = new Question();
-        User user = new User();
-        user.setUserId(1L);
-        user.setDisplayName("testUser");
-        question.setUser(user);
-        question.setBody("testBody");
-        question.setTitle("testTitle");
-        question.setQuestionStatus(QuestionStatus.OPENED);
-        return question;
-    }
-
-
 }
