@@ -28,7 +28,7 @@ include::{snippets}/get-home/response-body.adoc[]
 .response-fields
 include::{snippets}/get-home/response-fields.adoc[]
 
-== UserController
+== Users
 === 회원 생성
 
 - 회원 생성
@@ -151,7 +151,7 @@ include::{snippets}/deleteUser/request-headers.adoc[]
 include::{snippets}/deleteUser/http-response.adoc[]
 
 
-== TagController
+== Tags
 === 태그를 포함한 질문 전체 조회
 
 - 태그 단건을 포함한 질문을 1페이지 전체 조회
@@ -201,4 +201,168 @@ include::{snippets}/getTags/response-body.adoc[]
 
 .response-fields
 include::{snippets}/getTags/response-fields.adoc[]
+
+
+== Search
+=== 질문 검색
+
+- page=0&keyWord=test&tag=java&displayName=test
+- 파라미터를 전송하여 질문 검색
+- 페이지는 0부터 시작
+- keyWord는 질문과 질문 Body의 내용에 포함된 질문들을 검색
+- tag는 해당 태그를 가지고 있거나 포함하고 있는 질문들을 검색
+- displayName은 해당 닉네임의 사용자가 작성한 질문 검색
+
+.curl-request
+include::{snippets}/getSearchParam/curl-request.adoc[]
+
+.http-request
+include::{snippets}/getSearchParam/http-request.adoc[]
+
+.request-parameters
+include::{snippets}/getSearchParam/request-parameters.adoc[]
+
+.http-response
+include::{snippets}/getSearchParam/http-response.adoc[]
+
+.response-body
+include::{snippets}/getSearchParam/response-body.adoc[]
+
+.response-fields
+include::{snippets}/getSearchParam/response-fields.adoc[]
+
+=== 태그 검색
+
+- page=0&tag=java
+- 파라미터를 전송 받아 태그를 검색
+- 페이지는 0부터 시작
+- tag는 해당 단어를 포함하거나 단어에 해당하는 태그들을 검색
+
+.curl-request
+include::{snippets}/getSearchTag/curl-request.adoc[]
+
+.http-request
+include::{snippets}/getSearchTag/http-request.adoc[]
+
+.request-parameters
+include::{snippets}/getSearchTag/request-parameters.adoc[]
+
+.http-response
+include::{snippets}/getSearchTag/http-response.adoc[]
+
+.response-body
+include::{snippets}/getSearchTag/response-body.adoc[]
+
+.response-fields
+include::{snippets}/getSearchTag/response-fields.adoc[]
+
+
+== Questions
+=== 질문 단건 조회
+
+- 질문 단건 조회.
+- 파라미터로 Question ID를 전송 받음.
+
+.curl-request
+include::{snippets}/getQuestion/curl-request.adoc[]
+
+.http-request
+include::{snippets}/getQuestion/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/getQuestion/path-parameters.adoc[]
+
+.http-response
+include::{snippets}/getQuestion/http-response.adoc[]
+
+.response-fields
+include::{snippets}/getQuestion/response-fields.adoc[]
+
+
+=== 질문 생성
+
+
+.curl-request
+include::{snippets}/postQuestion/curl-request.adoc[]
+
+.http-request
+include::{snippets}/postQuestion/http-request.adoc[]
+
+.request-headers
+include::{snippets}/postQuestion/request-headers.adoc[]
+
+.http-response
+include::{snippets}/postQuestion/http-response.adoc[]
+
+.response-body
+include::{snippets}/postQuestion/response-body.adoc[]
+
+.response-fields
+include::{snippets}/postQuestion/response-fields.adoc[]
+
+
+=== 질문 수정
+
+- 질문 수정.
+- 파라미터로 Question ID를 전송 받음.
+
+.curl-request
+include::{snippets}/patchQuestion/curl-request.adoc[]
+
+.http-request
+include::{snippets}/patchQuestion/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/patchQuestion/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/patchQuestion/request-headers.adoc[]
+
+.http-response
+include::{snippets}/patchQuestion/http-response.adoc[]
+
+.response-fields
+include::{snippets}/patchQuestion/response-fields.adoc[]
+
+
+=== 질문 전체 조회
+
+- 페이지는 0 부터 시작
+
+.curl-request
+include::{snippets}/getQuestions/curl-request.adoc[]
+
+.http-request
+include::{snippets}/getQuestions/http-request.adoc[]
+
+.http-response
+include::{snippets}/getQuestions/http-response.adoc[]
+
+.response-body
+include::{snippets}/getQuestions/response-body.adoc[]
+
+.response-fields
+include::{snippets}/getQuestions/response-fields.adoc[]
+
+
+=== 질문 삭제
+
+- 질문 삭제.
+- 파라미터로 Question ID를 전송 받음.
+
+.curl-request
+include::{snippets}/deleteQuestion/curl-request.adoc[]
+
+.http-request
+include::{snippets}/deleteQuestion/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/deleteQuestion/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/deleteQuestion/request-headers.adoc[]
+
+.http-response
+include::{snippets}/deleteQuestion/http-response.adoc[]
+
 
