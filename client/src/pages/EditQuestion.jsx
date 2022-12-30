@@ -76,7 +76,9 @@ function EditQuestion() {
       return;
     }
 
-    handleAuthError(response.status, handleSubmit);
+    if (response.status >= 400 && response.status < 500) {
+      handleAuthError(response.status, handleSubmit);
+    }
   }
 
   return (

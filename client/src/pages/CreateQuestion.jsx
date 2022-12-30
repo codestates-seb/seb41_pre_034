@@ -5,7 +5,6 @@ import BlueButton from '../components/buttons/BlueButton';
 import Tag from '../components/Tag';
 import { useSelector } from 'react-redux';
 import ROUTE_PATH from '../constants/routePath';
-import BASE_URL from '../constants/baseUrl';
 import { fetchPost } from '../util/api';
 import handleAuthError from '../exception/handleAuthError';
 
@@ -44,7 +43,9 @@ function CreateQuestion() {
       return;
     }
 
-    handleAuthError(response.status, handleSubmit);
+    if (response.status >= 400 && response.status < 500) {
+      handleAuthError(response.status, handleSubmit);
+    }
   }
 
   function removeTags(indexToRemove) {

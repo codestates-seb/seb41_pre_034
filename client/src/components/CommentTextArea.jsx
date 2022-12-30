@@ -22,7 +22,7 @@ function CommentTextArea({ questionId, answerId }) {
 
     const response = await fetchPost(url, data);
     if (response.status >= 400 && response.status < 500) {
-      handleAuthError(response.status);
+      handleAuthError(response.status, handlePostCommentSubmit);
     }
   }
 

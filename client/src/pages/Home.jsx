@@ -32,7 +32,9 @@ function Home() {
       return;
     }
 
-    handleAuthError(response.status, handleConfirmLogin);
+    if (response.status >= 400 && response.status < 500) {
+      handleAuthError(response.status, handleConfirmLogin);
+    }
   }
 
   return (

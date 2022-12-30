@@ -49,9 +49,12 @@ function QuestionDetail() {
     $fetchData.data &&
     $fetchData.data.data.answers.some(({ check }) => check === true);
 
-  function deleteQuestion() {
+  async function deleteQuestion() {
     if (confirm('삭제하시겠습니까?')) {
-      fetchDelete('/questions/', questionId);
+      const response = fetchDelete('/questions/', questionId);
+      if (response.status >= 400 && response.status < 500) {
+        handleAuthError(response.status, deleteQuestion);
+      }
     }
   }
 
@@ -73,9 +76,17 @@ function QuestionDetail() {
     }
   }
 
-  function deleteAnswer({ target }) {
+  async function deleteAnswer({ target }) {
     if (confirm('답변을 삭제하시겠습니까?')) {
-      fetchDelete('/answers/', target.dataset.answerid, '');
+      const response = await fetchDelete(
+        '/answers/',
+        target.dataset.answerid,
+        ''
+      );
+
+      if (response.status >= 400 && response.status < 500) {
+        handleAuthError(response.status, deleteAnswer);
+      }
     }
   }
 
@@ -95,6 +106,10 @@ function QuestionDetail() {
       if (response.ok) {
         window.location.href = '';
       }
+
+      if (response.status >= 400 && response.status < 500) {
+        handleAuthError(response.status, selectAnswer);
+      }
     }
   }
 
@@ -102,6 +117,10 @@ function QuestionDetail() {
     const voteStatus = target.dataset.votetype;
     const answerId = Number(target.dataset.answerid);
     const response = await postVote(voteStatus, answerId);
+
+    if (response.status >= 400 && response.status < 500) {
+      handleAuthError(response.status, handleVoteButtonClick);
+    }
 
     if (response.status === 409) {
       const [response, data] = await patchVote(voteStatus, answerId);
