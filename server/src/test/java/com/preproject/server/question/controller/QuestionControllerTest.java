@@ -191,6 +191,15 @@ class QuestionControllerTest {
                                 headerWithName("Authorization").description("AccessToken"),
                                 headerWithName("Refresh").description("RefreshToken")
                         ),
+                        PayloadDocumentation.requestFields(
+                                List.of(
+                                        fieldWithPath("title").type(JsonFieldType.STRING).description("질문 제목"),
+                                        fieldWithPath("body").type(JsonFieldType.STRING).description("질문 내용"),
+                                        fieldWithPath("userId").type(JsonFieldType.NUMBER).description("회원 식별자"),
+                                        fieldWithPath("tags").type(JsonFieldType.STRING).description("질문 태그 리스트")
+                                )
+
+                        ),
                         PayloadDocumentation.responseFields(
                                 List.of(
                                         fieldWithPath("data").type(JsonFieldType.OBJECT).description("결과 데이터"),
@@ -255,6 +264,15 @@ class QuestionControllerTest {
                         HeaderDocumentation.requestHeaders(
                                 headerWithName("Authorization").description("AccessToken"),
                                 headerWithName("Refresh").description("RefreshToken")
+                        ),
+                        PayloadDocumentation.requestFields(
+                                List.of(
+                                        fieldWithPath("title").type(JsonFieldType.STRING).description("질문 제목").optional(),
+                                        fieldWithPath("body").type(JsonFieldType.STRING).description("질문 내용").optional(),
+                                        fieldWithPath("userId").type(JsonFieldType.NUMBER).description("회원 식별자").optional(),
+                                        fieldWithPath("tags").type(JsonFieldType.STRING).description("질문 태그 리스트").optional()
+                                )
+
                         ),
                         PayloadDocumentation.responseFields(
                                 List.of(

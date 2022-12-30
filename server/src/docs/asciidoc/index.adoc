@@ -5,9 +5,9 @@
 :toc-title: Table of Contents
 :source-highlighter: prettify
 
-E2I4 <test@test.com>
+E2I4
 
-v1.0.0, 2022.12.20
+v1.0.0, 2022.12.31
 
 
 == HomeController
@@ -291,6 +291,9 @@ include::{snippets}/postQuestion/http-request.adoc[]
 .request-headers
 include::{snippets}/postQuestion/request-headers.adoc[]
 
+.request-fields
+include::{snippets}/patchQuestion/request-fields.adoc[]
+
 .http-response
 include::{snippets}/postQuestion/http-response.adoc[]
 
@@ -311,6 +314,9 @@ include::{snippets}/patchQuestion/curl-request.adoc[]
 
 .http-request
 include::{snippets}/patchQuestion/http-request.adoc[]
+
+.request-fields
+include::{snippets}/patchQuestion/request-fields.adoc[]
 
 .path-parameters
 include::{snippets}/patchQuestion/path-parameters.adoc[]
@@ -366,3 +372,149 @@ include::{snippets}/deleteQuestion/request-headers.adoc[]
 include::{snippets}/deleteQuestion/http-response.adoc[]
 
 
+== Question Comment
+=== 질문 코멘트 생성
+
+.curl-request
+include::{snippets}/postQuestionComment/curl-request.adoc[]
+
+.http-request
+include::{snippets}/postQuestionComment/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/postQuestionComment/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/postQuestionComment/request-headers.adoc[]
+
+.request-fields
+include::{snippets}/postQuestionComment/request-fields.adoc[]
+
+.http-response
+include::{snippets}/postQuestionComment/http-response.adoc[]
+
+.response-body
+include::{snippets}/postQuestionComment/response-body.adoc[]
+
+.response-fields
+include::{snippets}/postQuestionComment/response-fields.adoc[]
+
+
+=== 질문 코멘트 수정
+
+.curl-request
+include::{snippets}/patchQuestionComment/curl-request.adoc[]
+
+.http-request
+include::{snippets}/patchQuestionComment/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/patchQuestionComment/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/patchQuestionComment/request-headers.adoc[]
+
+.request-fields
+include::{snippets}/patchQuestionComment/request-fields.adoc[]
+
+.http-response
+include::{snippets}/patchQuestionComment/http-response.adoc[]
+
+.response-body
+include::{snippets}/patchQuestionComment/response-body.adoc[]
+
+.response-fields
+include::{snippets}/patchQuestionComment/response-fields.adoc[]
+
+=== 질문 코멘트 삭제
+
+.curl-request
+include::{snippets}/deleteQuestionComment/curl-request.adoc[]
+
+.http-request
+include::{snippets}/deleteQuestionComment/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/deleteQuestionComment/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/deleteQuestionComment/request-headers.adoc[]
+
+.http-response
+include::{snippets}/deleteQuestionComment/http-response.adoc[]
+
+
+
+== Question Vote
+=== 질문 추천 생성
+
+.curl-request
+include::{snippets}/postQuestionVote/curl-request.adoc[]
+
+.http-request
+include::{snippets}/postQuestionVote/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/postQuestionVote/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/postQuestionVote/request-headers.adoc[]
+
+.request-fields
+include::{snippets}/postQuestionVote/request-fields.adoc[]
+
+.http-response
+include::{snippets}/postQuestionVote/http-response.adoc[]
+
+.response-body
+include::{snippets}/postQuestionVote/response-body.adoc[]
+
+.response-fields
+include::{snippets}/postQuestionVote/response-fields.adoc[]
+
+
+=== 질문 추천 수정 - 200 OK
+
+.curl-request
+include::{snippets}/patchOkQuestionVote/curl-request.adoc[]
+
+.http-request
+include::{snippets}/patchOkQuestionVote/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/patchOkQuestionVote/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/patchOkQuestionVote/request-headers.adoc[]
+
+.request-fields
+include::{snippets}/patchOkQuestionVote/request-fields.adoc[]
+
+.http-response
+include::{snippets}/patchOkQuestionVote/http-response.adoc[]
+
+.response-body
+include::{snippets}/patchOkQuestionVote/response-body.adoc[]
+
+.response-fields
+include::{snippets}/patchOkQuestionVote/response-fields.adoc[]
+
+=== 질문 추천 수정 - 204
+
+.curl-request
+include::{snippets}/patchNoContentQuestionVote/curl-request.adoc[]
+
+.http-request
+include::{snippets}/patchNoContentQuestionVote/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/patchNoContentQuestionVote/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/patchNoContentQuestionVote/request-headers.adoc[]
+
+.request-fields
+include::{snippets}/patchNoContentQuestionVote/request-fields.adoc[]
+
+.http-response
+include::{snippets}/patchNoContentQuestionVote/http-response.adoc[]
