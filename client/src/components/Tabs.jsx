@@ -25,7 +25,7 @@ function Tabs(props) {
 
   return (
     //
-    <div className="box-content flex flex-wrap mb-[1px] items-center justify-center text-[13px]">
+    <div className="box-content flex flex-wrap mb-[1px] items-center justify-start lg:justify-center text-[13px]">
       {menuArr.map((el, index) => {
         return index === 0 ? (
           <a

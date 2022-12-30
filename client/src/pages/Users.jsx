@@ -31,13 +31,15 @@ function Users() {
   return (
     <div className="mt-[50px] max-w-[100%] flex flex-col justify-center items-center">
       <div className="container mt-0 max-w-[1264px] w-full flex justify-between mx-auto my-0 relative z-[1000] flex-[1_0_auto] text-left min-h-[calc(100vh-50px-322px)]">
-        <Sidebar currentMenu="Users"></Sidebar>
-        <div className="content max-w-[1100px] w-[calc(100%-164px)] p-[24px] border-l-[1px] border-[#e1e2e5]">
+        <div className="hidden sm:block">
+          <Sidebar currentMenu="Users"></Sidebar>
+        </div>
+        <div className="content max-w-[1100px] w-full p-[24px] border-l-[1px] border-[#e1e2e5]">
           <div className="text-[27px] font-[500] w-[280px] h-[28.594px] mb-[24px]">
             Users
           </div>
-          <div className="flex justify-between">
-            <div className="w-[188.59px] h-[32.8px] mb-[52px] pt-[2px]">
+          <div className="flex flex-col justify-between lg:flex-row">
+            <div className="w-[320.90px] lg:w-[200.59px] md:h-[32.8px] mb-[12px] pt-[2px]">
               <Inputbox />
             </div>
             <div>
