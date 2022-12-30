@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
 import { AiOutlineSearch } from 'react-icons/ai';
@@ -7,9 +7,29 @@ import TagCard from '../components/TagCard';
 import useFetch from '../util/useFetch';
 import BASE_URL from '../constants/baseUrl';
 
-function Tags(props) {
+function Tags() {
+  const [searchValue, setSearchValue] = useState('');
   const $Tags = useFetch(BASE_URL + '/tags');
-  const TagArr = $Tags.data && $Tags.data.data;
+  const [tags, setTags] = useState($Tags && $Tags.data);
+
+  function handleChange(e) {
+    setSearchValue(e.target.value);
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+  }
+
+  async function getSearchedTags(value) {
+    const response = await fetch(`${BASE_URL}/search/tag?page=0&tag=${value}`);
+    return response.json();
+  }
+
+  useEffect(() => {
+    getSearchedTags(searchValue).then((el) => {
+      setTags(el);
+    });
+  }, [searchValue]);
 
   return (
     <div className="pt-[50px]">
@@ -37,13 +57,14 @@ function Tags(props) {
             </a>
           </div>
           <div className="flex flex-wrap">
-            <div className="relative mb-[12px]">
+            <div onSubmit={handleSubmit} className="relative mb-[12px]">
               <input
                 type="search"
                 className="py-[7.8px] pl-[32px] pr-[9.1px] border-[1px] rounded-[3px] "
                 placeholder="Filter by tag name"
                 autoFocus
                 maxLength={35}
+                onChange={handleChange}
               ></input>
               <AiOutlineSearch className="w-[28px] h-[28px] absolute left-2 top-2 pr-[4px] text-[#838c95]" />
             </div>
@@ -58,8 +79,8 @@ function Tags(props) {
             </div>
           </div>
           <div className="grid gap-4 xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2">
-            {TagArr &&
-              TagArr.map((el, idx) => (
+            {tags &&
+              tags.data.map((el, idx) => (
                 <TagCard
                   key={idx}
                   tag={el.tag}

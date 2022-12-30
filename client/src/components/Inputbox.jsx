@@ -13,10 +13,8 @@ function Inputbox() {
     console.log(searchValue);
   }
 
-  //검색어를 submit 하면...searchValue에 해당하는 값을 잘 빼서 get요청 url 파라미터로 붙여줘야 한다
   function handleSubmit(e) {
     e.preventDefault();
-    //dispatch 불러와서 전역 변수로 넣음
     dispatch(search(searchValue));
     window.location.href = ROUTE_PATH.SEARCH;
   }
