@@ -1,32 +1,25 @@
-= Stack Overflow
+= Stack Overflow Clone Project
 :sectnums:
 :toc: left
 :toclevels: 4
 :toc-title: Table of Contents
 :source-highlighter: prettify
 
-E2I4
+E2I4 - StackOverflow Clone Project
 
 v1.0.0, 2022.12.31
 
+- 배포 주소
 
-== HomeController
-=== TEST
+<http://ec2-43-200-176-112.ap-northeast-2.compute.amazonaws.com:8080/>
 
-.curl-request
-include::{snippets}/get-home/curl-request.adoc[]
+== E2I4 팀원
 
-.http-request
-include::{snippets}/get-home/http-request.adoc[]
+- 프론트 - 강진원, 김민경, 전성훈
+- 백엔드 - 김원도, 이수영, 최유진
 
-.http-response
-include::{snippets}/get-home/http-response.adoc[]
 
-.response-body
-include::{snippets}/get-home/response-body.adoc[]
 
-.response-fields
-include::{snippets}/get-home/response-fields.adoc[]
 
 == Users
 === 회원 생성
@@ -738,3 +731,92 @@ include::{snippets}/patchNoContentAnswerVote/request-fields.adoc[]
 
 .http-response
 include::{snippets}/patchNoContentAnswerVote/http-response.adoc[]
+
+== Auth
+=== 로그인 상태 확인 - OK
+
+.curl-request
+include::{snippets}/verifyUserOk/curl-request.adoc[]
+
+.http-request
+include::{snippets}/verifyUserOk/http-request.adoc[]
+
+.request-headers
+include::{snippets}/verifyUserOk/request-headers.adoc[]
+
+.http-response
+include::{snippets}/verifyUserOk/http-response.adoc[]
+
+
+=== 로그인 상태 확인 - AccessToken 만료
+
+.curl-request
+include::{snippets}/verifyUserException/curl-request.adoc[]
+
+.http-request
+include::{snippets}/verifyUserException/http-request.adoc[]
+
+.request-headers
+include::{snippets}/verifyUserException/request-headers.adoc[]
+
+.http-response
+include::{snippets}/verifyUserException/http-response.adoc[]
+
+.response-body
+include::{snippets}/verifyUserException/response-body.adoc[]
+
+.response-fields
+include::{snippets}/verifyUserException/response-fields.adoc[]
+
+=== 토큰 재발급 - OK
+
+- Response Header로 응답 받은 Token의 Key,Value 값을 사용합니다.
+
+.curl-request
+include::{snippets}/refreshOk/curl-request.adoc[]
+
+.http-request
+include::{snippets}/refreshOk/http-request.adoc[]
+
+.request-headers
+include::{snippets}/refreshOk/request-headers.adoc[]
+
+.http-response
+include::{snippets}/refreshOk/http-response.adoc[]
+
+.response-headers
+include::{snippets}/refreshOk/response-headers.adoc[]
+
+=== 토큰 재발급 - Refresh Token 만료
+
+.curl-request
+include::{snippets}/refreshExpired/curl-request.adoc[]
+
+.http-request
+include::{snippets}/refreshExpired/http-request.adoc[]
+
+.request-headers
+include::{snippets}/refreshExpired/request-headers.adoc[]
+
+.http-response
+include::{snippets}/refreshExpired/http-response.adoc[]
+
+.response-body
+include::{snippets}/refreshExpired/response-body.adoc[]
+
+.response-fields
+include::{snippets}/refreshExpired/response-fields.adoc[]
+
+=== 로그아웃 - OK
+
+.curl-request
+include::{snippets}/logoutOk/curl-request.adoc[]
+
+.http-request
+include::{snippets}/logoutOk/http-request.adoc[]
+
+.request-headers
+include::{snippets}/logoutOk/request-headers.adoc[]
+
+.http-response
+include::{snippets}/logoutOk/http-response.adoc[]
