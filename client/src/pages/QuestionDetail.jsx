@@ -15,8 +15,9 @@ import { fetchDelete } from '../util/api';
 import { useSelector } from 'react-redux';
 import basicProfile from '../assets/basicProfile.png';
 import BASE_URL from '../constants/baseUrl';
+import CommentTextArea from '../components/CommentTextArea';
 
-function AddComment() {
+function AddComment({ questionId, answerId }) {
   const [isOpenCommentInput, setIsOpenCommentInput] = useState(false);
 
   return (
@@ -31,10 +32,7 @@ function AddComment() {
       </span>
       {isOpenCommentInput ? (
         <div className="mt-[20px]">
-          <MdArea></MdArea>
-          <div className="my-[10px] w-[200px]">
-            <BlueButton text="Post Your Comment"></BlueButton>
-          </div>
+          <CommentTextArea questionId={questionId} answerId={answerId} />
         </div>
       ) : null}
     </>
@@ -122,7 +120,6 @@ function QuestionDetail() {
     const answerId = Number(target.dataset.answerid);
     const response = await postVote(voteStatus, answerId);
 
-    console.log(await postVote(voteStatus, answerId));
     if (response.status === 409) {
       const [response, data] = await patchVote(voteStatus, answerId);
 
@@ -488,7 +485,7 @@ function QuestionDetail() {
                             )}
                         </ul>
                       </div>
-                      <AddComment></AddComment>
+                      <AddComment questionId={questionId}></AddComment>
                     </div>
                   </div>
                 </div>
@@ -748,7 +745,7 @@ function QuestionDetail() {
                                 )}
                               </ul>
                             </div>
-                            <AddComment></AddComment>
+                            <AddComment answerId={answer.answerId}></AddComment>
                           </div>
                         </div>
                       </div>
