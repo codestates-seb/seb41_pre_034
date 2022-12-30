@@ -66,7 +66,7 @@ class UserControllerTest {
 
 
     @Test
-    @DisplayName("사용자 생성 TEST")
+    @DisplayName("사용자 생성 Controller TEST")
     void createUser() throws Exception {
         // Given
         UserPostDto postDto = createPostDto();
@@ -95,7 +95,7 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("사용자 단건 조회 TEST")
+    @DisplayName("사용자 단건 조회 Controller TEST")
     @WithMockUser
     void getUser() throws Exception {
         // Given
@@ -119,7 +119,7 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("사용자 전체 조회 TEST")
+    @DisplayName("사용자 전체 조회 Controller TEST")
     void getUsers() throws Exception {
         // Given
         User testUser = createTestUser();
@@ -144,7 +144,7 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("사용자 정보 수정 TEST")
+    @DisplayName("사용자 정보 수정 Controller TEST")
     @WithMockUser
     void patchUser() throws Exception {
         // Given
@@ -172,7 +172,7 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("사용자 삭제 TEST")
+    @DisplayName("사용자 삭제 Controller TEST")
     @WithMockUser
     void deleteUser() throws Exception {
         // Given

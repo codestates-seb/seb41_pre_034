@@ -66,7 +66,7 @@ class TagControllerTest {
     private TagMapper tagMapper;
 
     @Test
-    @DisplayName("Tag를 포함한 Question 전체 조회 TEST")
+    @DisplayName("Tag를 포함한 Question 전체 조회 Controller TEST")
     void getQuestionsByTag() throws Exception {
         // Given
         Long tagId = 1L;
@@ -101,7 +101,7 @@ class TagControllerTest {
     }
 
     @Test
-    @DisplayName("Tag 전체 조회 TEST")
+    @DisplayName("Tag 전체 조회 Controller TEST")
     void getTags() throws Exception {
         // Given
         Tag testTag = createTestTag();

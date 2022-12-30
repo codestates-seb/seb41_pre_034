@@ -107,6 +107,7 @@ class QuestionCommentServiceTest {
     }
 
     @Test
+    @DisplayName("질문 코멘트 삭제 TEST")
     void delete() throws Exception{
         // given
         given(questionCommentRepository.findById(anyLong()))
