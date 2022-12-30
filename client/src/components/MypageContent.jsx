@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Tag from '../components/Tag';
 import BASE_URL from '../constants/baseUrl';
+import handleAuthError from '../exception/handleAuthError';
 
 function MypageContent() {
   const [userInfo, setUserInfo] = useState(null);
@@ -28,11 +29,17 @@ function MypageContent() {
         Refresh: localStorage.getItem('Refresh'),
       },
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.status >= 400 && response.status < 500) {
+          handleAuthError(response.status);
+        }
+        return response.json();
+      })
       .then(({ data }) => {
         setUserInfo(data);
         setTags(data.questions.map((el) => el.tags).flat());
-      });
+      })
+      .catch((error) => console.log('Error:', error));
   }, []);
 
   return (

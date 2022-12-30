@@ -20,6 +20,7 @@ const forbidden = async (status, callback) => {
     const response = await fetch(BASE_URL + '/auth/reissuetoken');
 
     if (!response.ok) {
+      alert('로그인 후 이용해주세요.');
       window.location.href = ROUTE_PATH.LOGIN;
 
       return;
