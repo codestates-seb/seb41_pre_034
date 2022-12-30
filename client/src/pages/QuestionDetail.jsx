@@ -84,11 +84,6 @@ function QuestionDetail() {
           Authorization: localStorage.getItem('Authorization'),
           Refresh: localStorage.getItem('Refresh'),
         },
-        body: JSON.stringify({
-          userId,
-          questionId,
-          body: answer,
-        }),
       })
         .then(() => (window.location.href = ''))
         .catch((error) => console.log(error));
