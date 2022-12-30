@@ -13,7 +13,7 @@ import BASE_URL from '../constants/baseUrl';
 
 function Home() {
   const { search } = useLocation();
-  const $questions = useFetch(`${BASE_URL}/questions${search}`);
+  const $questions = useFetch(`/questions${search}`);
 
   async function handleConfirmLogin() {
     const response = await fetch(BASE_URL + '/auth/verify', {

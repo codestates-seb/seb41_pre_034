@@ -1,9 +1,5 @@
 import BASE_URL from '../constants/baseUrl';
 
-export const fetchRead = (url) => {
-  fetch(BASE_URL + url).then((res) => {});
-};
-
 export const fetchPost = async (url, data) => {
   try {
     const response = await fetch(BASE_URL + url, {

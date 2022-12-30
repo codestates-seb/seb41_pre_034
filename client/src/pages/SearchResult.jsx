@@ -17,14 +17,11 @@ function SearchResult() {
   const searchValue = useSelector((state) => state.searchReducer);
   function setUrl(value) {
     if (/^\[/.test(value)) {
-      return `${BASE_URL}/search?page=0&tag=${value.slice(
-        1,
-        value.length - 2
-      )}`;
+      return `/search?page=0&tag=${value.slice(1, value.length - 2)}`;
     } else if (/^user:/.test(value)) {
-      return `${BASE_URL}/search?page=0&displayName=${value.slice(5)}`;
+      return `/search?page=0&displayName=${value.slice(5)}`;
     } else {
-      return `${BASE_URL}/search?page=0&keyWord=${value}`;
+      return `/search?page=0&keyWord=${value}`;
     }
   }
   const url = setUrl(searchValue);

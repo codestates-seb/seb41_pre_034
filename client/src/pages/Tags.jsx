@@ -9,7 +9,7 @@ import BASE_URL from '../constants/baseUrl';
 
 function Tags() {
   const [searchValue, setSearchValue] = useState('');
-  const $Tags = useFetch(BASE_URL + '/tags');
+  const $Tags = useFetch('/tags');
   const [tags, setTags] = useState($Tags && $Tags.data);
 
   function handleChange(e) {

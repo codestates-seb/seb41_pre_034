@@ -14,7 +14,6 @@ import MDEditor from '@uiw/react-md-editor';
 import { fetchDelete, fetchPatch, fetchPost } from '../util/api';
 import { useSelector } from 'react-redux';
 import basicProfile from '../assets/basicProfile.png';
-import BASE_URL from '../constants/baseUrl';
 import CommentTextArea from '../components/CommentTextArea';
 
 function AddComment({ questionId, answerId }) {
@@ -41,7 +40,7 @@ function AddComment({ questionId, answerId }) {
 
 function QuestionDetail() {
   const { questionId } = useParams();
-  const $fetchData = useFetch(`${BASE_URL}/questions/${questionId}`);
+  const $fetchData = useFetch(`/questions/${questionId}`);
   const voteIconColor = '#babfc5';
   const [answer, setAnswer] = useState('');
   const userId = Number(useSelector((state) => state.userIdReducer));
@@ -183,7 +182,7 @@ function QuestionDetail() {
           ) : null}
           <div id="question-header" className="flex text-[27px] items-center">
             <h1 className="w-full">
-              {!$fetchData.isPending && $fetchData.data.data.title}
+              {$fetchData.data && $fetchData.data.data.title}
             </h1>
             <Link to={ROUTE_PATH.ADD_QUESTION}>
               <div className="ml-[12px] min-w-[103px]">
@@ -195,21 +194,19 @@ function QuestionDetail() {
             <div className="mr-[16px] mb-[8px]">
               <span className="mr-[6px] text-[#6a737c]">Asked</span>
               <time>
-                {!$fetchData.isPending &&
-                  timeForToday($fetchData.data.data.createAt)}
+                {$fetchData.data && timeForToday($fetchData.data.data.createAt)}
               </time>
             </div>
             <div className="mr-[16px] mb-[8px]">
               <span className="mr-[6px] text-[#6a737c]">Modified</span>
               <time>
-                {!$fetchData.isPending &&
-                  timeForToday($fetchData.data.data.updateAt)}
+                {$fetchData.data && timeForToday($fetchData.data.data.updateAt)}
               </time>
             </div>
             <div className="mr-[16px] mb-[8px]">
               <span className="mr-[6px] text-[#6a737c]">Viewed</span>
               <time>
-                {!$fetchData.isPending &&
+                {$fetchData.data &&
                   $fetchData.data.data.viewCounting + ' times'}
               </time>
             </div>
@@ -297,7 +294,7 @@ function QuestionDetail() {
                   >
                     <div className="align-top pr-[16px] flex flex-col w-auto min-w-[0px]">
                       <div id="question-post-body" className="w-full">
-                        {!$fetchData.isPending && (
+                        {$fetchData.data && (
                           <MDEditor.Markdown
                             source={$fetchData.data.data.body}
                           />
@@ -305,7 +302,7 @@ function QuestionDetail() {
                       </div>
                       <div className="mt-[24px] mb-[42px]">
                         <ul className="flex">
-                          {!$fetchData.isPending &&
+                          {$fetchData.data &&
                             $fetchData.data.data.tags.map((element, index) => {
                               return (
                                 <li className="mr-[6px]" key={index}>
@@ -367,7 +364,7 @@ function QuestionDetail() {
                                 id="question-user-action-time"
                                 className="mt-[1px] mb-[4px] text-[12px] text-[#6a737c]"
                               >
-                                {!$fetchData.isPending &&
+                                {$fetchData.data &&
                                   `asked ${timeForToday(
                                     $fetchData.data.data.createAt
                                   )}`}
@@ -391,7 +388,7 @@ function QuestionDetail() {
                                   to={ROUTE_PATH.MY_PAGE}
                                   className="text-[#157bce] hover:text-[#0e96ff]"
                                 >
-                                  {!$fetchData.isPending &&
+                                  {$fetchData.data &&
                                     $fetchData.data.data.displayName}
                                 </Link>
                                 <div>
@@ -418,7 +415,7 @@ function QuestionDetail() {
                     >
                       <div className="w-full mt-[12px] pb-[10px]">
                         <ul className="text-[13px] border-b-[1px] border-[#e4e6e8]">
-                          {!$fetchData.isPending &&
+                          {$fetchData.data &&
                             $fetchData.data.data.questionComments.map(
                               ({ comment, displayName, createAt }, index) => {
                                 return (
@@ -450,13 +447,13 @@ function QuestionDetail() {
               </div>
 
               <div id="answer" className="w-auto float-none pt-[10px]">
-                {!$fetchData.isPending && $fetchData.data.data.answers ? (
+                {$fetchData.data && $fetchData.data.data.answers ? (
                   <div
                     id="answers-header"
                     className="w-full mt-[10px] mb-[8px] flex items-center"
                   >
                     <div className="flex-auto">
-                      {!$fetchData.isPending &&
+                      {$fetchData.data &&
                         `${$fetchData.data.data.answers.length} Answers`}
                     </div>
                     <div className="flex text-[12px]">
@@ -482,7 +479,7 @@ function QuestionDetail() {
                     </div>
                   </div>
                 ) : null}
-                {!$fetchData.isPending &&
+                {$fetchData.data &&
                   $fetchData.data.data.answers.map((answer, index) => {
                     return (
                       <div
@@ -628,7 +625,7 @@ function QuestionDetail() {
                                     id="user-action-time"
                                     className="mt-[1px] mb-[4px] text-[12px] text-[#6a737c]"
                                   >
-                                    {!$fetchData.isPending &&
+                                    {$fetchData.data &&
                                       `answered ${timeForToday(
                                         answer.createAt
                                       )}`}

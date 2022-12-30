@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import BASE_URL from '../constants/baseUrl';
 import { fetchPost } from '../util/api';
 import BlueButton from './buttons/BlueButton';
 
