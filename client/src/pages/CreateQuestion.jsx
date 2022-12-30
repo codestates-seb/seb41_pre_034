@@ -6,8 +6,9 @@ import Tag from '../components/Tag';
 import { useSelector } from 'react-redux';
 import ROUTE_PATH from '../constants/routePath';
 import BASE_URL from '../constants/baseUrl';
+import { fetchPost } from '../util/api';
 
-function CreateQuestion(props) {
+function CreateQuestion() {
   const [tags, setTags] = useState([]);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('**Hello world!!!**');
@@ -28,20 +29,13 @@ function CreateQuestion(props) {
       return;
     }
 
-    const response = await fetch(BASE_URL + '/questions', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        Authorization: localStorage.getItem('Authorization'),
-        Refresh: localStorage.getItem('Refresh'),
-      },
-      body: JSON.stringify({
-        title,
-        body,
-        userId,
-        tags: tags.join(','),
-      }),
-    });
+    const data = {
+      title,
+      body,
+      userId,
+      tags: tags.join(','),
+    };
+    const response = await fetchPost('/questions', data);
 
     if (response.ok) {
       window.location.href = ROUTE_PATH.HOME;

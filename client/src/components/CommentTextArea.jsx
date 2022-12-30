@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import BASE_URL from '../constants/baseUrl';
+import { fetchPost } from '../util/api';
 import BlueButton from './buttons/BlueButton';
 
 function CommentTextArea({ questionId, answerId }) {
@@ -13,20 +14,14 @@ function CommentTextArea({ questionId, answerId }) {
 
   function handlePostCommentSubmit() {
     const url = questionId
-      ? `${BASE_URL}/question-comment/${questionId}`
-      : `${BASE_URL}/answer-comment/${answerId}`;
-    fetch(url, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        Authorization: localStorage.getItem('Authorization'),
-        Refresh: localStorage.getItem('Refresh'),
-      },
-      body: JSON.stringify({
-        comment,
-        userId,
-      }),
-    });
+      ? `/question-comment/${questionId}`
+      : `/answer-comment/${answerId}`;
+    const data = {
+      comment,
+      userId,
+    };
+
+    fetchPost(url, data);
   }
 
   return (

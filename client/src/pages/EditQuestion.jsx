@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ROUTE_PATH from '../constants/routePath';
 import BASE_URL from '../constants/baseUrl';
+import { fetchPatch } from '../util/api';
 
 function EditQuestion() {
   const { questionId } = useParams();
@@ -48,20 +49,13 @@ function EditQuestion() {
   async function handleSubmit(event) {
     event.preventDefault();
 
-    const response = await fetch(BASE_URL + '/questions/' + questionId, {
-      method: 'PATCH',
-      headers: {
-        'content-type': 'application/json',
-        Authorization: localStorage.getItem('Authorization'),
-        Refresh: localStorage.getItem('Refresh'),
-      },
-      body: JSON.stringify({
-        title,
-        body,
-        userId,
-        tags: tags.join(','),
-      }),
-    });
+    const data = {
+      title,
+      body,
+      userId,
+      tags: tags.join(','),
+    };
+    const response = await fetchPatch('/questions/', questionId, data);
 
     if (title.trim().length === 0) {
       alert('제목을 입력해주세요.');

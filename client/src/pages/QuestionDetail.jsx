@@ -11,7 +11,7 @@ import Tips from '../components/Tips';
 import useFetch from '../util/useFetch';
 import { timeForToday } from '../util/timeForToday';
 import MDEditor from '@uiw/react-md-editor';
-import { fetchDelete } from '../util/api';
+import { fetchDelete, fetchPatch, fetchPost } from '../util/api';
 import { useSelector } from 'react-redux';
 import basicProfile from '../assets/basicProfile.png';
 import BASE_URL from '../constants/baseUrl';
@@ -51,62 +51,41 @@ function QuestionDetail() {
 
   function deleteQuestion() {
     if (confirm('삭제하시겠습니까?')) {
-      fetchDelete('/questions/', questionId, {
-        'Content-Type': 'Application/json',
-        Authorization: localStorage.getItem('Authorization'),
-        Refresh: localStorage.getItem('Refresh'),
-      });
+      fetchDelete('/questions/', questionId);
     }
   }
 
   function addAnswer() {
-    fetch(BASE_URL + '/answers', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: localStorage.getItem('Authorization'),
-        Refresh: localStorage.getItem('Refresh'),
-      },
-      body: JSON.stringify({
-        userId,
-        questionId,
-        body: answer,
-      }),
-    }).catch((error) => console.log(error));
+    const data = {
+      userId,
+      questionId,
+      body: answer,
+    };
+    fetchPost('/answers', data);
   }
 
   function deleteAnswer({ target }) {
     if (confirm('답변을 삭제하시겠습니까?')) {
-      fetch(`${BASE_URL}/answers/${target.dataset.answerid}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: localStorage.getItem('Authorization'),
-          Refresh: localStorage.getItem('Refresh'),
-        },
-      })
-        .then(() => (window.location.href = ''))
-        .catch((error) => console.log(error));
+      fetchDelete('/answers/', target.dataset.answerid, '');
     }
   }
 
-  function selectAnswer({ target }) {
+  async function selectAnswer({ target }) {
     if (confirm('답변을 채택하시겠습니까?')) {
-      fetch(`${BASE_URL}/answers/${target.dataset.answerid}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: localStorage.getItem('Authorization'),
-          Refresh: localStorage.getItem('Refresh'),
-        },
-        body: JSON.stringify({
-          userId,
-          questionId,
-          check: true,
-        }),
-      })
-        .then(() => (window.location.href = ''))
-        .catch((error) => console.log(error));
+      const data = {
+        userId,
+        questionId,
+        check: true,
+      };
+      const response = await fetchPatch(
+        '/answers/',
+        target.dataset.answerid,
+        data
+      );
+
+      if (response.ok) {
+        window.location.href = '';
+      }
     }
   }
 
@@ -150,22 +129,14 @@ function QuestionDetail() {
 
   async function postVote(voteStatus, answerId) {
     const url = answerId
-      ? `${BASE_URL}/answer-vote/${answerId}`
-      : `${BASE_URL}/question-vote/${questionId}`;
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: localStorage.getItem('Authorization'),
-        Refresh: localStorage.getItem('Refresh'),
-      },
-      body: JSON.stringify({
-        userId,
-        voteStatus,
-      }),
-    });
+      ? `/answer-vote/${answerId}`
+      : `/question-vote/${questionId}`;
+    const data = {
+      userId,
+      voteStatus,
+    };
 
-    return response;
+    return await fetchPost(url, data);
   }
 
   async function patchVote(voteStatus, answerId) {
@@ -179,22 +150,14 @@ function QuestionDetail() {
         .find((answer) => answer.answerId === answerId)
         ?.answerVotes.find((answer) => answer.userId === userId) ?? '';
 
-    const url = answerId
-      ? `${BASE_URL}/answer-vote/vote/${answerVoteId}`
-      : `${BASE_URL}/question-vote/vote/${questionVoteId}`;
+    const url = answerId ? '/answer-vote/vote/' : '/question-vote/vote/';
+    const id = answerId ? answerVoteId : questionVoteId;
 
-    const response = await fetch(url, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: localStorage.getItem('Authorization'),
-        Refresh: localStorage.getItem('Refresh'),
-      },
-      body: JSON.stringify({
-        userId,
-        voteStatus,
-      }),
-    });
+    const bodyData = {
+      userId,
+      voteStatus,
+    };
+    const response = await fetchPatch(url, id, bodyData);
 
     let data;
     if (response.status !== 204) {
