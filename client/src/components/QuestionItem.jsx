@@ -16,7 +16,7 @@ function QuestionItem(props) {
         {props.questionStatus === 'CLOSED' ? (
           <div
             className={
-              'px-[5px] py-[1px] flex justify-end gap-x-1 items-center bg-[#2f6f44] border-[1px] border-[#2f6f44] text-[#ffffff] rounded px-[2px] font-[600]'
+              'py-[1px] flex justify-end gap-x-1 items-center bg-[#2f6f44] border-[1px] border-[#2f6f44] text-[#ffffff] rounded px-[5px] font-[600]'
             }
           >
             <svg
