@@ -1,7 +1,7 @@
 import BASE_URL from '../constants/baseUrl';
 
 export const fetchCreate = (url, data, redirectURL = '/') => {
-  fetch(url, {
+  fetch(BASE_URL + url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
@@ -15,7 +15,7 @@ export const fetchCreate = (url, data, redirectURL = '/') => {
 };
 
 export const fetchDelete = (url, id, headers, redirectURL = '/') => {
-  fetch(`${url}${id}`, {
+  fetch(`${BASE_URL}${url}${id}`, {
     method: 'DELETE',
     headers,
   })

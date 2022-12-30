@@ -51,7 +51,7 @@ function QuestionDetail() {
 
   function deleteQuestion() {
     if (confirm('삭제하시겠습니까?')) {
-      fetchDelete(BASE_URL + '/questions/', questionId, {
+      fetchDelete('/questions/', questionId, {
         'Content-Type': 'Application/json',
         Authorization: localStorage.getItem('Authorization'),
         Refresh: localStorage.getItem('Refresh'),
