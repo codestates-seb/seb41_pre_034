@@ -44,28 +44,7 @@ function SearchResult() {
       return;
     }
 
-    if (response.status === 401) {
-      alert('로그인 후 질문을 작성할 수 있습니다.');
-      window.location.href = ROUTE_PATH.LOGIN;
-
-      return;
-    }
-
-    if (response.status === 403) {
-      const response = await fetch(BASE_URL + '/auth/reissuetoken');
-
-      if (!response.ok) {
-        window.location.href = ROUTE_PATH.LOGIN;
-
-        return;
-      }
-
-      const authorization = response.headers.get('Authorization');
-      const refresh = response.headers.get('Refresh');
-
-      localStorage.setItem('Authorization', authorization);
-      localStorage.setItem('Refresh', refresh);
-    }
+    handleConfirmLogin(response.status, handleConfirmLogin);
   }
 
   return (

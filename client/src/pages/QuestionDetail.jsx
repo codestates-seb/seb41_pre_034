@@ -15,6 +15,7 @@ import { fetchDelete, fetchPatch, fetchPost } from '../util/api';
 import { useSelector } from 'react-redux';
 import basicProfile from '../assets/basicProfile.png';
 import CommentTextArea from '../components/CommentTextArea';
+import handleAuthError from '../exception/handleAuthError';
 
 function AddComment({ questionId, answerId }) {
   const [isOpenCommentInput, setIsOpenCommentInput] = useState(false);
@@ -54,13 +55,22 @@ function QuestionDetail() {
     }
   }
 
-  function addAnswer() {
+  async function addAnswer(e) {
+    e.preventDefault();
     const data = {
       userId,
       questionId,
       body: answer,
     };
-    fetchPost('/answers', data);
+    const response = await fetchPost('/answers', data);
+
+    if (response.ok) {
+      window.location.reload();
+    }
+
+    if (response.status >= 400 && response.status < 500) {
+      handleAuthError(response.status, addAnswer);
+    }
   }
 
   function deleteAnswer({ target }) {

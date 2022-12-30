@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import ROUTE_PATH from '../constants/routePath';
 import BASE_URL from '../constants/baseUrl';
 import { fetchPost } from '../util/api';
+import handleAuthError from '../exception/handleAuthError';
 
 function CreateQuestion() {
   const [tags, setTags] = useState([]);
@@ -43,23 +44,7 @@ function CreateQuestion() {
       return;
     }
 
-    if (response.status === 403) {
-      const response = await fetch(BASE_URL + '/auth/reissuetoken');
-
-      if (!response.ok) {
-        window.location.href = ROUTE_PATH.LOGIN;
-
-        return;
-      }
-
-      const authorization = response.headers.get('Authorization');
-      const refresh = response.headers.get('Refresh');
-
-      localStorage.setItem('Authorization', authorization);
-      localStorage.setItem('Refresh', refresh);
-
-      alert('엑세스 토큰이 재발급 되었습니다.');
-    }
+    handleAuthError(response.status, handleSubmit);
   }
 
   function removeTags(indexToRemove) {
