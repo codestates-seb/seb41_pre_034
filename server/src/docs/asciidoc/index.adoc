@@ -27,3 +27,178 @@ include::{snippets}/get-home/response-body.adoc[]
 
 .response-fields
 include::{snippets}/get-home/response-fields.adoc[]
+
+== UserController
+=== 회원 생성
+
+- 회원 생성
+
+.curl-request
+include::{snippets}/postUsers/curl-request.adoc[]
+
+.http-request
+include::{snippets}/postUsers/http-request.adoc[]
+
+.http-response
+include::{snippets}/postUsers/http-response.adoc[]
+
+.response-body
+include::{snippets}/postUsers/response-body.adoc[]
+
+.response-fields
+include::{snippets}/postUsers/response-fields.adoc[]
+
+
+=== 회원 단건 조회
+
+- 회원 단건 조회.
+- 파라미터로 User ID를 전송 받음.
+
+.curl-request
+include::{snippets}/getUser/curl-request.adoc[]
+
+.http-request
+include::{snippets}/getUser/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/getUser/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/getUser/request-headers.adoc[]
+
+.http-response
+include::{snippets}/getUser/http-response.adoc[]
+
+.response-body
+include::{snippets}/getUser/response-body.adoc[]
+
+.response-fields
+include::{snippets}/getUser/response-fields.adoc[]
+
+=== 회원 전체 조회
+
+- 1페이지 회원 전체 조회.
+- 페이지는 0부터 시작.
+
+.curl-request
+include::{snippets}/getUsers/curl-request.adoc[]
+
+.http-request
+include::{snippets}/getUsers/http-request.adoc[]
+
+.request-parameters
+include::{snippets}/getUsers/request-parameters.adoc[]
+
+.http-response
+include::{snippets}/getUsers/http-response.adoc[]
+
+.response-body
+include::{snippets}/getUsers/response-body.adoc[]
+
+.response-fields
+include::{snippets}/getUsers/response-fields.adoc[]
+
+
+=== 회원 정보 수정
+
+- 회원 정보 수정
+- 파라미터로 User ID를 전송 받음
+
+.curl-request
+include::{snippets}/patchUser/curl-request.adoc[]
+
+.http-request
+include::{snippets}/patchUser/http-request.adoc[]
+
+.http-request
+include::{snippets}/patchUser/request-fields.adoc[]
+
+.path-parameters
+include::{snippets}/patchUser/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/patchUser/request-headers.adoc[]
+
+.http-response
+include::{snippets}/patchUser/http-response.adoc[]
+
+.response-body
+include::{snippets}/patchUser/response-body.adoc[]
+
+.response-fields
+include::{snippets}/patchUser/response-fields.adoc[]
+
+
+=== 회원 삭제
+
+- 회원 삭제
+- 파라미터로 User ID를 전송 받음
+
+
+.curl-request
+include::{snippets}/deleteUser/curl-request.adoc[]
+
+.http-request
+include::{snippets}/deleteUser/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/deleteUser/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/deleteUser/request-headers.adoc[]
+
+.http-response
+include::{snippets}/deleteUser/http-response.adoc[]
+
+
+== TagController
+=== 태그를 포함한 질문 전체 조회
+
+- 태그 단건을 포함한 질문을 1페이지 전체 조회
+- 파라미터로 Tag ID를 전송 받음
+- 요청 페이지는 0부터 시작.
+
+.curl-request
+include::{snippets}/getQuestionByTag/curl-request.adoc[]
+
+.http-request
+include::{snippets}/getQuestionByTag/http-request.adoc[]
+
+.request-parameters
+include::{snippets}/getQuestionByTag/request-parameters.adoc[]
+
+.path-parameters
+include::{snippets}/getQuestionByTag/path-parameters.adoc[]
+
+.http-response
+include::{snippets}/getQuestionByTag/http-response.adoc[]
+
+.response-body
+include::{snippets}/getQuestionByTag/response-body.adoc[]
+
+.response-fields
+include::{snippets}/getQuestionByTag/response-fields.adoc[]
+
+=== 태그 전체 조회
+
+- 1 페이지 태그 전체 조회
+- 요청 페이지는 0부터 시작
+
+.curl-request
+include::{snippets}/getTags/curl-request.adoc[]
+
+.http-request
+include::{snippets}/getTags/http-request.adoc[]
+
+.request-parameters
+include::{snippets}/getTags/request-parameters.adoc[]
+
+.http-response
+include::{snippets}/getTags/http-response.adoc[]
+
+.response-body
+include::{snippets}/getTags/response-body.adoc[]
+
+.response-fields
+include::{snippets}/getTags/response-fields.adoc[]
+
