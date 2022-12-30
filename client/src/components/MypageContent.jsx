@@ -202,9 +202,15 @@ function MypageContent() {
                     className="first:rounded-t-md last:rounded-b-md w-full h-[40px] flex justify-between items-center bg-[#ffff] border-[1px] border-[#D6D9DC]"
                   >
                     <div className="flex justify-evenly w-[500px]">
-                      <div className="text-center text-[13px] mx-[2px] w-[40px] border-[1px] border-[#D6D9DC]">
-                        {el.answerCounting}
-                      </div>
+                      {el.questionStatus === 'OPENED' ? (
+                        <div className="text-center rounded-[3px] text-[13px] mx-[2px] w-[40px] border-[1px] border-[#D6D9DC]">
+                          {el.answerCounting}
+                        </div>
+                      ) : (
+                        <div className="text-center text-[13px] mx-[2px] w-[40px] rounded-[3px] bg-[#2f6f44] border-[1px] border-[#2f6f44] text-[#ffffff]">
+                          {el.answerCounting}
+                        </div>
+                      )}
                       <Link
                         to={`/detail/${el.questionId}`}
                         className="line-clamp-1 text-[13px] w-[400px] mx-[2px]"
