@@ -1,29 +1,822 @@
-= Stack Overflow
+= Stack Overflow Clone Project
 :sectnums:
 :toc: left
 :toclevels: 4
 :toc-title: Table of Contents
 :source-highlighter: prettify
 
-E2I4 <test@test.com>
+E2I4 - StackOverflow Clone Project
 
-v1.0.0, 2022.12.20
+v1.0.0, 2022.12.31
+
+- 배포 주소
+
+<http://ec2-43-200-176-112.ap-northeast-2.compute.amazonaws.com:8080/>
+
+== E2I4 팀원
+
+- 프론트 - 강진원, 김민경, 전성훈
+- 백엔드 - 김원도, 이수영, 최유진
 
 
-== HomeController
-=== TEST
+
+
+== Users
+=== 회원 생성
+
+- 회원 생성
 
 .curl-request
-include::{snippets}/get-home/curl-request.adoc[]
+include::{snippets}/postUsers/curl-request.adoc[]
 
 .http-request
-include::{snippets}/get-home/http-request.adoc[]
+include::{snippets}/postUsers/http-request.adoc[]
 
 .http-response
-include::{snippets}/get-home/http-response.adoc[]
+include::{snippets}/postUsers/http-response.adoc[]
 
 .response-body
-include::{snippets}/get-home/response-body.adoc[]
+include::{snippets}/postUsers/response-body.adoc[]
 
 .response-fields
-include::{snippets}/get-home/response-fields.adoc[]
+include::{snippets}/postUsers/response-fields.adoc[]
+
+
+=== 회원 단건 조회
+
+- 회원 단건 조회.
+- 파라미터로 User ID를 전송 받음.
+
+.curl-request
+include::{snippets}/getUser/curl-request.adoc[]
+
+.http-request
+include::{snippets}/getUser/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/getUser/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/getUser/request-headers.adoc[]
+
+.http-response
+include::{snippets}/getUser/http-response.adoc[]
+
+.response-body
+include::{snippets}/getUser/response-body.adoc[]
+
+.response-fields
+include::{snippets}/getUser/response-fields.adoc[]
+
+=== 회원 전체 조회
+
+- 1페이지 회원 전체 조회.
+- 페이지는 0부터 시작.
+
+.curl-request
+include::{snippets}/getUsers/curl-request.adoc[]
+
+.http-request
+include::{snippets}/getUsers/http-request.adoc[]
+
+.request-parameters
+include::{snippets}/getUsers/request-parameters.adoc[]
+
+.http-response
+include::{snippets}/getUsers/http-response.adoc[]
+
+.response-body
+include::{snippets}/getUsers/response-body.adoc[]
+
+.response-fields
+include::{snippets}/getUsers/response-fields.adoc[]
+
+
+=== 회원 정보 수정
+
+- 회원 정보 수정
+- 파라미터로 User ID를 전송 받음
+
+.curl-request
+include::{snippets}/patchUser/curl-request.adoc[]
+
+.http-request
+include::{snippets}/patchUser/http-request.adoc[]
+
+.http-request
+include::{snippets}/patchUser/request-fields.adoc[]
+
+.path-parameters
+include::{snippets}/patchUser/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/patchUser/request-headers.adoc[]
+
+.http-response
+include::{snippets}/patchUser/http-response.adoc[]
+
+.response-body
+include::{snippets}/patchUser/response-body.adoc[]
+
+.response-fields
+include::{snippets}/patchUser/response-fields.adoc[]
+
+
+=== 회원 삭제
+
+- 회원 삭제
+- 파라미터로 User ID를 전송 받음
+
+
+.curl-request
+include::{snippets}/deleteUser/curl-request.adoc[]
+
+.http-request
+include::{snippets}/deleteUser/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/deleteUser/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/deleteUser/request-headers.adoc[]
+
+.http-response
+include::{snippets}/deleteUser/http-response.adoc[]
+
+
+== Tags
+=== 태그를 포함한 질문 전체 조회
+
+- 태그 단건을 포함한 질문을 1페이지 전체 조회
+- 파라미터로 Tag ID를 전송 받음
+- 요청 페이지는 0부터 시작.
+
+.curl-request
+include::{snippets}/getQuestionByTag/curl-request.adoc[]
+
+.http-request
+include::{snippets}/getQuestionByTag/http-request.adoc[]
+
+.request-parameters
+include::{snippets}/getQuestionByTag/request-parameters.adoc[]
+
+.path-parameters
+include::{snippets}/getQuestionByTag/path-parameters.adoc[]
+
+.http-response
+include::{snippets}/getQuestionByTag/http-response.adoc[]
+
+.response-body
+include::{snippets}/getQuestionByTag/response-body.adoc[]
+
+.response-fields
+include::{snippets}/getQuestionByTag/response-fields.adoc[]
+
+=== 태그 전체 조회
+
+- 1 페이지 태그 전체 조회
+- 요청 페이지는 0부터 시작
+
+.curl-request
+include::{snippets}/getTags/curl-request.adoc[]
+
+.http-request
+include::{snippets}/getTags/http-request.adoc[]
+
+.request-parameters
+include::{snippets}/getTags/request-parameters.adoc[]
+
+.http-response
+include::{snippets}/getTags/http-response.adoc[]
+
+.response-body
+include::{snippets}/getTags/response-body.adoc[]
+
+.response-fields
+include::{snippets}/getTags/response-fields.adoc[]
+
+
+== Search
+=== 질문 검색
+
+- page=0&keyWord=test&tag=java&displayName=test
+- 파라미터를 전송하여 질문 검색
+- 페이지는 0부터 시작
+- keyWord는 질문과 질문 Body의 내용에 포함된 질문들을 검색
+- tag는 해당 태그를 가지고 있거나 포함하고 있는 질문들을 검색
+- displayName은 해당 닉네임의 사용자가 작성한 질문 검색
+
+.curl-request
+include::{snippets}/getSearchParam/curl-request.adoc[]
+
+.http-request
+include::{snippets}/getSearchParam/http-request.adoc[]
+
+.request-parameters
+include::{snippets}/getSearchParam/request-parameters.adoc[]
+
+.http-response
+include::{snippets}/getSearchParam/http-response.adoc[]
+
+.response-body
+include::{snippets}/getSearchParam/response-body.adoc[]
+
+.response-fields
+include::{snippets}/getSearchParam/response-fields.adoc[]
+
+=== 태그 검색
+
+- page=0&tag=java
+- 파라미터를 전송 받아 태그를 검색
+- 페이지는 0부터 시작
+- tag는 해당 단어를 포함하거나 단어에 해당하는 태그들을 검색
+
+.curl-request
+include::{snippets}/getSearchTag/curl-request.adoc[]
+
+.http-request
+include::{snippets}/getSearchTag/http-request.adoc[]
+
+.request-parameters
+include::{snippets}/getSearchTag/request-parameters.adoc[]
+
+.http-response
+include::{snippets}/getSearchTag/http-response.adoc[]
+
+.response-body
+include::{snippets}/getSearchTag/response-body.adoc[]
+
+.response-fields
+include::{snippets}/getSearchTag/response-fields.adoc[]
+
+
+== Questions
+=== 질문 단건 조회
+
+- 질문 단건 조회.
+- 파라미터로 Question ID를 전송 받음.
+
+.curl-request
+include::{snippets}/getQuestion/curl-request.adoc[]
+
+.http-request
+include::{snippets}/getQuestion/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/getQuestion/path-parameters.adoc[]
+
+.http-response
+include::{snippets}/getQuestion/http-response.adoc[]
+
+.response-fields
+include::{snippets}/getQuestion/response-fields.adoc[]
+
+
+=== 질문 생성
+
+
+.curl-request
+include::{snippets}/postQuestion/curl-request.adoc[]
+
+.http-request
+include::{snippets}/postQuestion/http-request.adoc[]
+
+.request-headers
+include::{snippets}/postQuestion/request-headers.adoc[]
+
+.request-fields
+include::{snippets}/patchQuestion/request-fields.adoc[]
+
+.http-response
+include::{snippets}/postQuestion/http-response.adoc[]
+
+.response-body
+include::{snippets}/postQuestion/response-body.adoc[]
+
+.response-fields
+include::{snippets}/postQuestion/response-fields.adoc[]
+
+
+=== 질문 수정
+
+- 질문 수정.
+- 파라미터로 Question ID를 전송 받음.
+
+.curl-request
+include::{snippets}/patchQuestion/curl-request.adoc[]
+
+.http-request
+include::{snippets}/patchQuestion/http-request.adoc[]
+
+.request-fields
+include::{snippets}/patchQuestion/request-fields.adoc[]
+
+.path-parameters
+include::{snippets}/patchQuestion/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/patchQuestion/request-headers.adoc[]
+
+.http-response
+include::{snippets}/patchQuestion/http-response.adoc[]
+
+.response-fields
+include::{snippets}/patchQuestion/response-fields.adoc[]
+
+
+=== 질문 전체 조회
+
+- 페이지는 0 부터 시작
+
+.curl-request
+include::{snippets}/getQuestions/curl-request.adoc[]
+
+.http-request
+include::{snippets}/getQuestions/http-request.adoc[]
+
+.http-response
+include::{snippets}/getQuestions/http-response.adoc[]
+
+.response-body
+include::{snippets}/getQuestions/response-body.adoc[]
+
+.response-fields
+include::{snippets}/getQuestions/response-fields.adoc[]
+
+
+=== 질문 삭제
+
+- 질문 삭제.
+- 파라미터로 Question ID를 전송 받음.
+
+.curl-request
+include::{snippets}/deleteQuestion/curl-request.adoc[]
+
+.http-request
+include::{snippets}/deleteQuestion/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/deleteQuestion/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/deleteQuestion/request-headers.adoc[]
+
+.http-response
+include::{snippets}/deleteQuestion/http-response.adoc[]
+
+
+== Question Comment
+=== 질문 코멘트 생성
+
+.curl-request
+include::{snippets}/postQuestionComment/curl-request.adoc[]
+
+.http-request
+include::{snippets}/postQuestionComment/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/postQuestionComment/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/postQuestionComment/request-headers.adoc[]
+
+.request-fields
+include::{snippets}/postQuestionComment/request-fields.adoc[]
+
+.http-response
+include::{snippets}/postQuestionComment/http-response.adoc[]
+
+.response-body
+include::{snippets}/postQuestionComment/response-body.adoc[]
+
+.response-fields
+include::{snippets}/postQuestionComment/response-fields.adoc[]
+
+
+=== 질문 코멘트 수정
+
+.curl-request
+include::{snippets}/patchQuestionComment/curl-request.adoc[]
+
+.http-request
+include::{snippets}/patchQuestionComment/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/patchQuestionComment/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/patchQuestionComment/request-headers.adoc[]
+
+.request-fields
+include::{snippets}/patchQuestionComment/request-fields.adoc[]
+
+.http-response
+include::{snippets}/patchQuestionComment/http-response.adoc[]
+
+.response-body
+include::{snippets}/patchQuestionComment/response-body.adoc[]
+
+.response-fields
+include::{snippets}/patchQuestionComment/response-fields.adoc[]
+
+=== 질문 코멘트 삭제
+
+.curl-request
+include::{snippets}/deleteQuestionComment/curl-request.adoc[]
+
+.http-request
+include::{snippets}/deleteQuestionComment/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/deleteQuestionComment/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/deleteQuestionComment/request-headers.adoc[]
+
+.http-response
+include::{snippets}/deleteQuestionComment/http-response.adoc[]
+
+
+
+== Question Vote
+=== 질문 추천 생성
+
+.curl-request
+include::{snippets}/postQuestionVote/curl-request.adoc[]
+
+.http-request
+include::{snippets}/postQuestionVote/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/postQuestionVote/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/postQuestionVote/request-headers.adoc[]
+
+.request-fields
+include::{snippets}/postQuestionVote/request-fields.adoc[]
+
+.http-response
+include::{snippets}/postQuestionVote/http-response.adoc[]
+
+.response-body
+include::{snippets}/postQuestionVote/response-body.adoc[]
+
+.response-fields
+include::{snippets}/postQuestionVote/response-fields.adoc[]
+
+
+=== 질문 추천 수정 - 200 OK
+
+.curl-request
+include::{snippets}/patchOkQuestionVote/curl-request.adoc[]
+
+.http-request
+include::{snippets}/patchOkQuestionVote/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/patchOkQuestionVote/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/patchOkQuestionVote/request-headers.adoc[]
+
+.request-fields
+include::{snippets}/patchOkQuestionVote/request-fields.adoc[]
+
+.http-response
+include::{snippets}/patchOkQuestionVote/http-response.adoc[]
+
+.response-body
+include::{snippets}/patchOkQuestionVote/response-body.adoc[]
+
+.response-fields
+include::{snippets}/patchOkQuestionVote/response-fields.adoc[]
+
+=== 질문 추천 수정 - 204
+
+.curl-request
+include::{snippets}/patchNoContentQuestionVote/curl-request.adoc[]
+
+.http-request
+include::{snippets}/patchNoContentQuestionVote/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/patchNoContentQuestionVote/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/patchNoContentQuestionVote/request-headers.adoc[]
+
+.request-fields
+include::{snippets}/patchNoContentQuestionVote/request-fields.adoc[]
+
+.http-response
+include::{snippets}/patchNoContentQuestionVote/http-response.adoc[]
+
+
+== Answers
+=== 답변 생성
+
+
+.curl-request
+include::{snippets}/postAnswer/curl-request.adoc[]
+
+.http-request
+include::{snippets}/postAnswer/http-request.adoc[]
+
+.request-headers
+include::{snippets}/postAnswer/request-headers.adoc[]
+
+.request-fields
+include::{snippets}/postAnswer/request-fields.adoc[]
+
+.http-response
+include::{snippets}/postAnswer/http-response.adoc[]
+
+.response-body
+include::{snippets}/postAnswer/response-body.adoc[]
+
+.response-fields
+include::{snippets}/postAnswer/response-fields.adoc[]
+
+=== 답변 수정
+
+- 답변 수정.
+- 파라미터로 Answer ID를 전송 받음.
+
+.curl-request
+include::{snippets}/patchAnswer/curl-request.adoc[]
+
+.http-request
+include::{snippets}/patchAnswer/http-request.adoc[]
+
+.request-fields
+include::{snippets}/patchAnswer/request-fields.adoc[]
+
+.path-parameters
+include::{snippets}/patchAnswer/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/patchAnswer/request-headers.adoc[]
+
+.http-response
+include::{snippets}/patchAnswer/http-response.adoc[]
+
+.response-fields
+include::{snippets}/patchAnswer/response-fields.adoc[]
+
+
+=== 답변 삭제
+
+- 답변 삭제.
+- 파라미터로 Answer ID를 전송 받음.
+
+.curl-request
+include::{snippets}/deleteAnswer/curl-request.adoc[]
+
+.http-request
+include::{snippets}/deleteAnswer/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/deleteAnswer/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/deleteAnswer/request-headers.adoc[]
+
+.http-response
+include::{snippets}/deleteAnswer/http-response.adoc[]
+
+
+== Answer Comment
+=== 답변 코멘트 생성
+
+.curl-request
+include::{snippets}/postAnswerComment/curl-request.adoc[]
+
+.http-request
+include::{snippets}/postAnswerComment/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/postAnswerComment/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/postAnswerComment/request-headers.adoc[]
+
+.request-fields
+include::{snippets}/postAnswerComment/request-fields.adoc[]
+
+.http-response
+include::{snippets}/postAnswerComment/http-response.adoc[]
+
+.response-body
+include::{snippets}/postAnswerComment/response-body.adoc[]
+
+.response-fields
+include::{snippets}/postAnswerComment/response-fields.adoc[]
+
+
+=== 답변 코멘트 수정
+
+.curl-request
+include::{snippets}/patchAnswerComment/curl-request.adoc[]
+
+.http-request
+include::{snippets}/patchAnswerComment/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/patchAnswerComment/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/patchAnswerComment/request-headers.adoc[]
+
+.request-fields
+include::{snippets}/patchAnswerComment/request-fields.adoc[]
+
+.http-response
+include::{snippets}/patchAnswerComment/http-response.adoc[]
+
+.response-body
+include::{snippets}/patchAnswerComment/response-body.adoc[]
+
+.response-fields
+include::{snippets}/patchAnswerComment/response-fields.adoc[]
+
+
+=== 답변 코멘트 삭제
+
+.curl-request
+include::{snippets}/deleteAnswerComment/curl-request.adoc[]
+
+.http-request
+include::{snippets}/deleteAnswerComment/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/deleteAnswerComment/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/deleteAnswerComment/request-headers.adoc[]
+
+.http-response
+include::{snippets}/deleteAnswerComment/http-response.adoc[]
+
+
+== Answer Vote
+=== 답변 추천 생성
+
+.curl-request
+include::{snippets}/postAnswerVote/curl-request.adoc[]
+
+.http-request
+include::{snippets}/postAnswerVote/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/postAnswerVote/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/postAnswerVote/request-headers.adoc[]
+
+.request-fields
+include::{snippets}/postAnswerVote/request-fields.adoc[]
+
+.http-response
+include::{snippets}/postAnswerVote/http-response.adoc[]
+
+.response-body
+include::{snippets}/postAnswerVote/response-body.adoc[]
+
+.response-fields
+include::{snippets}/postAnswerVote/response-fields.adoc[]
+
+=== 답변 추천 수정 - 200 OK
+
+.curl-request
+include::{snippets}/patchOkAnswerVote/curl-request.adoc[]
+
+.http-request
+include::{snippets}/patchOkAnswerVote/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/patchOkAnswerVote/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/patchOkAnswerVote/request-headers.adoc[]
+
+.request-fields
+include::{snippets}/patchOkAnswerVote/request-fields.adoc[]
+
+.http-response
+include::{snippets}/patchOkAnswerVote/http-response.adoc[]
+
+.response-body
+include::{snippets}/patchOkAnswerVote/response-body.adoc[]
+
+.response-fields
+include::{snippets}/patchOkAnswerVote/response-fields.adoc[]
+
+=== 질문 추천 수정 - 204
+
+.curl-request
+include::{snippets}/patchNoContentAnswerVote/curl-request.adoc[]
+
+.http-request
+include::{snippets}/patchNoContentAnswerVote/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/patchNoContentAnswerVote/path-parameters.adoc[]
+
+.request-headers
+include::{snippets}/patchNoContentAnswerVote/request-headers.adoc[]
+
+.request-fields
+include::{snippets}/patchNoContentAnswerVote/request-fields.adoc[]
+
+.http-response
+include::{snippets}/patchNoContentAnswerVote/http-response.adoc[]
+
+== Auth
+=== 로그인 상태 확인 - OK
+
+.curl-request
+include::{snippets}/verifyUserOk/curl-request.adoc[]
+
+.http-request
+include::{snippets}/verifyUserOk/http-request.adoc[]
+
+.request-headers
+include::{snippets}/verifyUserOk/request-headers.adoc[]
+
+.http-response
+include::{snippets}/verifyUserOk/http-response.adoc[]
+
+
+=== 로그인 상태 확인 - AccessToken 만료
+
+.curl-request
+include::{snippets}/verifyUserException/curl-request.adoc[]
+
+.http-request
+include::{snippets}/verifyUserException/http-request.adoc[]
+
+.request-headers
+include::{snippets}/verifyUserException/request-headers.adoc[]
+
+.http-response
+include::{snippets}/verifyUserException/http-response.adoc[]
+
+.response-body
+include::{snippets}/verifyUserException/response-body.adoc[]
+
+.response-fields
+include::{snippets}/verifyUserException/response-fields.adoc[]
+
+=== 토큰 재발급 - OK
+
+- Response Header로 응답 받은 Token의 Key,Value 값을 사용합니다.
+
+.curl-request
+include::{snippets}/refreshOk/curl-request.adoc[]
+
+.http-request
+include::{snippets}/refreshOk/http-request.adoc[]
+
+.request-headers
+include::{snippets}/refreshOk/request-headers.adoc[]
+
+.http-response
+include::{snippets}/refreshOk/http-response.adoc[]
+
+.response-headers
+include::{snippets}/refreshOk/response-headers.adoc[]
+
+=== 토큰 재발급 - Refresh Token 만료
+
+.curl-request
+include::{snippets}/refreshExpired/curl-request.adoc[]
+
+.http-request
+include::{snippets}/refreshExpired/http-request.adoc[]
+
+.request-headers
+include::{snippets}/refreshExpired/request-headers.adoc[]
+
+.http-response
+include::{snippets}/refreshExpired/http-response.adoc[]
+
+.response-body
+include::{snippets}/refreshExpired/response-body.adoc[]
+
+.response-fields
+include::{snippets}/refreshExpired/response-fields.adoc[]
+
+=== 로그아웃 - OK
+
+.curl-request
+include::{snippets}/logoutOk/curl-request.adoc[]
+
+.http-request
+include::{snippets}/logoutOk/http-request.adoc[]
+
+.request-headers
+include::{snippets}/logoutOk/request-headers.adoc[]
+
+.http-response
+include::{snippets}/logoutOk/http-response.adoc[]

@@ -13,6 +13,7 @@ import com.preproject.server.constant.QuestionStatus;
 import com.preproject.server.constant.VoteStatus;
 import com.preproject.server.question.entity.Question;
 import com.preproject.server.user.entity.User;
+import com.preproject.server.util.ApiDocumentUtils;
 import com.preproject.server.utils.JwtAuthorityUtils;
 import com.preproject.server.utils.JwtTokenizer;
 import org.junit.jupiter.api.DisplayName;
@@ -24,17 +25,25 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.headers.HeaderDocumentation;
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.restdocs.payload.PayloadDocumentation;
+import org.springframework.restdocs.request.RequestDocumentation;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -74,18 +83,45 @@ class AnswerVoteControllerTest {
                 .willReturn(responseDto);
         String content = gson.toJson(postDto);
         RequestBuilder result = RestDocumentationRequestBuilders
-                .post("/answer-vote/"+ answerId)
+                .post("/answer-vote/{answerId}", answerId)
+                .header("Authorization","AccessToken")
+                .header("Refresh","RefreshToken")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .characterEncoding(StandardCharsets.UTF_8.displayName())
-                .with(csrf());
+                .characterEncoding(StandardCharsets.UTF_8.displayName());
         // Then
         mockMvc.perform(result)
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.data.userId").value(responseDto.getUserId()))
                 .andExpect(jsonPath("$.data.voteStatus").value(responseDto.getVoteStatus()))
-                .andExpect(jsonPath("$.data.answerVoteId").value(responseDto.getAnswerVoteId()));
+                .andExpect(jsonPath("$.data.answerVoteId").value(responseDto.getAnswerVoteId()))
+                .andDo(MockMvcRestDocumentation.document("postAnswerVote",
+                        ApiDocumentUtils.getRequestPreProcessor(),
+                        ApiDocumentUtils.getResponsePreProcessor(),
+                        RequestDocumentation.pathParameters(
+                                parameterWithName("answerId").description("답변 식별자")
+                        ),
+                        HeaderDocumentation.requestHeaders(
+                                headerWithName("Authorization").description("AccessToken"),
+                                headerWithName("Refresh").description("RefreshToken")
+                        ),
+                        PayloadDocumentation.requestFields(
+                                List.of(
+                                        fieldWithPath("userId").type(JsonFieldType.NUMBER).description("회원 식별자"),
+                                        fieldWithPath("voteStatus").type(JsonFieldType.STRING).description("추천 상태 (UP/DOWN)")
+                                )
+
+                        ),
+                        PayloadDocumentation.responseFields(
+                                List.of(
+                                        fieldWithPath("data").type(JsonFieldType.OBJECT).description("결과 데이터"),
+                                        fieldWithPath("data.answerVoteId").type(JsonFieldType.NUMBER).description("답변 추천 식별자"),
+                                        fieldWithPath("data.userId").type(JsonFieldType.NUMBER).description("답변 추천 회원 식별자"),
+                                        fieldWithPath("data.voteStatus").type(JsonFieldType.STRING).description("답변 추천 상태(UP/NONE/DOWN)")
+                                )
+
+                        )));
     }
 
     @Test
@@ -106,18 +142,45 @@ class AnswerVoteControllerTest {
                 .willReturn(responseDto);
         String content = gson.toJson(patchDto);
         RequestBuilder result = RestDocumentationRequestBuilders
-                .patch("/answer-vote/vote/"+ answerVoteId)
+                .patch("/answer-vote/vote/{answerVoteId}", answerVoteId)
+                .header("Authorization","AccessToken")
+                .header("Refresh","RefreshToken")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .characterEncoding(StandardCharsets.UTF_8.displayName())
-                .with(csrf());
+                .characterEncoding(StandardCharsets.UTF_8.displayName());
         // Then
         mockMvc.perform(result)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.userId").value(responseDto.getUserId()))
                 .andExpect(jsonPath("$.data.voteStatus").value(responseDto.getVoteStatus()))
-                .andExpect(jsonPath("$.data.answerVoteId").value(responseDto.getAnswerVoteId()));
+                .andExpect(jsonPath("$.data.answerVoteId").value(responseDto.getAnswerVoteId()))
+                .andDo(MockMvcRestDocumentation.document("patchOkAnswerVote",
+                        ApiDocumentUtils.getRequestPreProcessor(),
+                        ApiDocumentUtils.getResponsePreProcessor(),
+                        RequestDocumentation.pathParameters(
+                                parameterWithName("answerVoteId").description("답변 추천 식별자")
+                        ),
+                        HeaderDocumentation.requestHeaders(
+                                headerWithName("Authorization").description("AccessToken"),
+                                headerWithName("Refresh").description("RefreshToken")
+                        ),
+                        PayloadDocumentation.requestFields(
+                                List.of(
+                                        fieldWithPath("userId").type(JsonFieldType.NUMBER).description("회원 식별자"),
+                                        fieldWithPath("voteStatus").type(JsonFieldType.STRING).description("추천 상태 (UP/DOWN)")
+                                )
+
+                        ),
+                        PayloadDocumentation.responseFields(
+                                List.of(
+                                        fieldWithPath("data").type(JsonFieldType.OBJECT).description("결과 데이터"),
+                                        fieldWithPath("data.answerVoteId").type(JsonFieldType.NUMBER).description("답변 추천 식별자"),
+                                        fieldWithPath("data.userId").type(JsonFieldType.NUMBER).description("답변 추천 회원 식별자"),
+                                        fieldWithPath("data.voteStatus").type(JsonFieldType.STRING).description("답변 추천 상태(UP/NONE/DOWN)")
+                                )
+
+                        )));
     }
 
     @Test
@@ -136,15 +199,33 @@ class AnswerVoteControllerTest {
                 .willReturn(testAnswerVote);
         String content = gson.toJson(patchDto);
         RequestBuilder result = RestDocumentationRequestBuilders
-                .patch("/answer-vote/vote/"+ answerVoteId)
+                .patch("/answer-vote/vote/{answerVoteId}", answerVoteId)
+                .header("Authorization","AccessToken")
+                .header("Refresh","RefreshToken")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .characterEncoding(StandardCharsets.UTF_8.displayName())
-                .with(csrf());
+                .characterEncoding(StandardCharsets.UTF_8.displayName());
         // Then
         mockMvc.perform(result)
-                .andExpect(status().isNoContent());
+                .andExpect(status().isNoContent())
+                .andDo(MockMvcRestDocumentation.document("patchNoContentAnswerVote",
+                        ApiDocumentUtils.getRequestPreProcessor(),
+                        ApiDocumentUtils.getResponsePreProcessor(),
+                        RequestDocumentation.pathParameters(
+                                parameterWithName("answerVoteId").description("답변 추천 식별자")
+                        ),
+                        HeaderDocumentation.requestHeaders(
+                                headerWithName("Authorization").description("AccessToken"),
+                                headerWithName("Refresh").description("RefreshToken")
+                        ),
+                        PayloadDocumentation.requestFields(
+                                List.of(
+                                        fieldWithPath("userId").type(JsonFieldType.NUMBER).description("회원 식별자"),
+                                        fieldWithPath("voteStatus").type(JsonFieldType.STRING).description("추천 상태 (UP/DOWN)")
+                                )
+
+                        )));
     }
 
     private AnswerVotePostDto createPostDto() {

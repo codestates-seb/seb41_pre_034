@@ -119,8 +119,21 @@ public class JwtTokenizer {
         }
     }
 
+    public void verifyAccessToken(
+            String accessToken
+    ) throws IOException {
+        String base64SecretKey = encodeBase64SecretKey(getSecretKey());
+        try {
+            verifySignature(accessToken, base64SecretKey);
+        } catch (ExpiredJwtException ee) {
+            throw new ServiceLogicException(ErrorCode.EXPIRED_ACCESS_TOKEN);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
     /* Secret key 생성 */
-    private Key getKeyFromBase64EncodedSecretKey(String base64EncodedSecretKey) {
+    public Key getKeyFromBase64EncodedSecretKey(String base64EncodedSecretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(base64EncodedSecretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }

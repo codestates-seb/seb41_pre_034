@@ -12,6 +12,7 @@ import com.preproject.server.user.entity.User;
 import com.preproject.server.user.mapper.UserMapper;
 import com.preproject.server.user.mapper.custom.CustomUserMapper;
 import com.preproject.server.user.service.UserService;
+import com.preproject.server.util.ApiDocumentUtils;
 import com.preproject.server.utils.JwtAuthorityUtils;
 import com.preproject.server.utils.JwtTokenizer;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +27,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.headers.HeaderDocumentation;
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.restdocs.payload.PayloadDocumentation;
+import org.springframework.restdocs.request.RequestDocumentation;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -38,7 +44,9 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -85,12 +93,38 @@ class UserControllerTest {
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .characterEncoding(StandardCharsets.UTF_8.displayName())
-                .with(csrf());
+                .characterEncoding(StandardCharsets.UTF_8.displayName());
         // Then
         mockMvc.perform(result)
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.data.email").value(postDto.getEmail()));
+                .andExpect(jsonPath("$.data.email").value(postDto.getEmail()))
+                .andDo(MockMvcRestDocumentation.document("postUsers",
+                        ApiDocumentUtils.getRequestPreProcessor(),
+                        ApiDocumentUtils.getResponsePreProcessor(),
+                        PayloadDocumentation.requestFields(
+                                List.of(
+                                        fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
+                                        fieldWithPath("password").type(JsonFieldType.STRING).description("비밀 번호"),
+                                        fieldWithPath("displayName").type(JsonFieldType.STRING).description("닉네임"),
+                                        fieldWithPath("emailNotice").type(JsonFieldType.BOOLEAN).description("이메일 알림 여부")
+                                )
+
+                        ),
+                        PayloadDocumentation.responseFields(
+                                List.of(
+                                        fieldWithPath("data").type(JsonFieldType.OBJECT).description("결과 데이터"),
+                                        fieldWithPath("data.userId").type(JsonFieldType.NUMBER).description("회원 식별자"),
+                                        fieldWithPath("data.email").type(JsonFieldType.STRING).description("이메일"),
+                                        fieldWithPath("data.displayName").type(JsonFieldType.STRING).description("닉네임"),
+                                        fieldWithPath("data.emailNotice").type(JsonFieldType.BOOLEAN).description("이메일 알림 여부"),
+                                        fieldWithPath("data.userStatus").type(JsonFieldType.STRING).description("회원 상태"),
+                                        fieldWithPath("data.loginType").type(JsonFieldType.STRING).description("회원 로그인 타입"),
+                                        fieldWithPath("data.createAt").type(JsonFieldType.STRING).description("생성 시각"),
+                                        fieldWithPath("data.updateAt").type(JsonFieldType.STRING).description("최종 수정 시각")
+                                )
+
+                        )
+                ));
 
     }
 
@@ -106,15 +140,41 @@ class UserControllerTest {
         given(userService.verifiedUserById(anyLong())).willReturn(testUser);
         given(customUserMapper.userEntityToResponseDto(any(User.class)))
                 .willReturn(userResponseDto);
-        RequestBuilder result = RestDocumentationRequestBuilders.get("/users/" + testUser.getUserId())
+        RequestBuilder result = RestDocumentationRequestBuilders.get("/users/{userId}" ,testUser.getUserId())
+                .header("Authorization","AccessToken")
+                .header("Refresh","RefreshToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .characterEncoding(StandardCharsets.UTF_8.displayName())
-                .with(csrf());
+                .characterEncoding(StandardCharsets.UTF_8.displayName());
         // Then
         mockMvc.perform(result)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.email").value(userResponseDto.getEmail()));
+                .andExpect(jsonPath("$.data.email").value(userResponseDto.getEmail()))
+                .andDo(MockMvcRestDocumentation.document("getUser",
+                        ApiDocumentUtils.getRequestPreProcessor(),
+                        ApiDocumentUtils.getResponsePreProcessor(),
+                        RequestDocumentation.pathParameters(
+                                parameterWithName("userId").description("회원 식별자")
+                        ),
+                        HeaderDocumentation.requestHeaders(
+                                headerWithName("Authorization").description("AccessToken"),
+                                headerWithName("Refresh").description("RefreshToken")
+                        ),
+                        PayloadDocumentation.responseFields(
+                                List.of(
+                                        fieldWithPath("data").type(JsonFieldType.OBJECT).description("결과 데이터"),
+                                        fieldWithPath("data.userId").type(JsonFieldType.NUMBER).description("회원 식별자"),
+                                        fieldWithPath("data.email").type(JsonFieldType.STRING).description("이메일"),
+                                        fieldWithPath("data.displayName").type(JsonFieldType.STRING).description("닉네임"),
+                                        fieldWithPath("data.emailNotice").type(JsonFieldType.BOOLEAN).description("이메일 알림 여부"),
+                                        fieldWithPath("data.userStatus").type(JsonFieldType.STRING).description("회원 상태"),
+                                        fieldWithPath("data.loginType").type(JsonFieldType.STRING).description("회원 로그인 타입"),
+                                        fieldWithPath("data.createAt").type(JsonFieldType.STRING).description("생성 시각"),
+                                        fieldWithPath("data.updateAt").type(JsonFieldType.STRING).description("최종 수정 시각"),
+                                        fieldWithPath("data.questions").type(JsonFieldType.ARRAY).description("작성 질문 목록"),
+                                        fieldWithPath("data.answers").type(JsonFieldType.ARRAY).description("작성 답변 목록"),
+                                        fieldWithPath("data.tags").type(JsonFieldType.ARRAY).description("작성 질문에 포함된 태그 목록")
+                                ))));
 
     }
 
@@ -130,17 +190,40 @@ class UserControllerTest {
         );
         given(userMapper.UserListToResponseDtoList(anyList()))
                 .willReturn(List.of(simpleResponseDto,simpleResponseDto));
-        RequestBuilder result = RestDocumentationRequestBuilders.get("/users")
+        RequestBuilder result = RestDocumentationRequestBuilders.get("/users?page=0")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .characterEncoding(StandardCharsets.UTF_8.displayName())
-                .with(csrf());
+                .characterEncoding(StandardCharsets.UTF_8.displayName());
         // Then
         mockMvc.perform(result)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data[0].email").value(simpleResponseDto.getEmail()))
                 .andExpect(jsonPath("$.pageInfo.page").value(1))
-                .andExpect(jsonPath("$.pageInfo.totalElements").value(2));
+                .andExpect(jsonPath("$.pageInfo.totalElements").value(2))
+                .andDo(
+                        MockMvcRestDocumentation.document("getUsers",
+                                ApiDocumentUtils.getRequestPreProcessor(),
+                                ApiDocumentUtils.getResponsePreProcessor(),
+                                RequestDocumentation.requestParameters(
+                                        parameterWithName("page").description("요청 페이지(0부터 1페이지)")
+                                ),
+                                PayloadDocumentation.responseFields(
+                                        List.of(
+                                                fieldWithPath("data").type(JsonFieldType.ARRAY).description("결과 데이터"),
+                                                fieldWithPath("data[].userId").type(JsonFieldType.NUMBER).description("회원 식별자"),
+                                                fieldWithPath("data[].email").type(JsonFieldType.STRING).description("이메일"),
+                                                fieldWithPath("data[].displayName").type(JsonFieldType.STRING).description("닉네임"),
+                                                fieldWithPath("data[].emailNotice").type(JsonFieldType.BOOLEAN).description("이메일 알림 여부"),
+                                                fieldWithPath("data[].userStatus").type(JsonFieldType.STRING).description("회원 상태"),
+                                                fieldWithPath("data[].loginType").type(JsonFieldType.STRING).description("회원 로그인 타입"),
+                                                fieldWithPath("data[].createAt").type(JsonFieldType.STRING).description("생성 시각"),
+                                                fieldWithPath("data[].updateAt").type(JsonFieldType.STRING).description("최종 수정 시각"),
+                                                fieldWithPath("pageInfo").type(JsonFieldType.OBJECT).description("요청 페이지 정보"),
+                                                fieldWithPath("pageInfo.page").type(JsonFieldType.NUMBER).description("요청 페이지"),
+                                                fieldWithPath("pageInfo.size").type(JsonFieldType.NUMBER).description("페이지당 요청 회원"),
+                                                fieldWithPath("pageInfo.totalElements").type(JsonFieldType.NUMBER).description("총 멤버"),
+                                                fieldWithPath("pageInfo.totalPages").type(JsonFieldType.NUMBER).description("생성된 총 페이지")
+                                                ))));
     }
 
     @Test
@@ -157,18 +240,50 @@ class UserControllerTest {
         given(userService.updateUser(any(User.class))).willReturn(testUser);
         given(userMapper.userEntityToSimpleResponseDto(any(User.class))).willReturn(simpleResponseDto);
         String content = gson.toJson(patchDto);
-        RequestBuilder result = RestDocumentationRequestBuilders.patch("/users/"+testUser.getUserId())
+        RequestBuilder result = RestDocumentationRequestBuilders.patch("/users/{userId}",testUser.getUserId())
+                .header("Authorization","AccessToken")
+                .header("Refresh","RefreshToken")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .characterEncoding(StandardCharsets.UTF_8.displayName())
-                .with(csrf());
+                .characterEncoding(StandardCharsets.UTF_8.displayName());
         // Then
         mockMvc.perform(result)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.email").value(simpleResponseDto.getEmail()))
                 .andExpect(jsonPath("$.data.displayName").value(simpleResponseDto.getDisplayName()))
-                .andExpect(jsonPath("$.data.userId").value(simpleResponseDto.getUserId()));
+                .andExpect(jsonPath("$.data.userId").value(simpleResponseDto.getUserId()))
+                .andDo(MockMvcRestDocumentation.document("patchUser",
+                        ApiDocumentUtils.getRequestPreProcessor(),
+                        ApiDocumentUtils.getResponsePreProcessor(),
+                        RequestDocumentation.pathParameters(
+                                parameterWithName("userId").description("회원 식별자")
+                        ),
+                        HeaderDocumentation.requestHeaders(
+                                headerWithName("Authorization").description("AccessToken"),
+                                headerWithName("Refresh").description("RefreshToken")
+                        ),
+                        PayloadDocumentation.requestFields(
+                                List.of(
+                                        fieldWithPath("email").type(JsonFieldType.STRING).description("이메일").optional(),
+                                        fieldWithPath("password").type(JsonFieldType.STRING).description("비밀 번호").optional(),
+                                        fieldWithPath("displayName").type(JsonFieldType.STRING).description("닉네임").optional()
+                                )
+
+                        ),
+                        PayloadDocumentation.responseFields(
+                                List.of(
+                                        fieldWithPath("data").type(JsonFieldType.OBJECT).description("결과 데이터"),
+                                        fieldWithPath("data.userId").type(JsonFieldType.NUMBER).description("회원 식별자"),
+                                        fieldWithPath("data.email").type(JsonFieldType.STRING).description("이메일"),
+                                        fieldWithPath("data.displayName").type(JsonFieldType.STRING).description("닉네임"),
+                                        fieldWithPath("data.emailNotice").type(JsonFieldType.BOOLEAN).description("이메일 알림 여부"),
+                                        fieldWithPath("data.userStatus").type(JsonFieldType.STRING).description("회원 상태"),
+                                        fieldWithPath("data.loginType").type(JsonFieldType.STRING).description("회원 로그인 타입"),
+                                        fieldWithPath("data.createAt").type(JsonFieldType.STRING).description("생성 시각"),
+                                        fieldWithPath("data.updateAt").type(JsonFieldType.STRING).description("최종 수정 시각")
+                                ))));
+
     }
 
     @Test
@@ -179,14 +294,26 @@ class UserControllerTest {
         Long userId = 1L;
         // When
         doNothing().when(userService).deleteUser(userId);
-        RequestBuilder result = RestDocumentationRequestBuilders.delete("/users/"+userId)
+        RequestBuilder result = RestDocumentationRequestBuilders.delete("/users/{userId}",userId)
+                .header("Authorization","AccessToken")
+                .header("Refresh","RefreshToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .characterEncoding(StandardCharsets.UTF_8.displayName())
-                .with(csrf());
+                .characterEncoding(StandardCharsets.UTF_8.displayName());
         // Then
         mockMvc.perform(result)
-                .andExpect(status().isNoContent());
+                .andExpect(status().isNoContent())
+                .andDo(
+                        MockMvcRestDocumentation.document("deleteUser",
+                                ApiDocumentUtils.getRequestPreProcessor(),
+                                ApiDocumentUtils.getResponsePreProcessor(),
+                                HeaderDocumentation.requestHeaders(
+                                        headerWithName("Authorization").description("AccessToken"),
+                                        headerWithName("Refresh").description("RefreshToken")
+                                ),
+                                RequestDocumentation.pathParameters(
+                                        parameterWithName("userId").description("회원 식별자")
+                                )));
 
     }
 
@@ -239,6 +366,8 @@ class UserControllerTest {
         if ( user.getLoginType() != null ) {
             userSimpleResponseDto.setLoginType( user.getLoginType().name() );
         }
+        userSimpleResponseDto.setCreateAt(LocalDateTime.now());
+        userSimpleResponseDto.setUpdateAt(LocalDateTime.now());
         return userSimpleResponseDto;
     }
 
@@ -251,7 +380,7 @@ class UserControllerTest {
         dto.setUserStatus(user.getUserStatus().name());
         dto.setLoginType(user.getLoginType().name());
         dto.setCreateAt(LocalDateTime.now());
-        dto.setCreateAt(LocalDateTime.now());
+        dto.setUpdateAt(LocalDateTime.now());
         dto.setQuestions(List.of());
         dto.setAnswers(List.of());
         dto.setTags(List.of());
