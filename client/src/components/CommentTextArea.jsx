@@ -11,7 +11,7 @@ function CommentTextArea({ questionId, answerId }) {
     setComment(target.value);
   }
 
-  function handlePostCommentSubmit() {
+  async function handlePostCommentSubmit() {
     const url = questionId
       ? `/question-comment/${questionId}`
       : `/answer-comment/${answerId}`;
@@ -20,7 +20,10 @@ function CommentTextArea({ questionId, answerId }) {
       userId,
     };
 
-    fetchPost(url, data);
+    const response = await fetchPost(url, data);
+    if (response.status >= 400 && response.status < 500) {
+      handleAuthError(response.status);
+    }
   }
 
   return (
