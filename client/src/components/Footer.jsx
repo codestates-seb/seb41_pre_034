@@ -5,7 +5,6 @@ function Footer(props) {
     <footer className="bg-[#232629] w-full">
       <div className="flex max-w-[1264px] mx-[auto] h-[322px] p-[12px] pt-[32px] text-[13px] font-[500]">
         <div className="w-[64px] h-[258px] mb-[32px] bt-[-12px]">
-          {/* 로고 이미지 클릭시 홈화면으로 이동 */}
           <a>
             <img
               src="https://cdn-icons-png.flaticon.com/512/2111/2111628.png"

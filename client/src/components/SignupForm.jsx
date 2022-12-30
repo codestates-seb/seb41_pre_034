@@ -129,9 +129,9 @@ function SignupForm(props) {
         <p className="text-[12px] w-[268px] h-[31.375px] mt-[32px] text-[#6A737C] ">
           By clicking “Sign up”, you agree to our
           <a href="/" className="text-[#3888D4]">
-            terms of service, privacy policy{' '}
+            terms of service, privacy policy
           </a>
-          and{' '}
+          and
           <a href="/" className="text-[#3888D4]">
             cookie policy
           </a>

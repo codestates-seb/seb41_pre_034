@@ -103,7 +103,6 @@ function Home() {
                       body={el.body}
                       tags={el.tags}
                       author={el.displayName}
-                      //프로필 이미지 받아와야함
                       img={el.img}
                       createAt={el.createAt}
                       updateAt={el.updateAt}

@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import ROUTE_PATH from '../constants/routePath';
 import BASE_URL from '../constants/baseUrl';
 
-function EditQuestion(props) {
+function EditQuestion() {
   const { questionId } = useParams();
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');

@@ -1,6 +1,4 @@
-const BASE_URL =
-  'http://ec2-13-124-206-193.ap-northeast-2.compute.amazonaws.com:8080';
-// const TODO_URL = 'http://localhost:3000/todo/';
+import BASE_URL from '../constants/baseUrl';
 
 export const fetchCreate = (url, data, redirectURL = '/') => {
   fetch(url, {
