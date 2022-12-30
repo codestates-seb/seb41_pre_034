@@ -12,10 +12,12 @@ import Navbar from './components/Navbar';
 import ROUTE_PATH from './constants/routePath';
 import NotFound from './pages/NotFound';
 import SearchResult from './pages/SearchResult';
+import ScrollToTop from './util/ScrollToTop';
 
 function App() {
   return (
     <Router basename="/">
+      <ScrollToTop />
       <Navbar isLogin={localStorage.getItem('Authorization')} />
       <Routes>
         <Route path={ROUTE_PATH.HOME} element={<Home />} />
