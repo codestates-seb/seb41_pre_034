@@ -114,7 +114,7 @@ public class SecurityConfig {
         corsConfiguration.setAllowedOrigins(
                 Arrays.asList("http://localhost:3000",
                         "http://localhost:8080",
-                        "http://pre-34-stackoverflow.s3-website.ap-northeast-2.amazonaws.com/"));
+                        "http://pre-34-stackoverflow.s3-website.ap-northeast-2.amazonaws.com"));
         corsConfiguration.setAllowedMethods(Arrays.asList("GET","POST", "PATCH", "DELETE", "OPTIONS"));
         corsConfiguration.setMaxAge(493772L);
         corsConfiguration.addAllowedOrigin("*");
