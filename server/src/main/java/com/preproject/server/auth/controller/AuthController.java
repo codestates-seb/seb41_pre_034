@@ -28,7 +28,12 @@ public class AuthController {
 
     @GetMapping("/verify")
     public ResponseEntity verifyUser(
-    ) {
+            HttpServletRequest request
+    ) throws IOException {
+        String authorization = request.getHeader("Authorization");
+        String accessToken = authorization.replace("Bearer ", "");
+
+        jwtTokenizer.verifyAccessToken(accessToken);
         return ResponseEntity.ok().build();
     }
     @GetMapping("/reissuetoken")

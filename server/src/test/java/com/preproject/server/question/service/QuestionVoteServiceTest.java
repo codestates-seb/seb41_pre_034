@@ -6,6 +6,7 @@ import com.preproject.server.exception.ServiceLogicException;
 import com.preproject.server.question.entity.QuestionVote;
 import com.preproject.server.question.repository.QuestionVoteRepository;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,6 +34,7 @@ class QuestionVoteServiceTest {
 
 
     @Test
+    @DisplayName("질문 추천 수정 TEST")
     void patch() {
         //given
         given(questionVoteRepository.findById(anyLong())).willReturn(Optional.empty());

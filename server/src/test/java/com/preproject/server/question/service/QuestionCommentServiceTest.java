@@ -8,6 +8,7 @@ import com.preproject.server.user.entity.User;
 import com.preproject.server.user.repository.UserRepository;
 import com.preproject.server.user.service.UserService;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -42,6 +43,7 @@ class QuestionCommentServiceTest {
 
 
     @Test
+    @DisplayName("질문 코멘트 수정 TEST_1")
     void patch1() throws Exception{
         // given
         given(questionCommentRepository.findById(anyLong()))
@@ -61,6 +63,7 @@ class QuestionCommentServiceTest {
 
 
     @Test
+    @DisplayName("질문 코멘트 수정 TEST_2")
     void patch2() throws Exception{
 
         // given
@@ -85,6 +88,7 @@ class QuestionCommentServiceTest {
 
 
     @Test
+    @DisplayName("질문 코멘트 수정 TEST_3")
     void patch3() throws Exception{
 
         // given
@@ -103,6 +107,7 @@ class QuestionCommentServiceTest {
     }
 
     @Test
+    @DisplayName("질문 코멘트 삭제 TEST")
     void delete() throws Exception{
         // given
         given(questionCommentRepository.findById(anyLong()))
