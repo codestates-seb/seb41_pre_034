@@ -155,7 +155,7 @@ function CreateQuestion() {
                 id="tags"
                 onKeyUp={addTags}
                 placeholder="e.g.(ajax wpf sql)"
-                className="my-[2px] py-[7.8px] h-[20px] w-[100%] px-[9.1px] text-[13px] rounded-[3px] focus:ring-0 focus:outline-none"
+                className="flex-auto my-[2px] py-[7.8px] h-[20px] px-[9.1px] text-[13px] rounded-[3px] focus:ring-0 focus:outline-none"
               ></input>
             </div>
           </div>
