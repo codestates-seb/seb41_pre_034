@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import BlueButton from './buttons/BlueButton';
 import { useDispatch } from 'react-redux';
+import { setUserId } from '../redux/actions/index';
 import { fetchSign as fetchLogin } from '../util/api';
+import handleAuthError from '../exception/handleAuthError';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -23,6 +25,19 @@ function LoginForm() {
       password: password,
     };
     const response = await fetchLogin('/auth/login', data);
+
+    if (response.status === 200) {
+      const authorization = response.headers.get('Authorization');
+      const refresh = response.headers.get('Refresh');
+      const userId = response.headers.get('userId');
+
+      localStorage.setItem('Authorization', authorization);
+      localStorage.setItem('Refresh', refresh);
+
+      dispatch(setUserId(userId));
+
+      window.location.href = '/';
+    }
 
     if (response.status >= 400 && response.status < 500) {
       handleAuthError(response.status, handleLogin);
