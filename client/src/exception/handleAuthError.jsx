@@ -17,7 +17,10 @@ const unauthorized = (status) => {
 const forbidden = async (status, callback) => {
   if (status === 403) {
     const response = await fetch(
-      process.env.REACT_APP_BASE_URL + '/auth/reissuetoken'
+      process.env.REACT_APP_BASE_URL + '/auth/reissuetoken',
+      {
+        headers: localStorage.getItem('Refresh'),
+      }
     );
 
     if (!response.ok) {
