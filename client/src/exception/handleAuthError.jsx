@@ -8,6 +8,7 @@ const handleAuthError = (status, callback) => {
 const unauthorized = (status) => {
   if (status === 401) {
     alert('로그인 후 이용해주세요.');
+    localStorage.removeItem('Authorization');
     window.location.href = ROUTE_PATH.LOGIN;
 
     return;
@@ -25,6 +26,7 @@ const forbidden = async (status, callback) => {
 
     if (!response.ok) {
       alert('로그인 후 이용해주세요.');
+      localStorage.removeItem('Authorization');
       window.location.href = ROUTE_PATH.LOGIN;
 
       return;

@@ -57,6 +57,7 @@ function Navbar(props) {
       },
     }).then((res) => console.log(res));
     localStorage.removeItem('Authorization');
+    localStorage.removeItem('Refresh');
     window.location.href = '/';
   }
 
