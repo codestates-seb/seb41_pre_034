@@ -39,6 +39,7 @@ public class UserService {
         user.setLoginType(LoginType.BASIC);
         String email = user.getEmail();
         verifyUserByEmail(email);
+        verifyUserByDisplayName(user.getDisplayName());
 
         String encode = passwordEncoder.encode(user.getPassword());
         user.setPassword(encode);
@@ -85,10 +86,17 @@ public class UserService {
         return findUser;
     }
 
+    private void verifyUserByDisplayName(String displayName) {
+        Optional<User> findUser = userRepository.findByDisplayName(displayName);
+        if (findUser.isPresent()) {
+            throw new ServiceLogicException(ErrorCode.USER_DISPLAY_NAME_EXISTS);
+        }
+    }
+
     public void verifyUserByEmail(String email) {
         Optional<User> findUser = userRepository.findByEmail(email);
         if (findUser.isPresent()) {
-            throw new ServiceLogicException(ErrorCode.USER_EXISTS);
+            throw new ServiceLogicException(ErrorCode.USER_EMAIL_EXISTS);
         }
     }
 
