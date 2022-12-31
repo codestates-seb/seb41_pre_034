@@ -5,7 +5,6 @@ import { AiOutlineSearch } from 'react-icons/ai';
 import Tabs from '../components/Tabs';
 import TagCard from '../components/TagCard';
 import useFetch from '../util/useFetch';
-import BASE_URL from '../constants/baseUrl';
 
 function Tags() {
   const [searchValue, setSearchValue] = useState('');
@@ -21,7 +20,9 @@ function Tags() {
   }
 
   async function getSearchedTags(value) {
-    const response = await fetch(`${BASE_URL}/search/tag?page=0&tag=${value}`);
+    const response = await fetch(
+      `${process.env.REACT_APP_BASE_URL}/search/tag?page=0&tag=${value}`
+    );
     return response.json();
   }
 

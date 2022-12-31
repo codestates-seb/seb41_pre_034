@@ -12,7 +12,6 @@ import { timeForToday } from '../util/timeForToday';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Tag from '../components/Tag';
-import BASE_URL from '../constants/baseUrl';
 import handleAuthError from '../exception/handleAuthError';
 
 function MypageContent() {
@@ -21,7 +20,7 @@ function MypageContent() {
   const userId = useSelector((state) => state.userIdReducer);
 
   useEffect(() => {
-    fetch(BASE_URL + '/users/' + userId, {
+    fetch(process.env.REACT_APP_BASE_URL + '/users/' + userId, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

@@ -9,7 +9,6 @@ import Tabs from '../components/Tabs';
 import useFetch from '../util/useFetch';
 import PageButton from '../components/buttons/PageButton';
 import { useLocation } from 'react-router-dom';
-import BASE_URL from '../constants/baseUrl';
 import handleAuthError from '../exception/handleAuthError';
 
 function Home() {
@@ -17,14 +16,17 @@ function Home() {
   const $questions = useFetch(`/questions${search}`);
 
   async function handleConfirmLogin() {
-    const response = await fetch(BASE_URL + '/auth/verify', {
-      method: 'GET',
-      headers: {
-        'content-type': 'application/json',
-        Authorization: localStorage.getItem('Authorization'),
-        Refresh: localStorage.getItem('Refresh'),
-      },
-    });
+    const response = await fetch(
+      process.env.REACT_APP_BASE_URL + '/auth/verify',
+      {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+          Authorization: localStorage.getItem('Authorization'),
+          Refresh: localStorage.getItem('Refresh'),
+        },
+      }
+    );
 
     if (response.ok) {
       window.location.href = ROUTE_PATH.ADD_QUESTION;
