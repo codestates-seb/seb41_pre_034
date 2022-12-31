@@ -27,20 +27,38 @@ function SignupForm() {
     setCheck(!isCheck);
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
-    const data = {
+    const body = {
       email: email,
       password: password,
       displayName: displayName,
       emailNotice: isCheck,
     };
 
-    fetchSignup('/users', data);
-    alert('회원가입이 완료되었습니다.');
+    const response = await fetchSignup('/users', body);
 
-    window.location.href = '/login';
+    if (response.ok) {
+      alert('회원가입이 완료되었습니다.');
+      window.location.href = '/login';
+
+      return;
+    }
+
+    const data = await response.json();
+
+    if (data.message === 'USER DISPLAY NAME EXISTS') {
+      alert('이미 사용중인 Display name입니다.');
+
+      return;
+    }
+
+    if (data.message === 'USER EMAIL EXISTS') {
+      alert('이미 사용중인 이메일 주소입니다.');
+
+      return;
+    }
   }
 
   return (
