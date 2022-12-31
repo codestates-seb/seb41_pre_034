@@ -26,7 +26,7 @@ function LoginForm() {
     };
     const response = await fetchLogin('/auth/login', data);
 
-    if (response.status === 200) {
+    if (response.ok) {
       const authorization = response.headers.get('Authorization');
       const refresh = response.headers.get('Refresh');
       const userId = response.headers.get('userId');
@@ -37,6 +37,12 @@ function LoginForm() {
       dispatch(setUserId(userId));
 
       window.location.href = '/';
+    }
+
+    if (response.status === 401) {
+      alert('아이디, 비밀번호를 확인해주세요.');
+
+      return;
     }
 
     if (response.status >= 400 && response.status < 500) {
