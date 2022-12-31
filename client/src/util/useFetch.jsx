@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import BASE_URL from '../constants/baseUrl';
 
 const useFetch = (url) => {
   const [data, setData] = useState(null);
@@ -7,7 +6,7 @@ const useFetch = (url) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(BASE_URL + url, {
+    fetch(process.env.REACT_APP_BASE_URL + url, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: localStorage.getItem('Authorization'),

@@ -5,7 +5,6 @@ import BlueButton from '../components/buttons/BlueButton';
 import Tag from '../components/Tag';
 import { useSelector } from 'react-redux';
 import ROUTE_PATH from '../constants/routePath';
-import BASE_URL from '../constants/baseUrl';
 import { fetchPost } from '../util/api';
 import handleAuthError from '../exception/handleAuthError';
 

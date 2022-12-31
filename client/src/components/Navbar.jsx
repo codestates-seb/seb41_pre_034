@@ -6,7 +6,6 @@ import Inputbox from './Inputbox';
 import { Link } from 'react-router-dom';
 import ROUTE_PATH from '../constants/routePath';
 import { useState } from 'react';
-import BASE_URL from '../constants/baseUrl';
 
 function Navbar(props) {
   const [isClick, setClick] = useState(false);
@@ -50,7 +49,7 @@ function Navbar(props) {
     setClick(!isClick);
   };
   function handleLogout() {
-    fetch(BASE_URL + '/logout', {
+    fetch(process.env.REACT_APP_BASE_URL + '/logout', {
       method: 'GET',
       headers: {
         Authorization: localStorage.getItem('Authorization'),

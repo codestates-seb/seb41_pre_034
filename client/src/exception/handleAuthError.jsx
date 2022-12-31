@@ -1,4 +1,3 @@
-import BASE_URL from '../constants/baseUrl';
 import ROUTE_PATH from '../constants/routePath';
 
 const handleAuthError = (status, callback) => {
@@ -17,7 +16,9 @@ const unauthorized = (status) => {
 
 const forbidden = async (status, callback) => {
   if (status === 403) {
-    const response = await fetch(BASE_URL + '/auth/reissuetoken');
+    const response = await fetch(
+      process.env.REACT_APP_BASE_URL + '/auth/reissuetoken'
+    );
 
     if (!response.ok) {
       alert('로그인 후 이용해주세요.');

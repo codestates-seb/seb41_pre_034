@@ -6,7 +6,6 @@ import Tag from '../components/Tag';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ROUTE_PATH from '../constants/routePath';
-import BASE_URL from '../constants/baseUrl';
 import { fetchPatch } from '../util/api';
 import handleAuthError from '../exception/handleAuthError';
 
@@ -18,7 +17,7 @@ function EditQuestion() {
   const userId = useSelector((state) => state.userIdReducer);
 
   useEffect(() => {
-    fetch(BASE_URL + '/questions/' + questionId)
+    fetch(process.env.REACT_APP_BASE_URL + '/questions/' + questionId)
       .then((response) => response.json())
       .then(({ data }) => {
         setTitle(data.title);

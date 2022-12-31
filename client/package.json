@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@stackoverflow/stacks-editor": "^0.8.3",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -55,6 +54,5 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "redux-devtools": "^3.7.0",
     "tailwindcss": "^3.2.4"
-  },
-  "proxy": "http://ec2-13-124-206-193.ap-northeast-2.compute.amazonaws.com:8080"
+  }
 }
