@@ -44,7 +44,7 @@ class UserServiceTest {
         // Then
         assertThat(throwableByCreate)
                 .isInstanceOf(ServiceLogicException.class)
-                .hasMessageContaining(ErrorCode.USER_EXISTS.getMessage());
+                .hasMessageContaining(ErrorCode.USER_EMAIL_EXISTS.getMessage());
         assertThat(throwableByFind)
                 .isInstanceOf(ServiceLogicException.class)
                 .hasMessageContaining(ErrorCode.USER_NOT_FOUND.getMessage());
