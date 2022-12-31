@@ -19,7 +19,7 @@ const forbidden = async (status, callback) => {
     const response = await fetch(
       process.env.REACT_APP_BASE_URL + '/auth/reissuetoken',
       {
-        headers: localStorage.getItem('Refresh'),
+        headers: { Refresh: localStorage.getItem('Refresh') },
       }
     );
 

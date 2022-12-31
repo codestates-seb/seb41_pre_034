@@ -58,8 +58,7 @@ function QuestionDetail() {
     }
   }
 
-  async function addAnswer(e) {
-    e.preventDefault();
+  async function addAnswer() {
     const data = {
       userId,
       questionId,
