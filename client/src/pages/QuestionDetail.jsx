@@ -200,7 +200,9 @@ function QuestionDetail() {
         id="container"
         className="mt-[50px] max-w-[1264px] w-full flex justify-between mx-auto my-0 relative z-[1000] flex-[1_0_auto] text-left min-h-[calc(100vh-50px-322px)]"
       >
-        <Sidebar></Sidebar>
+        <div className="hidden md:block">
+          <Sidebar></Sidebar>
+        </div>
         <div
           id="content"
           className="max-w-[1100px] w-[calc(100%-164px)] p-[24px] border-l-[1px] border-[#e1e2e5]"
@@ -240,7 +242,7 @@ function QuestionDetail() {
             </div>
           </div>
           <div className="flex">
-            <div id="mainbar" className="w-[calc(100%-324px)] float-left">
+            <div id="mainbar" className="float-left w-full">
               <div id="question" className="flex text-left">
                 <div id="question-layout" className="flex w-full">
                   <div
@@ -249,7 +251,7 @@ function QuestionDetail() {
                   >
                     <div
                       id="question-voting-container"
-                      className="flex items-stretch justify-center flex-col"
+                      className="flex flex-col items-stretch justify-center"
                     >
                       <button
                         id="question-up-button"
@@ -342,7 +344,7 @@ function QuestionDetail() {
                       </div>
 
                       <div className="flex">
-                        <div className="flex flex-auto justify-between">
+                        <div className="flex justify-between flex-auto">
                           <div className="flex text-[#6a737c] text-[13px]">
                             <div
                               id="question-share-button"
@@ -515,7 +517,7 @@ function QuestionDetail() {
                         className="flex w-full pb-[20px] border-b-[1px] border-[#e4e6e8] mb-[20px]"
                       >
                         <div className="w-auto pr-[16px] align-top">
-                          <div className="flex items-stretch justify-center flex-col">
+                          <div className="flex flex-col items-stretch justify-center">
                             <button
                               className="m-[2px]"
                               onClick={handleVoteButtonClick}
@@ -597,7 +599,7 @@ function QuestionDetail() {
                             <MDEditor.Markdown source={answer.body} />
                           </div>
                           <div className="flex w-full">
-                            <div className="flex flex-auto justify-between">
+                            <div className="flex justify-between flex-auto">
                               <div className="flex text-[#6a737c] text-[13px]">
                                 <div>
                                   <span className="mr-[8px] hover:text-[#949ca4]">
@@ -747,7 +749,7 @@ function QuestionDetail() {
                 </div>
               </form>
             </div>
-            <div className="ml-[10px]">
+            <div className="ml-[10px] hidden md:block">
               <Tips></Tips>
             </div>
           </div>
