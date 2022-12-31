@@ -108,6 +108,9 @@ public class JwtTokenizer {
             String refreshToken,
             HttpServletResponse response
     ) throws IOException {
+        if (refreshToken == null) {
+            throw new ServiceLogicException(ErrorCode.TOKEN_NOT_NULL);
+        }
         String base64SecretKey = encodeBase64SecretKey(getSecretKey());
         try {
             verifySignature(refreshToken, base64SecretKey);
