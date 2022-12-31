@@ -54,14 +54,14 @@ function MypageContent() {
 
           <div className=" w-[495.445px] h-[68px] m-[8px]">
             <div className="flex items-center text-[34px] w-[421.328px] h-[50pxpx] mb-[-4px]">
-              <div className="w-[104.430px] h-[44px] m-[4px] mb-[14px]">
+              <div className="m-[4px] mb-[14px]">
                 {userInfo && userInfo.displayName}
               </div>
             </div>
             <ul className="flex text-[13px] text-[#6A737C] w-[600px] h-[26px] ml-[-4px]">
               <li className="flex items-center m-[4px]">
                 <div className="mx-[2px]">
-                  <MdCake className="w-[18px] h-[18px] " />
+                  <MdCake className="w-[18px] h-[18px]" />
                 </div>
                 <div>
                   {'Member for ' + timeForToday(userInfo && userInfo.createAt)}
