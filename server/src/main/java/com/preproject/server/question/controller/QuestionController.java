@@ -9,6 +9,7 @@ import com.preproject.server.question.entity.Question;
 import com.preproject.server.question.mapper.QuestionMapper;
 import com.preproject.server.question.service.QuestionService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/questions")
 @RequiredArgsConstructor
+@Slf4j
 public class QuestionController {
 
     private final QuestionService questionService;
@@ -39,7 +41,7 @@ public class QuestionController {
                 question,
                 questionPostDto.getTags(),
                 questionPostDto.getUserId());
-
+        log.info("# Create Question");
         return new ResponseEntity<>(
                 ResponseDto.of(questionMapper.QuestionEntityToResponseDto(saved)),
                 HttpStatus.CREATED);
@@ -49,6 +51,7 @@ public class QuestionController {
     @DeleteMapping
     public ResponseEntity deleteQuestion() {
         questionService.deleteAll();
+        log.info("# Delete All Question");
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -57,7 +60,7 @@ public class QuestionController {
     public ResponseEntity getQuestion(
             @PathVariable Long questionId) {
         Question question = questionService.get(questionId);
-
+        log.info("# Question Query");
         return new ResponseEntity<>(
                 ResponseDto.of(questionMapper.QuestionEntityToResponseDto(question)),
                 HttpStatus.OK);
@@ -77,8 +80,7 @@ public class QuestionController {
                         questionPatchDto.getTags(),
                         questionPatchDto.getUserId()
                 );
-
-
+        log.info("# Patch Question");
         return new ResponseEntity<>(
                 ResponseDto.of(questionMapper.QuestionEntityToResponseDto(patch)),
                 HttpStatus.OK);
@@ -89,7 +91,7 @@ public class QuestionController {
     public ResponseEntity deleteQuestion(
             @PathVariable Long questionId) {
         questionService.delete(questionId);
-
+        log.info("# Delete Question");
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -109,7 +111,7 @@ public class QuestionController {
                         questionResponseDtos,
                         findQuestions.getPageable(),
                         findQuestions.getTotalElements()));
-
+        log.info("# All Question Query");
         return new ResponseEntity<>(
                 response,
                 HttpStatus.OK

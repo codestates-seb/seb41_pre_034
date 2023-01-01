@@ -4,6 +4,7 @@ package com.preproject.server.auth.controller;
 import com.preproject.server.dto.AuthSuccessTokenResponseDto;
 import com.preproject.server.utils.JwtTokenizer;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -22,6 +23,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 @Validated
+@Slf4j
 public class AuthController {
 
     private final JwtTokenizer jwtTokenizer;
@@ -32,8 +34,8 @@ public class AuthController {
     ) throws IOException {
         String authorization = request.getHeader("Authorization");
         String accessToken = authorization.replace("Bearer ", "");
-
         jwtTokenizer.verifyAccessToken(accessToken);
+        log.info("# Verify Login User");
         return ResponseEntity.ok().build();
     }
     @GetMapping("/reissuetoken")
@@ -43,7 +45,7 @@ public class AuthController {
     ) throws IOException {
 
         jwtTokenizer.verifyRefreshToken(request.getHeader("Refresh"), response);
-
+        log.info("# Reissue Token");
         return new ResponseEntity<>(AuthSuccessTokenResponseDto.of(response), HttpStatus.OK);
     }
 
@@ -56,6 +58,7 @@ public class AuthController {
         if (authentication != null) {
             new SecurityContextLogoutHandler().logout(request,response,authentication);
         }
+        log.info("# User Logout");
         return ResponseEntity.ok().build();
     }
 

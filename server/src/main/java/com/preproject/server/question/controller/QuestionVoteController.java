@@ -8,6 +8,7 @@ import com.preproject.server.question.entity.QuestionVote;
 import com.preproject.server.question.mapper.QuestionMapper;
 import com.preproject.server.question.service.QuestionVoteService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/question-vote")
 @RequiredArgsConstructor
+@Slf4j
 public class QuestionVoteController {
 
     private final QuestionMapper questionMapper;
@@ -34,7 +36,7 @@ public class QuestionVoteController {
                 questionMapper.questionVotePostDtoToEntity(questionVotePostDto),
                 questionId,
                 questionVotePostDto.getUserId());
-
+        log.info("# Create Question Vote");
         return new ResponseEntity<>(
                 ResponseDto.of(questionMapper.questionVoteToQuestionVoteResponseDto(saved)),
                 HttpStatus.CREATED);
@@ -54,7 +56,7 @@ public class QuestionVoteController {
 
         QuestionVote patchQuestionVote =
                 questionVoteService.updateVote(questionVote,questionVoteId);
-
+        log.info("# Patch Question Vote");
         if (patchQuestionVote.getVoteStatus().equals(VoteStatus.NO_CONTENT)) {
             return ResponseEntity.noContent().build();
         }else {
