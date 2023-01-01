@@ -11,6 +11,7 @@ import com.preproject.server.user.mapper.UserMapper;
 import com.preproject.server.user.mapper.custom.CustomUserMapper;
 import com.preproject.server.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +29,7 @@ import java.util.List;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 @Validated
+@Slf4j
 public class UserController {
 
     private final UserService userService;
@@ -44,6 +46,7 @@ public class UserController {
         User user = userService.verifiedUserById(userId);
         UserResponseDto userResponseDto =
                 customUserMapper.userEntityToResponseDto(user);
+        log.info("# User Single Query");
         return new ResponseEntity<>(
                 ResponseDto.of(userResponseDto),
                 HttpStatus.OK
@@ -68,6 +71,7 @@ public class UserController {
                         findUsers.getPageable(),
                         findUsers.getTotalElements()
                 ));
+        log.info("# User All Query");
         return new ResponseEntity<>(
                 response,
                 HttpStatus.OK
@@ -81,6 +85,7 @@ public class UserController {
     ) {
         User save = userService.createUser(
                 userMapper.UserPostDtoToEntity(userPostDto));
+        log.info("# Create New User");
         return new ResponseEntity<>(
                 ResponseDto.of(
                         userMapper.userEntityToSimpleResponseDto(save)
@@ -98,7 +103,7 @@ public class UserController {
 
         User updateUser =
                 userService.updateUser(userMapper.UserPatchDtoToEntity(userPatchDto));
-
+        log.info("# Patch User");
         return new ResponseEntity<>(
                 ResponseDto.of(
                         userMapper.userEntityToSimpleResponseDto(updateUser)
@@ -111,6 +116,7 @@ public class UserController {
     @DeleteMapping
     public ResponseEntity deleteUsers() {
         userService.deleteUsers();
+        log.info("# Delete All User");
         return ResponseEntity.noContent().build();
     }
 
@@ -120,6 +126,7 @@ public class UserController {
             @PathVariable("userId") Long userId
     ) {
         userService.deleteUser(userId);
+        log.info("# Delete User");
         return ResponseEntity.noContent().build();
     }
 

@@ -7,6 +7,7 @@ import com.preproject.server.answer.mapper.AnswerMapper;
 import com.preproject.server.answer.service.AnswerService;
 import com.preproject.server.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/answers")
 @RequiredArgsConstructor
+@Slf4j
 public class AnswerController {
 
     private final AnswerMapper answerMapper;
@@ -31,7 +33,7 @@ public class AnswerController {
                 answerPostDto.getQuestionId(),
                 answerPostDto.getUserId()
                 );
-
+        log.info("# Create Answer");
         return new ResponseEntity<>(
                 ResponseDto.of(answerMapper.entityToResponseDto(save)),
                 HttpStatus.CREATED);
@@ -47,6 +49,7 @@ public class AnswerController {
                 answerMapper.answerPatchDtoToEntity(answerPatchDto);
         answer.setAnswerId(answerId);
         Answer update = answerService.updateAnswer(answer);
+        log.info("# Patch Answer");
         return new ResponseEntity<>(
                 ResponseDto.of(answerMapper.entityToResponseDto(update)),
                 HttpStatus.OK);
@@ -58,6 +61,7 @@ public class AnswerController {
             @PathVariable("answerId") Long answerId
     ) {
         answerService.deleteAnswer(answerId);
+        log.info("# Delete Answer");
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

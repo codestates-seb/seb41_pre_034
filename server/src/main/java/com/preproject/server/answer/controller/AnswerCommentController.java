@@ -7,6 +7,7 @@ import com.preproject.server.answer.mapper.AnswerMapper;
 import com.preproject.server.answer.service.AnswerCommentService;
 import com.preproject.server.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/answer-comment")
 @RequiredArgsConstructor
+@Slf4j
 public class AnswerCommentController {
 
     private final AnswerMapper answerMapper;
@@ -33,7 +35,7 @@ public class AnswerCommentController {
                         answerMapper.AnswerPostDtoToEntity(answerCommentPostDto),
                         answerId,
                         answerCommentPostDto.getUserId());
-
+        log.info("# Create Answer Comment");
         return new ResponseEntity<>(
                 ResponseDto.of(answerMapper.answerCommentToAnswerCommentResponseDto(save)),
                 HttpStatus.CREATED);
@@ -50,7 +52,7 @@ public class AnswerCommentController {
 
         AnswerComment update =
                 answerCommentService.updateComment(answerComment, answerCommentId);
-
+        log.info("# Patch Answer Comment");
         return new ResponseEntity<>(
                 ResponseDto.of(answerMapper.answerCommentToAnswerCommentResponseDto(update)),
                 HttpStatus.OK);
@@ -62,6 +64,7 @@ public class AnswerCommentController {
             @PathVariable("answerCommentId") Long answerCommentId
     ) {
         answerCommentService.delete(answerCommentId);
+        log.info("# Delete Answer Comment");
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
