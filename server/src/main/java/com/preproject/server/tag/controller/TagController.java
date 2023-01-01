@@ -11,6 +11,7 @@ import com.preproject.server.tag.entity.Tag;
 import com.preproject.server.tag.mapper.TagMapper;
 import com.preproject.server.tag.service.TagService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/tags")
 @RequiredArgsConstructor
+@Slf4j
 public class TagController {
 
     private final TagService tagService;
@@ -60,6 +62,7 @@ public class TagController {
                         questionList,
                         tags.getPageable(),
                         tags.getTotalElements()));
+        log.info("# Questions By Tag Query");
         return new ResponseEntity<>(
                 response,
                 HttpStatus.OK);
@@ -78,6 +81,7 @@ public class TagController {
                 new PageImpl<>(
                         dtos, tags.getPageable(), tags.getTotalElements()
                 ));
+        log.info("# All Tag Query");
         return new ResponseEntity<>(
                 response,
                 HttpStatus.OK);
