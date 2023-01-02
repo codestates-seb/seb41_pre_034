@@ -35,3 +35,9 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### env ###
+src/main/resources/env.yml
+
+### querydsl
+/src/main/generated
