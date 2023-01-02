@@ -63,8 +63,8 @@ function Navbar(props) {
 
   return (
     <>
-      <header className="box-border h-[50px] fixed left-0 top-0 min-w-[auto] shadow-md w-full z-[5050] bg-[#ffffff]	flex border-t-[3px] border-[#f48225] items-center">
-        <div className="w-[97.2307692rem] max-w-[1264px] h-full flex my-0 mx-auto items-center box-border">
+      <header className="flex justify-center box-border h-[50px] fixed left-0 top-0 min-w-[auto] shadow-md w-full z-[5050] bg-[#ffffff]	flex border-t-[3px] border-[#f48225] items-center">
+        <div className="relative w-[97.2307692rem] max-w-[1264px] h-full flex items-center box-border">
           <a
             href="/"
             className="py-0 px-2 h-full flex items-center bg-transparent box-border hover:bg-[#e3e6e8]"
@@ -126,32 +126,6 @@ function Navbar(props) {
                         <path d="M15 1H3a2 2 0 0 0-2 2v2h16V3a2 2 0 0 0-2-2ZM1 13c0 1.1.9 2 2 2h8v3l3-3h1a2 2 0 0 0 2-2v-2H1v2Zm16-7H1v4h16V6Z" />
                       </svg>
                     </a>
-                    <div
-                      className={
-                        isClick === true
-                          ? 'flex flex-wrap shadow-lg bg-[#ffffff] flex-col box-content top-[47px] right-[30px] w-[343px] w-max-[749px] absolute border-[#E3E6E8] border-[1px] cursor-pointer'
-                          : 'hidden'
-                      }
-                    >
-                      <div className="box-content text-[11px] py-[8px] px-[10px] text-[#3B89D4]  hover:text-[#0e96ff] font-[600] bg-[#f1f2f3] h-[14.297px] w-[343px]">
-                        CURRENT COMMUNITY
-                      </div>
-                      <div className="box-content items-center flex h-[32px] w-[343px] px-[10px] pt-[2px] justify-between font-[600] bg-[#F4F8FB] text-[12px] text-[#3B89D4]">
-                        <div className="flex  hover:text-[#0e96ff]">
-                          <img
-                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Stack_Overflow_icon.svg/768px-Stack_Overflow_icon.svg.png"
-                            className="w-[16px] h-[16px] m-[2px]"
-                          ></img>
-                          Stack Overflow
-                        </div>
-                        <div
-                          className="font-[400]  hover:text-[#0e96ff]"
-                          onClick={handleLogout}
-                        >
-                          logout
-                        </div>
-                      </div>
-                    </div>
                   </li>
                 </>
               ) : (
@@ -170,6 +144,32 @@ function Navbar(props) {
               )}
             </ol>
           </nav>
+          <div
+            className={
+              isClick === true
+                ? 'flex flex-wrap shadow-lg bg-[#ffffff] flex-col box-content w-[330px] top-[47px] left-auto right-[0px] absolute border-[#E3E6E8] border-[1px] mr-[12px]'
+                : 'hidden'
+            }
+          >
+            <div className="box-content text-[11px] py-[8px] px-[10px] text-[#3B89D4]  hover:text-[#0e96ff] font-[600] bg-[#f1f2f3] h-[14.297px]">
+              CURRENT COMMUNITY
+            </div>
+            <div className="box-content items-center flex h-[32px] px-[10px] pt-[2px] justify-between font-[600] bg-[#F4F8FB] text-[12px] text-[#3B89D4]">
+              <div className="flex hover:text-[#0e96ff]">
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Stack_Overflow_icon.svg/768px-Stack_Overflow_icon.svg.png"
+                  className="w-[16px] h-[16px] m-[2px]"
+                ></img>
+                Stack Overflow
+              </div>
+              <div
+                className="font-[400]  hover:text-[#0e96ff] cursor-pointer"
+                onClick={handleLogout}
+              >
+                logout
+              </div>
+            </div>
+          </div>
         </div>
       </header>
     </>
